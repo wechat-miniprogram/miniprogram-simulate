@@ -1,0 +1,40 @@
+{
+  "name": "miniprogram-simulate",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest \"./test/(.*)/(.*).test.js\" --silent --bail",
+    "coverage-local": "jest \"./test/(.*)/(.*).test.js\" --coverage --bail",
+    "coverage": "jest \"./test/(.*)/(.*).test.js\" --coverage --coverageReporters=text-lcov | coveralls",
+    "lint": "eslint \"src/**/*.js\" --fix"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testURL": "https://jest.test",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wechat-miniprogram/miniprogram-simulate.git"
+  },
+  "author": "wechat-miniprogram",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "jest": "^23.5.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^3.8.0"
+  },
+  "dependencies": {
+    "j-component": "git+https://github.com/JuneAndGreen/j-component.git"
+  }
+}
