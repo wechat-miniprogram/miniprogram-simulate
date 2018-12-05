@@ -25,12 +25,23 @@ global.Component = options => {
 /**
  * behavior 构造器
  */
-global.Behavior = options => jComponent.behavior(options)
+global.Behavior = definition => jComponent.behavior(definition)
+
+/**
+ * 加载 behavior
+ */
+function behavior(definition) {
+  if (typeof definition !== 'object') {
+    throw new Error('definition must be a object')
+  }
+
+  return jComponent.behavior(definition)
+}
 
 /**
  * 加载自定义组件
  */
-async function load(componentPath, tagName) {
+function load(componentPath, tagName) {
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
@@ -38,13 +49,21 @@ async function load(componentPath, tagName) {
     return jComponent.register(definition)
   }
 
+  if (typeof componentPath !== 'string') {
+    throw new Error('componentPath must be a string')
+  }
+
+  if (tagName !== undefined && typeof tagName !== 'string') {
+    throw new Error('tagName must be a string')
+  }
+
   const oldLoad = nowLoad
   const component = nowLoad = {}
 
   // 读取自定义组件的静态内容
   component.tagName = tagName
-  component.wxml = await _.readFile(`${componentPath}.wxml`)
-  component.wxss = await _.readFile(`${componentPath}.wxss`) // TODO
+  component.wxml = _.readFile(`${componentPath}.wxml`)
+  component.wxss = _.readFile(`${componentPath}.wxss`) // TODO
   component.json = _.readJson(`${componentPath}.json`)
 
   if (!component.json) {
@@ -57,8 +76,7 @@ async function load(componentPath, tagName) {
   for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
     const key = usingComponentKeys[i]
     const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
-    // eslint-disable-next-line no-await-in-loop
-    const id = await load(usingPath)
+    const id = load(usingPath)
 
     usingComponents[key] = id
   }
@@ -116,6 +134,7 @@ injectPolyfill()
 injectDefinition()
 
 module.exports = {
+  behavior,
   load,
   render,
   match,

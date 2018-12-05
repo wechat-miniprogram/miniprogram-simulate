@@ -35,6 +35,6 @@
     "eslint-plugin-promise": "^3.8.0"
   },
   "dependencies": {
-    "j-component": "git+https://github.com/JuneAndGreen/j-component.git"
+    "j-component": "latest"
   }
 }

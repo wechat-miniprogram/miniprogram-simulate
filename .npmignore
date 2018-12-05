@@ -11,3 +11,4 @@ yarn-error.log*
 test
 node_modules
 coverage
+docs
