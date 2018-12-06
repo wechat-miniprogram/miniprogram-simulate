@@ -23,10 +23,8 @@ const addClassPrefixPlugin = function (prefix = '') {
 /**
  * 编译 wxss
  */
-function compile(component) {
-  const { tagName, wxss } = component
-
-  return postcss([addClassPrefixPlugin(tagName)]).process(wxss, {
+function compile(wxss, prefix) {
+  return postcss([addClassPrefixPlugin(prefix)]).process(wxss, {
     from: undefined, // 主要是不想看到那个 warning
     map: null,
   }).css
@@ -36,6 +34,10 @@ function compile(component) {
  * 插入 wxss
  */
 function insert(wxss, id) {
+  if (!Array.isArray(wxss)) {
+    wxss = [wxss]
+  }
+
   // 删除已插入的
   document.querySelectorAll(`style#${id}`).forEach(style => {
     style.parentNode.removeChild(style)

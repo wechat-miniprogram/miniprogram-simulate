@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-simulate",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "testEnvironment": "jsdom",
     "testURL": "https://jest.test",
     "collectCoverageFrom": [
-      "src/**/*.js"
+      "src/*.js"
     ],
     "moduleDirectories": [
       "node_modules",

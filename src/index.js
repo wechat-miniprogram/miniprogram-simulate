@@ -71,7 +71,7 @@ function register(componentPath, tagName, cache) {
   component.json = _.readJson(`${componentPath}.json`)
 
   if (!component.json) {
-    throw new Error(`invalid component: ${componentPath}`)
+    throw new Error(`invalid componentPath: ${componentPath}`)
   }
 
   // 先加载 using components
@@ -90,7 +90,7 @@ function register(componentPath, tagName, cache) {
   require(componentPath)
 
   // 保存追加了已编译的 wxss
-  cache.wxss.push(wxss.compile(component))
+  cache.wxss.push(wxss.compile(component.wxss, tagName))
 
   nowLoad = oldLoad
 
