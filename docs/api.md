@@ -1,5 +1,13 @@
 # 接口
 
+* [behavior](#behaviordefinition)
+* [load](#loadcomponentpath-tagname--loaddefinition)
+* [render](#rendercomponentid-properties)
+* [match](#matchdom-html)
+* [sleep](#sleeptimeout)
+* [Class: Component](#class)
+* [Class: RootComponent](#class)
+
 ## behavior(definition)
 
 注册并返回 behavior 对象。
@@ -85,7 +93,7 @@ let id = simulate.load({
 
 ### componentId
 
-调用 [load](#load) 接口返回的 id。
+调用 [load](#loadcomponentpath-tagname--loaddefinition) 接口返回的 id。
 
 ### properties
 
@@ -111,7 +119,7 @@ const isMatch = simulate.match(dom, '<view>123</view>')
 await simulate.sleep(300) // 等待 300ms 后再继续后续代码的执行
 ```
 
-## Component
+## Class: Component
 
 组件。
 
@@ -180,7 +188,7 @@ comp.dispatchEvent('customevent', {
 comp.triggerLifeTime('moved')
 ```
 
-## RootComponent
+## Class: RootComponent
 
 根组件，继承自 [Component](#component)。亦即是说，所有 Component 支持的属性/接口，RootComponent 都支持。
 

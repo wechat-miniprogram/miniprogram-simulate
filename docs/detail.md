@@ -30,3 +30,7 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 ```
 
 这里的 other 组件在被渲染时就默认会以 other-comp 为 tagName，other 组件内的 class 就会被前缀化，加上前缀 other-comp。
+
+## jsDom
+
+因为搭建和渲染自定义组件树需要调用 dom 接口，所以
