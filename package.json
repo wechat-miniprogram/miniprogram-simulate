@@ -1,7 +1,7 @@
 {
   "name": "miniprogram-simulate",
   "version": "0.1.0",
-  "description": "",
+  "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
     "test": "jest \"./test/(.*)/(.*).test.js\" --silent --bail",
@@ -20,6 +20,11 @@
       "src"
     ]
   },
+  "keywords": [
+    "miniprogram",
+    "custom component",
+    "unit test"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/wechat-miniprogram/miniprogram-simulate.git"
