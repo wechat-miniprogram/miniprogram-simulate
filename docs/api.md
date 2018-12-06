@@ -5,8 +5,8 @@
 * [render](#rendercomponentid-properties)
 * [match](#matchdom-html)
 * [sleep](#sleeptimeout)
-* [Class: Component](#class)
-* [Class: RootComponent](#class)
+* [Class: Component](#class-component)
+* [Class: RootComponent](#class-rootcomponent)
 
 ## behavior(definition)
 
@@ -89,7 +89,7 @@ let id = simulate.load({
 
 ## render(componentId, properties)
 
-渲染自定义组件，返回 [RootComponent](#rootcomponent)。
+渲染自定义组件，返回 [RootComponent](#class-rootcomponent)。
 
 ### componentId
 
@@ -135,7 +135,7 @@ await simulate.sleep(300) // 等待 300ms 后再继续后续代码的执行
 
 #### querySelector(selector)
 
-获取符合给定匹配串的第一个节点，返回 [Component](#component) 实例。
+获取符合给定匹配串的第一个节点，返回 [Component](#class-component) 实例。
 
 > PS：支持 selector 同小程序自定义组件的 selectComponent 接口
 
@@ -145,7 +145,7 @@ const childComp = comp.querySelector('#a')
 
 #### querySelectorAll(selector)
 
-获取符合给定匹配串的所有节点，返回 [Component](#component) 实例列表
+获取符合给定匹配串的所有节点，返回 [Component](#class-component) 实例列表
 
 > PS：支持 selector 同小程序自定义组件的 selectAllComponents 接口
 
@@ -190,7 +190,7 @@ comp.triggerLifeTime('moved')
 
 ## Class: RootComponent
 
-根组件，继承自 [Component](#component)。亦即是说，所有 Component 支持的属性/接口，RootComponent 都支持。
+根组件，继承自 [Component](#class-component)。亦即是说，所有 Component 支持的属性/接口，RootComponent 都支持。
 
 ### 方法
 
