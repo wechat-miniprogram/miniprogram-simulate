@@ -8,5 +8,7 @@ test('comp1', () => {
     const parent = document.createElement('parent-wrapper')
     comp.attach(parent)
 
-    expect(simulate.match(comp.dom, '<wx-view class="index">index.test.properties</wx-view>')).toBe(true)
+    expect(simulate.match(comp.dom, '<wx-view class="main--index">index.test.properties</wx-view>')).toBe(true)
+    expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
+    expect(comp.dom.tagName).toBe('MAIN')
 })

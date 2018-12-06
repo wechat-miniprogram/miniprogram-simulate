@@ -2,6 +2,7 @@ const path = require('path')
 const jComponent = require('j-component')
 
 const _ = require('./utils')
+const wxss = require('./wxss')
 const injectPolyfill = require('./polyfill')
 const injectDefinition = require('./definition')
 
@@ -17,6 +18,9 @@ global.Component = options => {
     template: component.wxml,
     usingComponents: component.json.usingComponents,
     tagName: component.tagName,
+    options: {
+      classPrefix: component.tagName,
+    },
   }, options)
 
   component.id = jComponent.register(definition)
@@ -39,9 +43,9 @@ function behavior(definition) {
 }
 
 /**
- * 加载自定义组件
+ * 注册自定义组件
  */
-function load(componentPath, tagName) {
+function register(componentPath, tagName, cache) {
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
@@ -53,8 +57,8 @@ function load(componentPath, tagName) {
     throw new Error('componentPath must be a string')
   }
 
-  if (tagName !== undefined && typeof tagName !== 'string') {
-    throw new Error('tagName must be a string')
+  if (!tagName || typeof tagName !== 'string') {
+    tagName = 'main' // 默认标签名
   }
 
   const oldLoad = nowLoad
@@ -63,7 +67,7 @@ function load(componentPath, tagName) {
   // 读取自定义组件的静态内容
   component.tagName = tagName
   component.wxml = _.readFile(`${componentPath}.wxml`)
-  component.wxss = _.readFile(`${componentPath}.wxss`) // TODO
+  component.wxss = _.readFile(`${componentPath}.wxss`)
   component.json = _.readJson(`${componentPath}.json`)
 
   if (!component.json) {
@@ -76,7 +80,7 @@ function load(componentPath, tagName) {
   for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
     const key = usingComponentKeys[i]
     const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
-    const id = load(usingPath)
+    const id = register(usingPath, key, cache)
 
     usingComponents[key] = id
   }
@@ -85,19 +89,43 @@ function load(componentPath, tagName) {
   // eslint-disable-next-line import/no-dynamic-require
   require(componentPath)
 
+  // 保存追加了已编译的 wxss
+  cache.wxss.push(wxss.compile(component))
+
   nowLoad = oldLoad
-  componentMap[componentPath] = component
 
   return component.id
 }
 
 /**
+ * 加载自定义组件
+ */
+function load(componentPath, tagName) {
+  const cache = {
+    wxss: [],
+  }
+  const id = register(componentPath, tagName, cache)
+
+  // 存入缓存
+  componentMap[id] = cache
+
+  return id
+}
+
+/**
  * 渲染自定义组件
  */
-function render(componentId, properties) {
-  if (!componentId) throw new Error('you need to pass the componentId')
+function render(id, properties) {
+  if (!id) throw new Error('you need to pass the componentId')
 
-  return jComponent.create(componentId, properties)
+  const cache = componentMap[id]
+
+  if (cache) {
+    // 注入 wxss
+    wxss.insert(cache.wxss, id)
+  }
+
+  return jComponent.create(id, properties)
 }
 
 /**
@@ -106,7 +134,7 @@ function render(componentId, properties) {
 function match(dom, html) {
   if (!(dom instanceof window.Element) || !html || typeof html !== 'string') return false
 
-  // remove some
+  // 干掉一些换行符，以免生成不必要的 TextNode
   html = html.trim()
     .replace(/(>)[\n\r\s\t]+(<)/g, '$1$2')
 

@@ -35,6 +35,7 @@
     "eslint-plugin-promise": "^3.8.0"
   },
   "dependencies": {
-    "j-component": "latest"
+    "j-component": "latest",
+    "postcss": "^7.0.6"
   }
 }

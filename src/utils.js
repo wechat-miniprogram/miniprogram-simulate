@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 
 /**
  * 读取 json
@@ -22,8 +21,7 @@ function readFile(filePath) {
   try {
     return fs.readFileSync(filePath, 'utf8')
   } catch (err) {
-    // eslint-disable-next-line no-console
-    return console.error(err)
+    return null
   }
 }
 

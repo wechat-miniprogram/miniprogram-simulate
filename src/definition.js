@@ -1,312 +1,308 @@
 const jComponent = require('j-component')
 
+const Animation = require('./api/animation')
+
 const noop = () => {}
 
 module.exports = function () {
-    // 注册内置组件
-    // eslint-disable-next-line semi-style
-    ;[
-        'view', 'scroll-view', 'swiper', 'movable-view', 'cover-view', 'cover-view',
-        'icon', 'text', 'rich-text', 'progress',
-        'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'radio', 'slider', 'switch', 'textarea',
-        'navigator', 'function-page-navigator',
-        'audio', 'image', 'video', 'camera', 'live-player', 'live-pusher',
-        'map',
-        'canvas',
-        'open-data', 'web-view', 'ad'
-    ].forEach(name => {
-        jComponent.register({
-            id: name,
-            tagName: `wx-${name}`,
-            template: '<slot/>',
-        })
+  // 注册内置组件
+  // eslint-disable-next-line semi-style
+  [
+    'view', 'scroll-view', 'swiper', 'movable-view', 'cover-view', 'cover-view',
+    'icon', 'text', 'rich-text', 'progress',
+    'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'radio', 'slider', 'switch', 'textarea',
+    'navigator', 'function-page-navigator',
+    'audio', 'image', 'video', 'camera', 'live-player', 'live-pusher',
+    'map',
+    'canvas',
+    'open-data', 'web-view', 'ad'
+  ].forEach(name => {
+    jComponent.register({
+      id: name,
+      tagName: `wx-${name}`,
+      template: '<slot/>',
     })
+  })
+
+  // 注入 api
+  global.wx = {
+    request: noop,
+
+    uploadFile: noop,
+    downloadFile: noop,
+
+    connectSocket: noop,
+    onSocketOpen: noop,
+    onSocketError: noop,
+    sendSocketMessage: noop,
+    onSocketMessage: noop,
+    closeSocket: noop,
+    onSocketClose: noop,
+
+    chooseImage: noop,
+    previewImage: noop,
+    getImageInfo: noop,
+    saveImageToPhotosAlbum: noop,
+
+    startRecord: noop,
+    stopRecord: noop,
+
+    getRecorderManager: noop,
+
+    playVoice: noop,
+    pauseVoice: noop,
+    stopVoice: noop,
+
+    getBackgroundAudioPlayerState: noop,
+    playBackgroundAudio: noop,
+    pauseBackgroundAudio: noop,
+    seekBackgroundAudio: noop,
+    stopBackgroundAudio: noop,
+    onBackgroundAudioPlay: noop,
+    onBackgroundAudioPause: noop,
+    onBackgroundAudioStop: noop,
+
+    getBackgroundAudioManager: noop,
+
+    createAudioContext: noop,
+    createInnerAudioContext: noop,
+    getAvailableAudioSources: noop,
+
+    chooseVideo: noop,
+    saveVideoToPhotosAlbum: noop,
+
+    createVideoContext: noop,
+
+    createCameraContext: noop,
+
+    createLivePlayerContext: noop,
+    createLivePusherContext: noop,
+
+    loadFontFace: noop,
+
+    saveFile: noop,
+    getFileInfo: noop,
+    getSavedFileList: noop,
+    getSavedFileInfo: noop,
+    removeSavedFile: noop,
+    openDocument: noop,
+
+    setStorage: noop,
+    setStorageSync: noop,
+    getStorage: noop,
+    getStorageSync: noop,
+    getStorageInfo: noop,
+    getStorageInfoSync: noop,
+    removeStorage: noop,
+    removeStorageSync: noop,
+    clearStorage: noop,
+    clearStorageSync: noop,
+
+    getLocation: noop,
+    chooseLocation: noop,
+
+    openLocation: noop,
+
+    createMapContext: noop,
+
+    getSystemInfo(options = {}) {
+      const res = Object.assign({}, wx.getSystemInfoSync())
+      res.errMsg = 'getSystemInfo:ok'
+
+      if (typeof options.success === 'function') options.success(res)
+      if (typeof options.complete === 'function') options.complete(res)
+    },
+    getSystemInfoSync() {
+      return {
+        SDKVersion: '2.3.0',
+        batteryLevel: 100,
+        benchmarkLevel: 1,
+        brand: 'devtools',
+        fontSizeSetting: 16,
+        language: 'zh_CN',
+        model: 'iPhone 7 Plus',
+        pixelRatio: 3,
+        platform: 'devtools',
+        screenHeight: 736,
+        screenWidth: 414,
+        statusBarHeight: 20,
+        system: 'iOS 10.0.1',
+        version: '6.6.3',
+        windowHeight: 672,
+        windowWidth: 414,
+      }
+    },
+    canIUse: noop,
+
+    onMemoryWarning: noop,
+
+    getNetworkType: noop,
+    onNetworkStatusChange: noop,
+
+    onAccelerometerChange: noop,
+    startAccelerometer: noop,
+    stopAccelerometer: noop,
+
+    onCompassChange: noop,
+    startCompass: noop,
+    stopCompass: noop,
+
+    makePhoneCall: noop,
+
+    scanCode: noop,
+
+    setClipboardData: noop,
+    getClipboardData: noop,
+
+    openBluetoothAdapter: noop,
+    closeBluetoothAdapter: noop,
+    getBluetoothAdapterState: noop,
+    onBluetoothAdapterStateChange: noop,
+    startBluetoothDevicesDiscovery: noop,
+    stopBluetoothDevicesDiscovery: noop,
+    getBluetoothDevices: noop,
+    getConnectedBluetoothDevices: noop,
+    onBluetoothDeviceFound: noop,
+    createBLEConnection: noop,
+    closeBLEConnection: noop,
+    getBLEDeviceServices: noop,
+    getBLEDeviceCharacteristics: noop,
+    readBLECharacteristicValue: noop,
+    writeBLECharacteristicValue: noop,
+    notifyBLECharacteristicValueChange: noop,
+    onBLEConnectionStateChange: noop,
+    onBLECharacteristicValueChange: noop,
+
+    startBeaconDiscovery: noop,
+    stopBeaconDiscovery: noop,
+    getBeacons: noop,
+    onBeaconUpdate: noop,
+    onBeaconServiceChange: noop,
+
+    setScreenBrightness: noop,
+    getScreenBrightness: noop,
+    setKeepScreenOn: noop,
+
+    onUserCaptureScreen: noop,
+
+    vibrateLong: noop,
+    vibrateShort: noop,
+
+    addPhoneContact: noop,
+
+    getHCEState: noop,
+    startHCE: noop,
+    stopHCE: noop,
+    onHCEMessage: noop,
+    sendHCEMessage: noop,
+
+    startWifi: noop,
+    stopWifi: noop,
+    connectWifi: noop,
+    getWifiList: noop,
+    onGetWifiList: noop,
+    setWifiList: noop,
+    onWifiConnected: noop,
+    getConnectedWifi: noop,
 
-    // 注入 api
-    global.wx = {
-        request: noop,
-
-        uploadFile: noop,
-        downloadFile: noop,
-
-        connectSocket: noop,
-        onSocketOpen: noop,
-        onSocketError: noop,
-        sendSocketMessage: noop,
-        onSocketMessage: noop,
-        closeSocket: noop,
-        onSocketClose: noop,
-
-        chooseImage: noop,
-        previewImage: noop,
-        getImageInfo: noop,
-        saveImageToPhotosAlbum: noop,
-
-        startRecord: noop,
-        stopRecord: noop,
-
-        getRecorderManager: noop,
-
-        playVoice: noop,
-        pauseVoice: noop,
-        stopVoice: noop,
-
-        getBackgroundAudioPlayerState: noop,
-        playBackgroundAudio: noop,
-        pauseBackgroundAudio: noop,
-        seekBackgroundAudio: noop,
-        stopBackgroundAudio: noop,
-        onBackgroundAudioPlay: noop,
-        onBackgroundAudioPause: noop,
-        onBackgroundAudioStop: noop,
-
-        getBackgroundAudioManager: noop,
-
-        createAudioContext: noop,
-        createInnerAudioContext: noop,
-        getAvailableAudioSources: noop,
-
-        chooseVideo: noop,
-        saveVideoToPhotosAlbum: noop,
-
-        createVideoContext: noop,
-
-        createCameraContext: noop,
-
-        createLivePlayerContext: noop,
-        createLivePusherContext: noop,
-
-        loadFontFace: noop,
-
-        saveFile: noop,
-        getFileInfo: noop,
-        getSavedFileList: noop,
-        getSavedFileInfo: noop,
-        removeSavedFile: noop,
-        openDocument: noop,
-
-        setStorage: noop,
-        setStorageSync: noop,
-        getStorage: noop,
-        getStorageSync: noop,
-        getStorageInfo: noop,
-        getStorageInfoSync: noop,
-        removeStorage: noop,
-        removeStorageSync: noop,
-        clearStorage: noop,
-        clearStorageSync: noop,
-
-        getLocation: noop,
-        chooseLocation: noop,
-
-        openLocation: noop,
-
-        createMapContext: noop,
-
-        getSystemInfo(options = {}) {
-            const res = {
-                errMsg: 'getSystemInfo:ok',
-                SDKVersion: '2.3.0',
-                batteryLevel: 100,
-                benchmarkLevel: 1,
-                brand: 'devtools',
-                fontSizeSetting: 16,
-                language: 'zh_CN',
-                model: 'iPhone 7 Plus',
-                pixelRatio: 3,
-                platform: 'devtools',
-                screenHeight: 736,
-                screenWidth: 414,
-                statusBarHeight: 20,
-                system: 'iOS 10.0.1',
-                version: '6.6.3',
-                windowHeight: 672,
-                windowWidth: 414,
-            }
-            typeof options.success === 'function' && options.success(res)
-            typeof options.complete === 'function' && options.complete(res)
-        },
-        getSystemInfoSync() {
-            let info = {}
-            wx.getSystemInfo({
-                success(res) {
-                    info = res
-                }
-            })
-
-            delete info.errMsg
-
-            return info
-        },
-        canIUse: noop,
-
-        onMemoryWarning: noop,
-
-        getNetworkType: noop,
-        onNetworkStatusChange: noop,
-
-        onAccelerometerChange: noop,
-        startAccelerometer: noop,
-        stopAccelerometer: noop,
-
-        onCompassChange: noop,
-        startCompass: noop,
-        stopCompass: noop,
-
-        makePhoneCall: noop,
-
-        scanCode: noop,
-
-        setClipboardData: noop,
-        getClipboardData: noop,
-
-        openBluetoothAdapter: noop,
-        closeBluetoothAdapter: noop,
-        getBluetoothAdapterState: noop,
-        onBluetoothAdapterStateChange: noop,
-        startBluetoothDevicesDiscovery: noop,
-        stopBluetoothDevicesDiscovery: noop,
-        getBluetoothDevices: noop,
-        getConnectedBluetoothDevices: noop,
-        onBluetoothDeviceFound: noop,
-        createBLEConnection: noop,
-        closeBLEConnection: noop,
-        getBLEDeviceServices: noop,
-        getBLEDeviceCharacteristics: noop,
-        readBLECharacteristicValue: noop,
-        writeBLECharacteristicValue: noop,
-        notifyBLECharacteristicValueChange: noop,
-        onBLEConnectionStateChange: noop,
-        onBLECharacteristicValueChange: noop,
-
-        startBeaconDiscovery: noop,
-        stopBeaconDiscovery: noop,
-        getBeacons: noop,
-        onBeaconUpdate: noop,
-        onBeaconServiceChange: noop,
-
-        setScreenBrightness: noop,
-        getScreenBrightness: noop,
-        setKeepScreenOn: noop,
-
-        onUserCaptureScreen: noop,
-
-        vibrateLong: noop,
-        vibrateShort: noop,
-
-        addPhoneContact: noop,
-
-        getHCEState: noop,
-        startHCE: noop,
-        stopHCE: noop,
-        onHCEMessage: noop,
-        sendHCEMessage: noop,
+    showToast: noop,
+    showLoading: noop,
+    hideToast: noop,
+    hideLoading: noop,
+    showModal: noop,
+    showActionSheet: noop,
 
-        startWifi: noop,
-        stopWifi: noop,
-        connectWifi: noop,
-        getWifiList: noop,
-        onGetWifiList: noop,
-        setWifiList: noop,
-        onWifiConnected: noop,
-        getConnectedWifi: noop,
+    setNavigationBarTitle: noop,
+    showNavigationBarLoading: noop,
+    hideNavigationBarLoading: noop,
+    setNavigationBarColor: noop,
 
-        showToast: noop,
-        showLoading: noop,
-        hideToast: noop,
-        hideLoading: noop,
-        showModal: noop,
-        showActionSheet: noop,
+    setTabBarBadge: noop,
+    removeTabBarBadge: noop,
+    showTabBarRedDot: noop,
+    hideTabBarRedDot: noop,
+    setTabBarStyle: noop,
+    setTabBarItem: noop,
+    showTabBar: noop,
+    hideTabBar: noop,
 
-        setNavigationBarTitle: noop,
-        showNavigationBarLoading: noop,
-        hideNavigationBarLoading: noop,
-        setNavigationBarColor: noop,
+    setBackgroundColor: noop,
+    setBackgroundTextStyle: noop,
 
-        setTabBarBadge: noop,
-        removeTabBarBadge: noop,
-        showTabBarRedDot: noop,
-        hideTabBarRedDot: noop,
-        setTabBarStyle: noop,
-        setTabBarItem: noop,
-        showTabBar: noop,
-        hideTabBar: noop,
+    setTopBarText: noop,
 
-        setBackgroundColor: noop,
-        setBackgroundTextStyle: noop,
+    navigateTo: noop,
+    redirectTo: noop,
+    switchTab: noop,
+    navigateBack: noop,
+    reLaunch: noop,
 
-        setTopBarText: noop,
+    createAnimation(transition = {}) {
+      return new Animation(transition)
+    },
 
-        navigateTo: noop,
-        redirectTo: noop,
-        switchTab: noop,
-        navigateBack: noop,
-        reLaunch: noop,
+    pageScrollTo: noop,
 
-        createAnimation: noop,
+    createCanvasContext: noop,
+    createContext: noop,
+    drawCanvas: noop,
+    canvasToTempFilePath: noop,
+    canvasGetImageData: noop,
+    canvasPutImageData: noop,
 
-        pageScrollTo: noop,
+    startPullDownRefresh: noop,
+    stopPullDownRefresh: noop,
 
-        createCanvasContext: noop,
-        createContext: noop,
-        drawCanvas: noop,
-        canvasToTempFilePath: noop,
-        canvasGetImageData: noop,
-        canvasPutImageData: noop,
+    createSelectorQuery: noop,
 
-        startPullDownRefresh: noop,
-        stopPullDownRefresh: noop,
+    createIntersectionObserver: noop,
 
-        createSelectorQuery: noop,
+    getExtConfig: noop,
+    getExtConfigSync: noop,
 
-        createIntersectionObserver: noop,
+    login: noop,
+    checkSession: noop,
 
-        getExtConfig: noop,
-        getExtConfigSync: noop,
+    authorize: noop,
 
-        login: noop,
-        checkSession: noop,
+    getUserInfo: noop,
 
-        authorize: noop,
+    requestPayment: noop,
 
-        getUserInfo: noop,
+    showShareMenu: noop,
+    hideShareMenu: noop,
+    updateShareMenu: noop,
+    getShareInfo: noop,
 
-        requestPayment: noop,
+    chooseAddress: noop,
 
-        showShareMenu: noop,
-        hideShareMenu: noop,
-        updateShareMenu: noop,
-        getShareInfo: noop,
+    addCard: noop,
+    openCard: noop,
 
-        chooseAddress: noop,
+    openSetting: noop,
+    getSetting: noop,
 
-        addCard: noop,
-        openCard: noop,
+    getWeRunData: noop,
 
-        openSetting: noop,
-        getSetting: noop,
+    getAccountInfoSync: noop,
 
-        getWeRunData: noop,
+    navigateToMiniProgram: noop,
+    navigateBackMiniProgram: noop,
 
-        getAccountInfoSync: noop,
+    chooseInvoiceTitle: noop,
 
-        navigateToMiniProgram: noop,
-        navigateBackMiniProgram: noop,
+    checkIsSupportSoterAuthentication: noop,
+    startSoterAuthentication: noop,
+    checkIsSoterEnrolledInDevice: noop,
 
-        chooseInvoiceTitle: noop,
+    getUpdateManager: noop,
 
-        checkIsSupportSoterAuthentication: noop,
-        startSoterAuthentication: noop,
-        checkIsSoterEnrolledInDevice: noop,
+    createWorker: noop,
 
-        getUpdateManager: noop,
+    getLogManager: noop,
 
-        createWorker: noop,
+    reportMonitor: noop,
 
-        getLogManager: noop,
-
-        reportMonitor: noop,
-
-        setEnableDebug: noop,
-    }
+    setEnableDebug: noop,
+  }
 }

@@ -81,7 +81,10 @@ module.exports = {
     'semi': [
       'error',
       'never'
-    ]
+    ],
+
+    // 补充规则
+    'max-len': 'off',
   },
   'globals': {
     'window': true,

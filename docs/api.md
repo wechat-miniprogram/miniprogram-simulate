@@ -1,4 +1,4 @@
-# api
+# 接口
 
 ## behavior(definition)
 
@@ -28,7 +28,7 @@ const id = simulate.load('/path/to/component')
 
 ### tagName
 
-可选字段，当自定义组件被实例化后对应的 dom 节点的标签名。如果不传此字段则默认用 componentId 作为标签名。
+可选字段，当自定义组件被实例化后对应的 dom 节点的标签名。如果不传此字段则默认为 main。
 
 ```js
 const id = simulate.load('/path/to/component', 'custom-comp')
