@@ -1,6 +1,13 @@
 const Animation = require('./animation')
 
-const noop = () => {}
+const noop = (options = {}) => {
+    const res = {
+        errMsg: 'mockApi:ok',
+    }
+
+    if (typeof options.success === 'function') options.success(res)
+    if (typeof options.complete === 'function') options.complete(res)
+}
 
 module.exports = {
     request: noop,
@@ -215,7 +222,7 @@ module.exports = {
     reLaunch: noop,
 
     createAnimation(transition = {}) {
-      return new Animation(transition)
+        return new Animation(transition)
     },
 
     pageScrollTo: noop,

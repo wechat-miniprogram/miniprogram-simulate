@@ -6,5 +6,7 @@
 * [外链 wxss](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxss.html#%E6%A0%B7%E5%BC%8F%E5%AF%BC%E5%85%A5)
 * [template 模板](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/template.html)
 * [外链 wxml](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/import.html)
+* wxss 支持 rpx
+* wx 对象上的接口模拟
 * 插件（未来几乎不会考虑支持）
 * ...
