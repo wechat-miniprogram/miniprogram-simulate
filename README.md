@@ -22,10 +22,12 @@ npm install --save-dev miniprogram-simulate
 ```js
 const simulate = require('miniprogram-simulate')
 
-const id = simulate.load('/components/comp/index') // 加载自定义组件
-const comp = simulate.render(id) // 渲染自定义组件
-
-// 使用自定义组件封装实例 comp 对象来进行各种单元测试
+test('test sth', () => {
+    const id = simulate.load('/components/comp/index') // 加载自定义组件
+    const comp = simulate.render(id) // 渲染自定义组件
+    
+    // 使用自定义组件封装实例 comp 对象来进行各种单元测试
+})
 ```
 
 以上只是一个简单的例子，实际上这个工具集必须搭配 jest 或 jsdom/mocha 等测试框架来使用，更为详细的使用细节请参阅下述文档：
