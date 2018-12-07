@@ -4,9 +4,9 @@
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
-    "test": "jest \"./test/(.*)/(.*).test.js\" --silent --bail",
-    "coverage": "jest \"./test/(.*)/(.*).test.js\" --coverage --bail",
-    "coveralls": "jest \"./test/(.*)/(.*).test.js\" --coverage && cat ./coverage/lcov.info | coveralls",
+    "test": "jest ./test/* --silent --bail",
+    "coverage": "jest ./test/* --coverage --bail",
+    "coveralls": "jest ./test/* --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint \"src/**/*.js\" --fix"
   },
   "jest": {
