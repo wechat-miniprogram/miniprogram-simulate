@@ -7,5 +7,13 @@ Component({
       value: 'index.properties'
     },
   },
+  data: {
+    a: 123,
+  },
   behaviors: [behavior],
+  methods: {
+    print() {
+        return this.data.a
+    },
+  },
 })

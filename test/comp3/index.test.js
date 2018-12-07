@@ -18,4 +18,6 @@ test('comp3', () => {
     view.dispatchEvent('touchstart')
     view.dispatchEvent('touchend')
     expect(view.dom.innerHTML).toBe('<div>comp3.properties</div>')
+
+    expect(comp.instance.print()).toBe(123)
 })
