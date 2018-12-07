@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest \"./test/(.*)/(.*).test.js\" --silent --bail",
-    "coverage-local": "jest \"./test/(.*)/(.*).test.js\" --coverage --bail",
-    "coverage": "jest \"./test/(.*)/(.*).test.js\" --coverage --coverageReporters=text-lcov | coveralls",
+    "coverage": "jest \"./test/(.*)/(.*).test.js\" --coverage --bail",
+    "coveralls": "jest \"./test/(.*)/(.*).test.js\" --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint \"src/**/*.js\" --fix"
   },
   "jest": {
