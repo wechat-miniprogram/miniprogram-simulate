@@ -5,8 +5,10 @@ const noop = (options = {}) => {
         errMsg: 'mockApi:ok',
     }
 
-    if (typeof options.success === 'function') options.success(res)
-    if (typeof options.complete === 'function') options.complete(res)
+    setTimeout(() => {
+        if (typeof options.success === 'function') options.success(res)
+        if (typeof options.complete === 'function') options.complete(res)
+    }, 0)
 }
 
 module.exports = {
