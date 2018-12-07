@@ -1,9 +1,10 @@
 # 细节
 
-为了尽量模仿出和小程序相似的环境，会对一些细节表现作一些调整。
+为了尽量模仿出和小程序相似的表现，会对一些细节实现作一些调整。
 
 * [class 前缀化](#class-前缀化)
 * [dom 接口模拟](#dom-接口模拟)
+* [相对路径](#相对路径)
 
 ## class 前缀化
 
@@ -39,3 +40,31 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 因为搭建和渲染自定义组件树需要调用 dom 接口，所以需要在 node 端模拟出 dom 接口。假如你使用的是 [mocha](https://www.npmjs.com/package/mocha) 或者是其他一些没有提供 dom 模拟功能的测试框架的话，一个比较好的解决方式是使用 [jsdom](https://www.npmjs.com/package/jsdom) 库来进行模拟。假如你使用的是如 [jest](https://www.npmjs.com/package/jest) 等已内置 dom 模拟功能的测试框架的话，则直接使用即可。
 
 > PS：推荐使用 jest 来搭配此工具集使用，jest 内部已集成 jsdom，通过配置 testEnvironment 字段的值为 jsdom 即可以类浏览器环境的方式来执行测试用例。
+
+## 相对路径
+
+因为在此测试环境中没有小程序根路径的概念，所以原本支持绝对路径的地方必须改为相对路径方可进行测试，比如下述例子中的 usingComponents 字段：
+
+```json
+{
+    "component": true,
+    "usingComponents": {
+        "other-comp": "/components/other"
+    }
+}
+```
+
+在小程序中是支持这种写法的，它会从小程序根路径开始寻找对应组件，但是在应用此工具集时，需要改成相对路径写法：
+
+```json
+{
+    "component": true,
+    "usingComponents": {
+        "other-comp": "./other"
+    }
+}
+```
+
+这样才能正确找到使用的自定义组件。
+
+> PS：并不是所有绝对路径都需要改成相对路径，有些绝对路径在测试过程中我们不需要真实去处理，所以直接保留也没有太大问题。
