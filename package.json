@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-simulate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
