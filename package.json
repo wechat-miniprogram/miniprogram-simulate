@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest ./test/* --silent --bail",
     "coverage": "jest ./test/* --coverage --bail",
-    "coveralls": "jest ./test/* --coverage --coverageReporters=text-lcov | coveralls",
     "codecov": "jest ./test/* --coverage && codecov",
     "lint": "eslint \"src/**/*.js\" --fix"
   },
@@ -34,7 +33,6 @@
   "license": "MIT",
   "devDependencies": {
     "codecov": "^3.1.0",
-    "coveralls": "^3.0.2",
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
