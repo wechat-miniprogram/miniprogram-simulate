@@ -67,7 +67,7 @@ function register(componentPath, tagName, cache) {
   // 读取自定义组件的静态内容
   component.tagName = tagName
   component.wxml = _.readFile(`${componentPath}.wxml`)
-  component.wxss = _.readFile(`${componentPath}.wxss`)
+  component.wxss = wxss.getContent(`${componentPath}.wxss`)
   component.json = _.readJson(`${componentPath}.json`)
 
   if (!component.json) {

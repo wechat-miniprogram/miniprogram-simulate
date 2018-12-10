@@ -1,4 +1,5 @@
 const postcss = require('postcss')
+const path = require('path')
 
 const _ = require('./utils')
 
@@ -20,6 +21,42 @@ const addClassPrefixPlugin = function (prefix = '') {
       }
     })
   })
+}
+
+/**
+ * 获取 import 列表
+ */
+function getImportList(wxss, filePath) {
+  const reg = /@import\s+(?:(?:"([^"]+)")|(?:'([^"]+)'));/ig
+  const importList = []
+  let execRes = reg.exec(wxss)
+
+  while (execRes && (execRes[1] || execRes[2])) {
+    importList.push({
+      code: execRes[0],
+      path: path.join(path.dirname(filePath), execRes[1] || execRes[2]),
+    })
+    execRes = reg.exec(wxss)
+  }
+
+  return importList
+}
+
+/**
+ * 获取 wxss 内容
+ */
+function getContent(filePath) {
+  let wxss = _.readFile(filePath)
+
+  if (wxss) {
+    const importList = getImportList(wxss, filePath)
+    
+    importList.forEach(item => {
+      wxss = wxss.replace(item.code, getContent(item.path))
+    })
+  }
+
+  return wxss || ''
 }
 
 /**
@@ -55,6 +92,7 @@ function insert(wxss, id) {
 
 
 module.exports = {
+  getContent,
   compile,
   insert,
 }

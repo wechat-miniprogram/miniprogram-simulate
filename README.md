@@ -36,6 +36,7 @@ test('test sth', () => {
 * [接口文档](./docs/api.md)
 * [细节实现](./docs/detail.md)
 * [暂不支持特性](./docs/todo.md)
+* [更新日志](./docs/update.md)
 
 ## 协议
 

@@ -1,0 +1,18 @@
+@import "./i_am_Special-Name.wxss";
+
+.a {
+    color: green;
+    width: 100%;
+}
+
+@import "./inner-folder/THIS-IS-WXSS.wxss";
+
+.b {
+    height: 100%;
+}
+
+.c {
+    background-color: yellow;
+    background-repeat: no-repeat;
+    font-size: 13px;
+}

@@ -1,6 +1,34 @@
+const path = require('path')
+
 const wxss = require('../../src/wxss')
 
-test('wxss: compile', () => {
+test('getContent', () => {
+    expect(wxss.getContent(path.join(__dirname, './wxss/index.wxss'))).toBe(`#id {
+    position: absolute;
+    left: 0;
+    right: 0;
+}\n
+#haha {
+    color: red;
+}\n\n
+.a {
+    color: green;
+    width: 100%;
+}\n
+#hehe {
+    color: black;
+}\n
+.b {
+    height: 100%;
+}\n
+.c {
+    background-color: yellow;
+    background-repeat: no-repeat;
+    font-size: 13px;
+}\n`)
+})
+
+test('compile', () => {
     expect(wxss.compile('.class{width:100%;}', 'a')).toBe('.a--class{width:100%;}')
     expect(wxss.compile('.class {width:100%;}', 'a')).toBe('.a--class {width:100%;}')
     expect(wxss.compile('.class .class-2{width:100%;}', 'a')).toBe('.a--class .a--class-2{width:100%;}')
@@ -14,7 +42,7 @@ test('wxss: compile', () => {
     expect(wxss.compile(`
         .class.class-2{
             width: 100%;
-            height: 100px;
+            height: 100rpx;
         }
         #id.class_3 {
             display: block;
@@ -27,7 +55,7 @@ test('wxss: compile', () => {
     `, 'abc-d_ef')).toBe(`
         .abc-d_ef--class.abc-d_ef--class-2{
             width: 100%;
-            height: 100px;
+            height: 100rpx;
         }
         #id.abc-d_ef--class_3 {
             display: block;
@@ -40,13 +68,13 @@ test('wxss: compile', () => {
     `)
 })
 
-test('wxss: insert', () => {
+test('insert', () => {
     const id = 'abc'
     expect(document.querySelector(`style#${id}`)).toBe(null)
 
     wxss.insert('.class{width:100%;}', id)
     expect(document.querySelector(`style#${id}`).innerHTML).toBe('.class{width:100%;}')
 
-    wxss.insert(['.class{width:100%;}', '.class2{height:100px;}'], id)
+    wxss.insert(['.class{width:100%;}', '.class2{height:100rpx;}'], id)
     expect(document.querySelector(`style#${id}`).innerHTML).toBe('.class{width:100%;}.class2{height:100px;}')
 })
