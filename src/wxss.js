@@ -1,5 +1,7 @@
 const postcss = require('postcss')
 
+const _ = require('./utils')
+
 /**
  * 追加 class 前缀插件
  */
@@ -46,8 +48,8 @@ function insert(wxss, id) {
   const style = document.createElement('style')
   style.type = 'text/css'
   style.id = id
-  style.innerHTML = wxss.join(''),
-  
+  style.innerHTML = _.transformRpx(wxss.join(''))
+
   document.getElementsByTagName('head').item(0).appendChild(style)
 }
 

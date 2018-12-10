@@ -25,7 +25,15 @@ function readFile(filePath) {
   }
 }
 
+/**
+ * 转换 rpx 单位为 px 单位
+ */
+function transformRpx(style) {
+  return style.replace(/(\d+)rpx/ig, '$1px')
+}
+
 module.exports = {
   readJson,
   readFile,
+  transformRpx,
 }
