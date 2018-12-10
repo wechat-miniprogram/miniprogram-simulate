@@ -1,4 +1,4 @@
-@import "./i_am_Special-Name.wxss";
+@import "./I_am_Special-Name.wxss";
 
 .a {
     color: green;
