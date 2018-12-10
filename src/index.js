@@ -7,6 +7,7 @@ const injectPolyfill = require('./polyfill')
 const injectDefinition = require('./definition')
 
 const componentMap = {}
+const wxmlCache = {}
 let nowLoad = null
 
 /**
@@ -66,7 +67,7 @@ function register(componentPath, tagName, cache) {
 
   // 读取自定义组件的静态内容
   component.tagName = tagName
-  component.wxml = _.readFile(`${componentPath}.wxml`)
+  component.wxml = wxmlCache[componentPath] || _.readFile(`${componentPath}.wxml`)
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
   component.json = _.readJson(`${componentPath}.json`)
 
@@ -88,9 +89,13 @@ function register(componentPath, tagName, cache) {
   // require 自定义组件的 js
   // eslint-disable-next-line import/no-dynamic-require
   require(componentPath)
+  delete require.cache[require.resolve(componentPath)]
 
   // 保存追加了已编译的 wxss
   cache.wxss.push(wxss.compile(component.wxss, tagName))
+
+  // 缓存 wxml
+  componentPath[componentPath] == component.wxml
 
   nowLoad = oldLoad
 

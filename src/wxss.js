@@ -3,6 +3,8 @@ const path = require('path')
 
 const _ = require('./utils')
 
+const wxssCache = {}
+
 /**
  * 追加 class 前缀插件
  */
@@ -46,6 +48,11 @@ function getImportList(wxss, filePath) {
  * 获取 wxss 内容
  */
 function getContent(filePath) {
+  // 判断缓存
+  if (wxssCache[filePath]) {
+    return wxssCache[filePath]
+  }
+
   let wxss = _.readFile(filePath)
 
   if (wxss) {
@@ -56,7 +63,10 @@ function getContent(filePath) {
     })
   }
 
-  return wxss || ''
+  // 缓存 wxss
+  wxssCache[filePath] = wxss || ''
+
+  return wxssCache[filePath]
 }
 
 /**
