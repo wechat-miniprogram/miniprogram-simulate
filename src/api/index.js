@@ -1,295 +1,263 @@
 const Animation = require('./animation')
+const dataApi = require('./data')
+const systemApi = require('./system')
+const _ = require('./utils')
 
-const noop = (options = {}) => {
+const mockSync = (ret) => () => ret
+const mockAsync = (name) => (options = {}) => {
   const res = {
-    errMsg: 'mockApi:ok',
+    errMsg: `${name}:ok`,
   }
-
-  setTimeout(() => {
-    if (typeof options.success === 'function') options.success(res)
-    if (typeof options.complete === 'function') options.complete(res)
-  }, 0)
+  _.runInAsync(options, res)
 }
 
 module.exports = {
-  request: noop,
+  request: mockAsync('request'),
 
-  uploadFile: noop,
-  downloadFile: noop,
+  uploadFile: mockAsync('uploadFile'),
+  downloadFile: mockAsync('downloadFile'),
 
-  connectSocket: noop,
-  onSocketOpen: noop,
-  onSocketError: noop,
-  sendSocketMessage: noop,
-  onSocketMessage: noop,
-  closeSocket: noop,
-  onSocketClose: noop,
+  connectSocket: mockAsync('connectSocket'),
+  onSocketOpen: mockAsync('onSocketOpen'),
+  onSocketError: mockAsync('onSocketError'),
+  sendSocketMessage: mockAsync('sendSocketMessage'),
+  onSocketMessage: mockAsync('onSocketMessage'),
+  closeSocket: mockAsync('closeSocket'),
+  onSocketClose: mockAsync('onSocketClose'),
 
-  chooseImage: noop,
-  previewImage: noop,
-  getImageInfo: noop,
-  saveImageToPhotosAlbum: noop,
+  chooseImage: mockAsync('chooseImage'),
+  previewImage: mockAsync('previewImage'),
+  getImageInfo: mockAsync('getImageInfo'),
+  saveImageToPhotosAlbum: mockAsync('saveImageToPhotosAlbum'),
 
-  startRecord: noop,
-  stopRecord: noop,
+  startRecord: mockAsync('startRecord'),
+  stopRecord: mockAsync('stopRecord'),
 
-  getRecorderManager: noop,
+  getRecorderManager: mockAsync('getRecorderManager'),
 
-  playVoice: noop,
-  pauseVoice: noop,
-  stopVoice: noop,
+  playVoice: mockAsync('playVoice'),
+  pauseVoice: mockAsync('pauseVoice'),
+  stopVoice: mockAsync('stopVoice'),
 
-  getBackgroundAudioPlayerState: noop,
-  playBackgroundAudio: noop,
-  pauseBackgroundAudio: noop,
-  seekBackgroundAudio: noop,
-  stopBackgroundAudio: noop,
-  onBackgroundAudioPlay: noop,
-  onBackgroundAudioPause: noop,
-  onBackgroundAudioStop: noop,
+  getBackgroundAudioPlayerState: mockAsync('getBackgroundAudioPlayerState'),
+  playBackgroundAudio: mockAsync('playBackgroundAudio'),
+  pauseBackgroundAudio: mockAsync('pauseBackgroundAudio'),
+  seekBackgroundAudio: mockAsync('seekBackgroundAudio'),
+  stopBackgroundAudio: mockAsync('stopBackgroundAudio'),
+  onBackgroundAudioPlay: mockAsync('onBackgroundAudioPlay'),
+  onBackgroundAudioPause: mockAsync('onBackgroundAudioPause'),
+  onBackgroundAudioStop: mockAsync('onBackgroundAudioStop'),
 
-  getBackgroundAudioManager: noop,
+  getBackgroundAudioManager: mockAsync('getBackgroundAudioManager'),
 
-  createAudioContext: noop,
-  createInnerAudioContext: noop,
-  getAvailableAudioSources: noop,
+  createAudioContext: mockAsync('createAudioContext'),
+  createInnerAudioContext: mockAsync('createInnerAudioContext'),
+  getAvailableAudioSources: mockAsync('getAvailableAudioSources'),
 
-  chooseVideo: noop,
-  saveVideoToPhotosAlbum: noop,
+  chooseVideo: mockAsync('chooseVideo'),
+  saveVideoToPhotosAlbum: mockAsync('saveVideoToPhotosAlbum'),
 
-  createVideoContext: noop,
+  createVideoContext: mockAsync('createVideoContext'),
 
-  createCameraContext: noop,
+  createCameraContext: mockAsync('createCameraContext'),
 
-  createLivePlayerContext: noop,
-  createLivePusherContext: noop,
+  createLivePlayerContext: mockAsync('createLivePlayerContext'),
+  createLivePusherContext: mockAsync('createLivePusherContext'),
 
-  loadFontFace: noop,
+  loadFontFace: mockAsync('loadFontFace'),
 
-  saveFile: noop,
-  getFileInfo: noop,
-  getSavedFileList: noop,
-  getSavedFileInfo: noop,
-  removeSavedFile: noop,
-  openDocument: noop,
+  saveFile: mockAsync('saveFile'),
+  getFileInfo: mockAsync('getFileInfo'),
+  getSavedFileList: mockAsync('getSavedFileList'),
+  getSavedFileInfo: mockAsync('getSavedFileInfo'),
+  removeSavedFile: mockAsync('removeSavedFile'),
+  openDocument: mockAsync('openDocument'),
 
-  setStorage: noop,
-  setStorageSync: noop,
-  getStorage: noop,
-  getStorageSync: noop,
-  getStorageInfo: noop,
-  getStorageInfoSync: noop,
-  removeStorage: noop,
-  removeStorageSync: noop,
-  clearStorage: noop,
-  clearStorageSync: noop,
+  // data
+  ...dataApi,
 
-  getLocation: noop,
-  chooseLocation: noop,
+  getLocation: mockAsync('getLocation'),
+  chooseLocation: mockAsync('chooseLocation'),
 
-  openLocation: noop,
+  openLocation: mockAsync('openLocation'),
 
-  createMapContext: noop,
+  createMapContext: mockAsync('createMapContext'),
 
-  getSystemInfo(options = {}) {
-    const res = Object.assign({}, wx.getSystemInfoSync())
-    res.errMsg = 'getSystemInfo:ok'
+  // system
+  ...systemApi,
 
-    setTimeout(() => {
-      if (typeof options.success === 'function') options.success(res)
-      if (typeof options.complete === 'function') options.complete(res)
-    }, 0)
-  },
-  getSystemInfoSync() {
-    return {
-      SDKVersion: '2.3.0',
-      batteryLevel: 100,
-      benchmarkLevel: 1,
-      brand: 'devtools',
-      fontSizeSetting: 16,
-      language: 'zh_CN',
-      model: 'iPhone 7 Plus',
-      pixelRatio: 3,
-      platform: 'devtools',
-      screenHeight: 736,
-      screenWidth: 414,
-      statusBarHeight: 20,
-      system: 'iOS 10.0.1',
-      version: '6.6.3',
-      windowHeight: 672,
-      windowWidth: 414,
-    }
-  },
-  canIUse: noop,
+  // base
+  canIUse: mockSync(true),
 
-  onMemoryWarning: noop,
+  onMemoryWarning: mockAsync('onMemoryWarning'),
 
-  getNetworkType: noop,
-  onNetworkStatusChange: noop,
+  getNetworkType: mockAsync('getNetworkType'),
+  onNetworkStatusChange: mockAsync('onNetworkStatusChange'),
 
-  onAccelerometerChange: noop,
-  startAccelerometer: noop,
-  stopAccelerometer: noop,
+  onAccelerometerChange: mockAsync('onAccelerometerChange'),
+  startAccelerometer: mockAsync('startAccelerometer'),
+  stopAccelerometer: mockAsync('stopAccelerometer'),
 
-  onCompassChange: noop,
-  startCompass: noop,
-  stopCompass: noop,
+  onCompassChange: mockAsync('onCompassChange'),
+  startCompass: mockAsync('startCompass'),
+  stopCompass: mockAsync('stopCompass'),
 
-  makePhoneCall: noop,
+  makePhoneCall: mockAsync('makePhoneCall'),
 
-  scanCode: noop,
+  scanCode: mockAsync('scanCode'),
 
-  setClipboardData: noop,
-  getClipboardData: noop,
+  setClipboardData: mockAsync('setClipboardData'),
+  getClipboardData: mockAsync('getClipboardData'),
 
-  openBluetoothAdapter: noop,
-  closeBluetoothAdapter: noop,
-  getBluetoothAdapterState: noop,
-  onBluetoothAdapterStateChange: noop,
-  startBluetoothDevicesDiscovery: noop,
-  stopBluetoothDevicesDiscovery: noop,
-  getBluetoothDevices: noop,
-  getConnectedBluetoothDevices: noop,
-  onBluetoothDeviceFound: noop,
-  createBLEConnection: noop,
-  closeBLEConnection: noop,
-  getBLEDeviceServices: noop,
-  getBLEDeviceCharacteristics: noop,
-  readBLECharacteristicValue: noop,
-  writeBLECharacteristicValue: noop,
-  notifyBLECharacteristicValueChange: noop,
-  onBLEConnectionStateChange: noop,
-  onBLECharacteristicValueChange: noop,
+  openBluetoothAdapter: mockAsync('openBluetoothAdapter'),
+  closeBluetoothAdapter: mockAsync('closeBluetoothAdapter'),
+  getBluetoothAdapterState: mockAsync('getBluetoothAdapterState'),
+  onBluetoothAdapterStateChange: mockAsync('onBluetoothAdapterStateChange'),
+  startBluetoothDevicesDiscovery: mockAsync('startBluetoothDevicesDiscovery'),
+  stopBluetoothDevicesDiscovery: mockAsync('stopBluetoothDevicesDiscovery'),
+  getBluetoothDevices: mockAsync('getBluetoothDevices'),
+  getConnectedBluetoothDevices: mockAsync('getConnectedBluetoothDevices'),
+  onBluetoothDeviceFound: mockAsync('onBluetoothDeviceFound'),
+  createBLEConnection: mockAsync('createBLEConnection'),
+  closeBLEConnection: mockAsync('closeBLEConnection'),
+  getBLEDeviceServices: mockAsync('getBLEDeviceServices'),
+  getBLEDeviceCharacteristics: mockAsync('getBLEDeviceCharacteristics'),
+  readBLECharacteristicValue: mockAsync('readBLECharacteristicValue'),
+  writeBLECharacteristicValue: mockAsync('writeBLECharacteristicValue'),
+  notifyBLECharacteristicValueChange: mockAsync('notifyBLECharacteristicValueChange'),
+  onBLEConnectionStateChange: mockAsync('onBLEConnectionStateChange'),
+  onBLECharacteristicValueChange: mockAsync('onBLECharacteristicValueChange'),
 
-  startBeaconDiscovery: noop,
-  stopBeaconDiscovery: noop,
-  getBeacons: noop,
-  onBeaconUpdate: noop,
-  onBeaconServiceChange: noop,
+  startBeaconDiscovery: mockAsync('startBeaconDiscovery'),
+  stopBeaconDiscovery: mockAsync('stopBeaconDiscovery'),
+  getBeacons: mockAsync('getBeacons'),
+  onBeaconUpdate: mockAsync('onBeaconUpdate'),
+  onBeaconServiceChange: mockAsync('onBeaconServiceChange'),
 
-  setScreenBrightness: noop,
-  getScreenBrightness: noop,
-  setKeepScreenOn: noop,
+  setScreenBrightness: mockAsync('setScreenBrightness'),
+  getScreenBrightness: mockAsync('getScreenBrightness'),
+  setKeepScreenOn: mockAsync('setKeepScreenOn'),
 
-  onUserCaptureScreen: noop,
+  onUserCaptureScreen: mockAsync('onUserCaptureScreen'),
 
-  vibrateLong: noop,
-  vibrateShort: noop,
+  vibrateLong: mockAsync('vibrateLong'),
+  vibrateShort: mockAsync('vibrateShort'),
 
-  addPhoneContact: noop,
+  addPhoneContact: mockAsync('addPhoneContact'),
 
-  getHCEState: noop,
-  startHCE: noop,
-  stopHCE: noop,
-  onHCEMessage: noop,
-  sendHCEMessage: noop,
+  getHCEState: mockAsync('getHCEState'),
+  startHCE: mockAsync('startHCE'),
+  stopHCE: mockAsync('stopHCE'),
+  onHCEMessage: mockAsync('onHCEMessage'),
+  sendHCEMessage: mockAsync('sendHCEMessage'),
 
-  startWifi: noop,
-  stopWifi: noop,
-  connectWifi: noop,
-  getWifiList: noop,
-  onGetWifiList: noop,
-  setWifiList: noop,
-  onWifiConnected: noop,
-  getConnectedWifi: noop,
+  startWifi: mockAsync('startWifi'),
+  stopWifi: mockAsync('stopWifi'),
+  connectWifi: mockAsync('connectWifi'),
+  getWifiList: mockAsync('getWifiList'),
+  onGetWifiList: mockAsync('onGetWifiList'),
+  setWifiList: mockAsync('setWifiList'),
+  onWifiConnected: mockAsync('onWifiConnected'),
+  getConnectedWifi: mockAsync('getConnectedWifi'),
 
-  showToast: noop,
-  showLoading: noop,
-  hideToast: noop,
-  hideLoading: noop,
-  showModal: noop,
-  showActionSheet: noop,
+  showToast: mockAsync('showToast'),
+  showLoading: mockAsync('showLoading'),
+  hideToast: mockAsync('hideToast'),
+  hideLoading: mockAsync('hideLoading'),
+  showModal: mockAsync('showModal'),
+  showActionSheet: mockAsync('showActionSheet'),
 
-  setNavigationBarTitle: noop,
-  showNavigationBarLoading: noop,
-  hideNavigationBarLoading: noop,
-  setNavigationBarColor: noop,
+  setNavigationBarTitle: mockAsync('setNavigationBarTitle'),
+  showNavigationBarLoading: mockAsync('showNavigationBarLoading'),
+  hideNavigationBarLoading: mockAsync('hideNavigationBarLoading'),
+  setNavigationBarColor: mockAsync('setNavigationBarColor'),
 
-  setTabBarBadge: noop,
-  removeTabBarBadge: noop,
-  showTabBarRedDot: noop,
-  hideTabBarRedDot: noop,
-  setTabBarStyle: noop,
-  setTabBarItem: noop,
-  showTabBar: noop,
-  hideTabBar: noop,
+  setTabBarBadge: mockAsync('setTabBarBadge'),
+  removeTabBarBadge: mockAsync('removeTabBarBadge'),
+  showTabBarRedDot: mockAsync('showTabBarRedDot'),
+  hideTabBarRedDot: mockAsync('hideTabBarRedDot'),
+  setTabBarStyle: mockAsync('setTabBarStyle'),
+  setTabBarItem: mockAsync('setTabBarItem'),
+  showTabBar: mockAsync('showTabBar'),
+  hideTabBar: mockAsync('hideTabBar'),
 
-  setBackgroundColor: noop,
-  setBackgroundTextStyle: noop,
+  setBackgroundColor: mockAsync('setBackgroundColor'),
+  setBackgroundTextStyle: mockAsync('setBackgroundTextStyle'),
 
-  setTopBarText: noop,
+  setTopBarText: mockAsync('setTopBarText'),
 
-  navigateTo: noop,
-  redirectTo: noop,
-  switchTab: noop,
-  navigateBack: noop,
-  reLaunch: noop,
+  // route
+  navigateTo: mockAsync('navigateTo'),
+  redirectTo: mockAsync('redirectTo'),
+  switchTab: mockAsync('switchTab'),
+  navigateBack: mockAsync('navigateBack'),
+  reLaunch: mockAsync('reLaunch'),
 
   createAnimation(transition = {}) {
     return new Animation(transition)
   },
 
-  pageScrollTo: noop,
+  pageScrollTo: mockAsync('pageScrollTo'),
 
-  createCanvasContext: noop,
-  createContext: noop,
-  drawCanvas: noop,
-  canvasToTempFilePath: noop,
-  canvasGetImageData: noop,
-  canvasPutImageData: noop,
+  createCanvasContext: mockAsync('createCanvasContext'),
+  createContext: mockAsync('createContext'),
+  drawCanvas: mockAsync('drawCanvas'),
+  canvasToTempFilePath: mockAsync('canvasToTempFilePath'),
+  canvasGetImageData: mockAsync('canvasGetImageData'),
+  canvasPutImageData: mockAsync('canvasPutImageData'),
 
-  startPullDownRefresh: noop,
-  stopPullDownRefresh: noop,
+  startPullDownRefresh: mockAsync('startPullDownRefresh'),
+  stopPullDownRefresh: mockAsync('stopPullDownRefresh'),
 
-  createSelectorQuery: noop,
+  createSelectorQuery: mockAsync('createSelectorQuery'),
 
-  createIntersectionObserver: noop,
+  createIntersectionObserver: mockAsync('createIntersectionObserver'),
 
-  getExtConfig: noop,
-  getExtConfigSync: noop,
+  getExtConfig: mockAsync('getExtConfig'),
+  getExtConfigSync: mockAsync('getExtConfigSync'),
 
-  login: noop,
-  checkSession: noop,
+  login: mockAsync('login'),
+  checkSession: mockAsync('checkSession'),
 
-  authorize: noop,
+  authorize: mockAsync('authorize'),
 
-  getUserInfo: noop,
+  getUserInfo: mockAsync('getUserInfo'),
 
-  requestPayment: noop,
+  requestPayment: mockAsync('requestPayment'),
 
-  showShareMenu: noop,
-  hideShareMenu: noop,
-  updateShareMenu: noop,
-  getShareInfo: noop,
+  showShareMenu: mockAsync('showShareMenu'),
+  hideShareMenu: mockAsync('hideShareMenu'),
+  updateShareMenu: mockAsync('updateShareMenu'),
+  getShareInfo: mockAsync('getShareInfo'),
 
-  chooseAddress: noop,
+  chooseAddress: mockAsync('chooseAddress'),
 
-  addCard: noop,
-  openCard: noop,
+  addCard: mockAsync('addCard'),
+  openCard: mockAsync('openCard'),
 
-  openSetting: noop,
-  getSetting: noop,
+  openSetting: mockAsync('openSetting'),
+  getSetting: mockAsync('getSetting'),
 
-  getWeRunData: noop,
+  getWeRunData: mockAsync('getWeRunData'),
 
-  getAccountInfoSync: noop,
+  getAccountInfoSync: mockAsync('getAccountInfoSync'),
 
-  navigateToMiniProgram: noop,
-  navigateBackMiniProgram: noop,
+  navigateToMiniProgram: mockAsync('navigateToMiniProgram'),
+  navigateBackMiniProgram: mockAsync('navigateBackMiniProgram'),
 
-  chooseInvoiceTitle: noop,
+  chooseInvoiceTitle: mockAsync('chooseInvoiceTitle'),
 
-  checkIsSupportSoterAuthentication: noop,
-  startSoterAuthentication: noop,
-  checkIsSoterEnrolledInDevice: noop,
+  checkIsSupportSoterAuthentication: mockAsync('checkIsSupportSoterAuthentication'),
+  startSoterAuthentication: mockAsync('startSoterAuthentication'),
+  checkIsSoterEnrolledInDevice: mockAsync('checkIsSoterEnrolledInDevice'),
 
-  getUpdateManager: noop,
+  getUpdateManager: mockAsync('getUpdateManager'),
 
-  createWorker: noop,
+  createWorker: mockAsync('createWorker'),
 
-  getLogManager: noop,
+  getLogManager: mockAsync('getLogManager'),
 
-  reportMonitor: noop,
+  reportMonitor: mockAsync('reportMonitor'),
 
-  setEnableDebug: noop,
+  setEnableDebug: mockAsync('setEnableDebug'),
 }
