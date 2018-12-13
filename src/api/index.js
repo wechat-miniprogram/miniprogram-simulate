@@ -1,6 +1,5 @@
 const Animation = require('./animation')
 const dataApi = require('./data')
-const systemApi = require('./system')
 const _ = require('./utils')
 
 const mockSync = (ret) => () => ret
@@ -73,21 +72,7 @@ module.exports = {
   removeSavedFile: mockAsync('removeSavedFile'),
   openDocument: mockAsync('openDocument'),
 
-  // data
-  ...dataApi,
-
-  getLocation: mockAsync('getLocation'),
-  chooseLocation: mockAsync('chooseLocation'),
-
-  openLocation: mockAsync('openLocation'),
-
   createMapContext: mockAsync('createMapContext'),
-
-  // system
-  ...systemApi,
-
-  // base
-  canIUse: mockSync(true),
 
   onMemoryWarning: mockAsync('onMemoryWarning'),
 
@@ -186,13 +171,6 @@ module.exports = {
 
   setTopBarText: mockAsync('setTopBarText'),
 
-  // route
-  navigateTo: mockAsync('navigateTo'),
-  redirectTo: mockAsync('redirectTo'),
-  switchTab: mockAsync('switchTab'),
-  navigateBack: mockAsync('navigateBack'),
-  reLaunch: mockAsync('reLaunch'),
-
   createAnimation(transition = {}) {
     return new Animation(transition)
   },
@@ -213,9 +191,6 @@ module.exports = {
 
   createIntersectionObserver: mockAsync('createIntersectionObserver'),
 
-  getExtConfig: mockAsync('getExtConfig'),
-  getExtConfigSync: mockAsync('getExtConfigSync'),
-
   login: mockAsync('login'),
   checkSession: mockAsync('checkSession'),
 
@@ -224,11 +199,6 @@ module.exports = {
   getUserInfo: mockAsync('getUserInfo'),
 
   requestPayment: mockAsync('requestPayment'),
-
-  showShareMenu: mockAsync('showShareMenu'),
-  hideShareMenu: mockAsync('hideShareMenu'),
-  updateShareMenu: mockAsync('updateShareMenu'),
-  getShareInfo: mockAsync('getShareInfo'),
 
   chooseAddress: mockAsync('chooseAddress'),
 
@@ -239,8 +209,6 @@ module.exports = {
   getSetting: mockAsync('getSetting'),
 
   getWeRunData: mockAsync('getWeRunData'),
-
-  getAccountInfoSync: mockAsync('getAccountInfoSync'),
 
   navigateToMiniProgram: mockAsync('navigateToMiniProgram'),
   navigateBackMiniProgram: mockAsync('navigateBackMiniProgram'),
@@ -255,9 +223,134 @@ module.exports = {
 
   createWorker: mockAsync('createWorker'),
 
-  getLogManager: mockAsync('getLogManager'),
+  // network
+  // TODO
 
-  reportMonitor: mockAsync('reportMonitor'),
+  // media
+  // TOOD
+  
+  // file
+  // TODO
 
-  setEnableDebug: mockAsync('setEnableDebug'),
+  // data
+  ...dataApi,
+
+  // location
+  chooseLocation(options = {}) {
+    _.runInAsync(options, {
+      errMsg: 'chooseLocation:ok',
+      address: '广东省广州市海珠区tit创意园品牌街',
+      name: '腾讯微信总部',
+      latitude: 23.1001,
+      longitude: 113.32456,
+    })
+  },
+  getLocation(options = {}) {
+    _.runInAsync(options, {
+      errMsg: 'getLocation:ok',
+      accuracy: 65,
+      altitude: 0,
+      latitude: 23.12908,
+      longitude: 113.26436,
+      speed: -1,
+      verticalAccuracy: 65,
+      horizontalAccuracy: 65,
+    })
+  },
+  openLocation: mockAsync('openLocation'),
+  
+  // device
+  // TODO
+  
+  // open
+  // TODO
+  getAccountInfoSync: mockSync({
+    miniprogram: { appId: 'wx4f4bc4dec97d474b' },
+  }),
+
+  // update
+  // TODO
+  
+  // worker
+  // TODO
+  
+  // report
+  reportMonitor: mockSync(null),
+  
+  // miniprogram
+  // TODO
+  
+  // base
+  canIUse: mockSync(true),
+
+  // canvas
+  // TODO
+
+  // debug
+  getLogManager: mockSync(console),
+  setEnableDebug: mockSync(null),
+
+  // thirdparty
+  getExtConfig(options = {}) {
+    _.runInAsync(options, {
+      errMsg: 'getExtConfig:ok',
+      extConfig: wx.getExtConfigSync(),
+    })
+  },
+  getExtConfigSync() {
+    return {}
+  },
+
+  // map
+  // TODO
+
+  // route
+  navigateTo: mockAsync('navigateTo'),
+  redirectTo: mockAsync('redirectTo'),
+  switchTab: mockAsync('switchTab'),
+  navigateBack: mockAsync('navigateBack'),
+  reLaunch: mockAsync('reLaunch'),
+
+  // share
+  getShareInfo(options = {}) {
+    _.runInAsync(options, {
+      errMsg: 'getShareInfo:ok',
+      encryptedData: 'CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew==',
+      iv: 'r7BXXKkLb8qrSNn05n0qiA==',
+    })
+  },
+  hideShareMenu: mockAsync('hideShareMenu'),
+  showShareMenu: mockAsync('showShareMenu'),
+  updateShareMenu: mockAsync('updateShareMenu'),
+
+  // system
+  getSystemInfo(options = {}) {
+    _.runInAsync(options, {
+      errMsg: 'getSystemInfo:ok',
+      ...wx.getSystemInfoSync(),
+    })
+  },
+  getSystemInfoSync() {
+    return {
+      SDKVersion: '2.3.0',
+      batteryLevel: 100,
+      benchmarkLevel: 1,
+      brand: 'devtools',
+      fontSizeSetting: 16,
+      language: 'zh_CN',
+      model: 'iPhone 7 Plus',
+      pixelRatio: 3,
+      platform: 'devtools',
+      screenHeight: 736,
+      screenWidth: 414,
+      statusBarHeight: 20,
+      system: 'iOS 10.0.1',
+      version: '6.6.3',
+      windowHeight: 672,
+      windowWidth: 414,
+    }
+  },
+
+  // wxml
+  // TODO
 }
