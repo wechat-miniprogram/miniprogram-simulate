@@ -32,7 +32,7 @@ test('test sth', () => {
 
 以上只是一个简单的例子，实际上这个工具集必须搭配 jest 或 jsdom/mocha 等测试框架来使用，更为详细的使用细节请参阅下述文档：
 
-* [使用简介](./tutorial.md)
+* [使用简介](./docs/tutorial.md)
 * [接口文档](./docs/api.md)
 * [细节实现](./docs/detail.md)
 * [暂不支持特性](./docs/todo.md)
