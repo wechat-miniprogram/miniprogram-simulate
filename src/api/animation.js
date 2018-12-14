@@ -1,6 +1,3 @@
-/**
- * 动画实现
- */
 class Animation {
   constructor(option = {}) {
     this.actions = []

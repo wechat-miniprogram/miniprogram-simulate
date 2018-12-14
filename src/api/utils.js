@@ -30,7 +30,28 @@ function getSize(string) {
   return total
 }
 
+/**
+ * 快速模拟同步接口
+ */
+function mockSync(ret) {
+  return () => ret
+}
+
+/**
+ * 快速模拟异步接口
+ */
+function mockAsync(name){
+  return (options = {}) => {
+    const res = {
+      errMsg: `${name}:ok`,
+    }
+    runInAsync(options, res)
+  }
+}
+
 module.exports = {
   runInAsync,
   getSize,
+  mockSync,
+  mockAsync,
 }

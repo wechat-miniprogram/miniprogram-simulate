@@ -2,17 +2,17 @@ const simulate = require('../../index')
 const _ = require('../utils')
 
 test('getSystemInfo', async () => {
-    const info = await _.wa(wx.getSystemInfo)
+    const res = await _.wa(wx.getSystemInfo)
 
-    expect(info).toEqual(Object.assign({
+    expect(res).toEqual(Object.assign({
         errMsg: 'getSystemInfo:ok',
     }, wx.getSystemInfoSync()))
 })
 
 test('getSystemInfoSync', () => {
-    const info = wx.getSystemInfoSync()
+    const res = wx.getSystemInfoSync()
 
-    expect(info).toEqual({
+    expect(res).toEqual({
         SDKVersion: '2.3.0',
         batteryLevel: 100,
         benchmarkLevel: 1,

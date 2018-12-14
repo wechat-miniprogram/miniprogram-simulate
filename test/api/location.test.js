@@ -2,9 +2,9 @@ const simulate = require('../../index')
 const _ = require('../utils')
 
 test('chooseLocation', async () => {
-    const info = await _.wa(wx.chooseLocation)
+    const res = await _.wa(wx.chooseLocation)
 
-    expect(info).toEqual({
+    expect(res).toEqual({
         errMsg: 'chooseLocation:ok',
         address: '广东省广州市海珠区tit创意园品牌街',
         name: '腾讯微信总部',
@@ -14,9 +14,9 @@ test('chooseLocation', async () => {
 })
 
 test('getLocation', async () => {
-    const info = await _.wa(wx.getLocation)
+    const res = await _.wa(wx.getLocation)
 
-    expect(info).toEqual({
+    expect(res).toEqual({
         errMsg: 'getLocation:ok',
         accuracy: 65,
         altitude: 0,

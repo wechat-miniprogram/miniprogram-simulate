@@ -2,9 +2,9 @@ const simulate = require('../../index')
 const _ = require('../utils')
 
 test('getExtConfig', async () => {
-    const info = await _.wa(wx.getExtConfig)
+    const res = await _.wa(wx.getExtConfig)
 
-    expect(info).toEqual({
+    expect(res).toEqual({
         errMsg: 'getExtConfig:ok',
         extConfig: wx.getExtConfigSync(),
     })

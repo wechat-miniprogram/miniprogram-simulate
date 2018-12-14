@@ -6,11 +6,11 @@ const _ = require('../utils')
 test('getShareInfo', async () => {
     const appid = 'wx4f4bc4dec97d474b'
     const sessionKey = new Buffer('tiihtNczf5v6AKRyjwEUhQ==', 'base64')
-    const info = await _.wa(wx.getShareInfo)
+    const res = await _.wa(wx.getShareInfo)
 
     // base64 decode
-    const encryptedData = new Buffer(info.encryptedData, 'base64')
-    const iv = new Buffer(info.iv, 'base64')
+    const encryptedData = new Buffer(res.encryptedData, 'base64')
+    const iv = new Buffer(res.iv, 'base64')
 
     // 解密
     const decipher = crypto.createDecipheriv('aes-128-cbc', sessionKey, iv)

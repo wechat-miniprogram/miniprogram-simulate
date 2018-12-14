@@ -1,227 +1,191 @@
 const Animation = require('./animation')
+const UpdateManager = require('./update-manager')
 const dataApi = require('./data')
+const openApi = require('./open')
 const _ = require('./utils')
 
-const mockSync = (ret) => () => ret
-const mockAsync = (name) => (options = {}) => {
-  const res = {
-    errMsg: `${name}:ok`,
-  }
-  _.runInAsync(options, res)
-}
-
 module.exports = {
-  request: mockAsync('request'),
+  request: _.mockAsync('request'),
 
-  uploadFile: mockAsync('uploadFile'),
-  downloadFile: mockAsync('downloadFile'),
+  uploadFile: _.mockAsync('uploadFile'),
+  downloadFile: _.mockAsync('downloadFile'),
 
-  connectSocket: mockAsync('connectSocket'),
-  onSocketOpen: mockAsync('onSocketOpen'),
-  onSocketError: mockAsync('onSocketError'),
-  sendSocketMessage: mockAsync('sendSocketMessage'),
-  onSocketMessage: mockAsync('onSocketMessage'),
-  closeSocket: mockAsync('closeSocket'),
-  onSocketClose: mockAsync('onSocketClose'),
+  connectSocket: _.mockAsync('connectSocket'),
+  onSocketOpen: _.mockAsync('onSocketOpen'),
+  onSocketError: _.mockAsync('onSocketError'),
+  sendSocketMessage: _.mockAsync('sendSocketMessage'),
+  onSocketMessage: _.mockAsync('onSocketMessage'),
+  closeSocket: _.mockAsync('closeSocket'),
+  onSocketClose: _.mockAsync('onSocketClose'),
 
-  chooseImage: mockAsync('chooseImage'),
-  previewImage: mockAsync('previewImage'),
-  getImageInfo: mockAsync('getImageInfo'),
-  saveImageToPhotosAlbum: mockAsync('saveImageToPhotosAlbum'),
+  chooseImage: _.mockAsync('chooseImage'),
+  previewImage: _.mockAsync('previewImage'),
+  getImageInfo: _.mockAsync('getImageInfo'),
+  saveImageToPhotosAlbum: _.mockAsync('saveImageToPhotosAlbum'),
 
-  startRecord: mockAsync('startRecord'),
-  stopRecord: mockAsync('stopRecord'),
+  startRecord: _.mockAsync('startRecord'),
+  stopRecord: _.mockAsync('stopRecord'),
 
-  getRecorderManager: mockAsync('getRecorderManager'),
+  getRecorderManager: _.mockAsync('getRecorderManager'),
 
-  playVoice: mockAsync('playVoice'),
-  pauseVoice: mockAsync('pauseVoice'),
-  stopVoice: mockAsync('stopVoice'),
+  playVoice: _.mockAsync('playVoice'),
+  pauseVoice: _.mockAsync('pauseVoice'),
+  stopVoice: _.mockAsync('stopVoice'),
 
-  getBackgroundAudioPlayerState: mockAsync('getBackgroundAudioPlayerState'),
-  playBackgroundAudio: mockAsync('playBackgroundAudio'),
-  pauseBackgroundAudio: mockAsync('pauseBackgroundAudio'),
-  seekBackgroundAudio: mockAsync('seekBackgroundAudio'),
-  stopBackgroundAudio: mockAsync('stopBackgroundAudio'),
-  onBackgroundAudioPlay: mockAsync('onBackgroundAudioPlay'),
-  onBackgroundAudioPause: mockAsync('onBackgroundAudioPause'),
-  onBackgroundAudioStop: mockAsync('onBackgroundAudioStop'),
+  getBackgroundAudioPlayerState: _.mockAsync('getBackgroundAudioPlayerState'),
+  playBackgroundAudio: _.mockAsync('playBackgroundAudio'),
+  pauseBackgroundAudio: _.mockAsync('pauseBackgroundAudio'),
+  seekBackgroundAudio: _.mockAsync('seekBackgroundAudio'),
+  stopBackgroundAudio: _.mockAsync('stopBackgroundAudio'),
+  onBackgroundAudioPlay: _.mockAsync('onBackgroundAudioPlay'),
+  onBackgroundAudioPause: _.mockAsync('onBackgroundAudioPause'),
+  onBackgroundAudioStop: _.mockAsync('onBackgroundAudioStop'),
 
-  getBackgroundAudioManager: mockAsync('getBackgroundAudioManager'),
+  getBackgroundAudioManager: _.mockAsync('getBackgroundAudioManager'),
 
-  createAudioContext: mockAsync('createAudioContext'),
-  createInnerAudioContext: mockAsync('createInnerAudioContext'),
-  getAvailableAudioSources: mockAsync('getAvailableAudioSources'),
+  createAudioContext: _.mockAsync('createAudioContext'),
+  createInnerAudioContext: _.mockAsync('createInnerAudioContext'),
+  getAvailableAudioSources: _.mockAsync('getAvailableAudioSources'),
 
-  chooseVideo: mockAsync('chooseVideo'),
-  saveVideoToPhotosAlbum: mockAsync('saveVideoToPhotosAlbum'),
+  chooseVideo: _.mockAsync('chooseVideo'),
+  saveVideoToPhotosAlbum: _.mockAsync('saveVideoToPhotosAlbum'),
 
-  createVideoContext: mockAsync('createVideoContext'),
+  createVideoContext: _.mockAsync('createVideoContext'),
 
-  createCameraContext: mockAsync('createCameraContext'),
+  createCameraContext: _.mockAsync('createCameraContext'),
 
-  createLivePlayerContext: mockAsync('createLivePlayerContext'),
-  createLivePusherContext: mockAsync('createLivePusherContext'),
+  createLivePlayerContext: _.mockAsync('createLivePlayerContext'),
+  createLivePusherContext: _.mockAsync('createLivePusherContext'),
 
-  loadFontFace: mockAsync('loadFontFace'),
+  loadFontFace: _.mockAsync('loadFontFace'),
 
-  saveFile: mockAsync('saveFile'),
-  getFileInfo: mockAsync('getFileInfo'),
-  getSavedFileList: mockAsync('getSavedFileList'),
-  getSavedFileInfo: mockAsync('getSavedFileInfo'),
-  removeSavedFile: mockAsync('removeSavedFile'),
-  openDocument: mockAsync('openDocument'),
+  saveFile: _.mockAsync('saveFile'),
+  getFileInfo: _.mockAsync('getFileInfo'),
+  getSavedFileList: _.mockAsync('getSavedFileList'),
+  getSavedFileInfo: _.mockAsync('getSavedFileInfo'),
+  removeSavedFile: _.mockAsync('removeSavedFile'),
+  openDocument: _.mockAsync('openDocument'),
 
-  createMapContext: mockAsync('createMapContext'),
+  createMapContext: _.mockAsync('createMapContext'),
 
-  onMemoryWarning: mockAsync('onMemoryWarning'),
+  onMemoryWarning: _.mockAsync('onMemoryWarning'),
 
-  getNetworkType: mockAsync('getNetworkType'),
-  onNetworkStatusChange: mockAsync('onNetworkStatusChange'),
+  getNetworkType: _.mockAsync('getNetworkType'),
+  onNetworkStatusChange: _.mockAsync('onNetworkStatusChange'),
 
-  onAccelerometerChange: mockAsync('onAccelerometerChange'),
-  startAccelerometer: mockAsync('startAccelerometer'),
-  stopAccelerometer: mockAsync('stopAccelerometer'),
+  onAccelerometerChange: _.mockAsync('onAccelerometerChange'),
+  startAccelerometer: _.mockAsync('startAccelerometer'),
+  stopAccelerometer: _.mockAsync('stopAccelerometer'),
 
-  onCompassChange: mockAsync('onCompassChange'),
-  startCompass: mockAsync('startCompass'),
-  stopCompass: mockAsync('stopCompass'),
+  onCompassChange: _.mockAsync('onCompassChange'),
+  startCompass: _.mockAsync('startCompass'),
+  stopCompass: _.mockAsync('stopCompass'),
 
-  makePhoneCall: mockAsync('makePhoneCall'),
+  makePhoneCall: _.mockAsync('makePhoneCall'),
 
-  scanCode: mockAsync('scanCode'),
+  scanCode: _.mockAsync('scanCode'),
 
-  setClipboardData: mockAsync('setClipboardData'),
-  getClipboardData: mockAsync('getClipboardData'),
+  setClipboardData: _.mockAsync('setClipboardData'),
+  getClipboardData: _.mockAsync('getClipboardData'),
 
-  openBluetoothAdapter: mockAsync('openBluetoothAdapter'),
-  closeBluetoothAdapter: mockAsync('closeBluetoothAdapter'),
-  getBluetoothAdapterState: mockAsync('getBluetoothAdapterState'),
-  onBluetoothAdapterStateChange: mockAsync('onBluetoothAdapterStateChange'),
-  startBluetoothDevicesDiscovery: mockAsync('startBluetoothDevicesDiscovery'),
-  stopBluetoothDevicesDiscovery: mockAsync('stopBluetoothDevicesDiscovery'),
-  getBluetoothDevices: mockAsync('getBluetoothDevices'),
-  getConnectedBluetoothDevices: mockAsync('getConnectedBluetoothDevices'),
-  onBluetoothDeviceFound: mockAsync('onBluetoothDeviceFound'),
-  createBLEConnection: mockAsync('createBLEConnection'),
-  closeBLEConnection: mockAsync('closeBLEConnection'),
-  getBLEDeviceServices: mockAsync('getBLEDeviceServices'),
-  getBLEDeviceCharacteristics: mockAsync('getBLEDeviceCharacteristics'),
-  readBLECharacteristicValue: mockAsync('readBLECharacteristicValue'),
-  writeBLECharacteristicValue: mockAsync('writeBLECharacteristicValue'),
-  notifyBLECharacteristicValueChange: mockAsync('notifyBLECharacteristicValueChange'),
-  onBLEConnectionStateChange: mockAsync('onBLEConnectionStateChange'),
-  onBLECharacteristicValueChange: mockAsync('onBLECharacteristicValueChange'),
+  openBluetoothAdapter: _.mockAsync('openBluetoothAdapter'),
+  closeBluetoothAdapter: _.mockAsync('closeBluetoothAdapter'),
+  getBluetoothAdapterState: _.mockAsync('getBluetoothAdapterState'),
+  onBluetoothAdapterStateChange: _.mockAsync('onBluetoothAdapterStateChange'),
+  startBluetoothDevicesDiscovery: _.mockAsync('startBluetoothDevicesDiscovery'),
+  stopBluetoothDevicesDiscovery: _.mockAsync('stopBluetoothDevicesDiscovery'),
+  getBluetoothDevices: _.mockAsync('getBluetoothDevices'),
+  getConnectedBluetoothDevices: _.mockAsync('getConnectedBluetoothDevices'),
+  onBluetoothDeviceFound: _.mockAsync('onBluetoothDeviceFound'),
+  createBLEConnection: _.mockAsync('createBLEConnection'),
+  closeBLEConnection: _.mockAsync('closeBLEConnection'),
+  getBLEDeviceServices: _.mockAsync('getBLEDeviceServices'),
+  getBLEDeviceCharacteristics: _.mockAsync('getBLEDeviceCharacteristics'),
+  readBLECharacteristicValue: _.mockAsync('readBLECharacteristicValue'),
+  writeBLECharacteristicValue: _.mockAsync('writeBLECharacteristicValue'),
+  notifyBLECharacteristicValueChange: _.mockAsync('notifyBLECharacteristicValueChange'),
+  onBLEConnectionStateChange: _.mockAsync('onBLEConnectionStateChange'),
+  onBLECharacteristicValueChange: _.mockAsync('onBLECharacteristicValueChange'),
 
-  startBeaconDiscovery: mockAsync('startBeaconDiscovery'),
-  stopBeaconDiscovery: mockAsync('stopBeaconDiscovery'),
-  getBeacons: mockAsync('getBeacons'),
-  onBeaconUpdate: mockAsync('onBeaconUpdate'),
-  onBeaconServiceChange: mockAsync('onBeaconServiceChange'),
+  startBeaconDiscovery: _.mockAsync('startBeaconDiscovery'),
+  stopBeaconDiscovery: _.mockAsync('stopBeaconDiscovery'),
+  getBeacons: _.mockAsync('getBeacons'),
+  onBeaconUpdate: _.mockAsync('onBeaconUpdate'),
+  onBeaconServiceChange: _.mockAsync('onBeaconServiceChange'),
 
-  setScreenBrightness: mockAsync('setScreenBrightness'),
-  getScreenBrightness: mockAsync('getScreenBrightness'),
-  setKeepScreenOn: mockAsync('setKeepScreenOn'),
+  setScreenBrightness: _.mockAsync('setScreenBrightness'),
+  getScreenBrightness: _.mockAsync('getScreenBrightness'),
+  setKeepScreenOn: _.mockAsync('setKeepScreenOn'),
 
-  onUserCaptureScreen: mockAsync('onUserCaptureScreen'),
+  onUserCaptureScreen: _.mockAsync('onUserCaptureScreen'),
 
-  vibrateLong: mockAsync('vibrateLong'),
-  vibrateShort: mockAsync('vibrateShort'),
+  vibrateLong: _.mockAsync('vibrateLong'),
+  vibrateShort: _.mockAsync('vibrateShort'),
 
-  addPhoneContact: mockAsync('addPhoneContact'),
+  addPhoneContact: _.mockAsync('addPhoneContact'),
 
-  getHCEState: mockAsync('getHCEState'),
-  startHCE: mockAsync('startHCE'),
-  stopHCE: mockAsync('stopHCE'),
-  onHCEMessage: mockAsync('onHCEMessage'),
-  sendHCEMessage: mockAsync('sendHCEMessage'),
+  getHCEState: _.mockAsync('getHCEState'),
+  startHCE: _.mockAsync('startHCE'),
+  stopHCE: _.mockAsync('stopHCE'),
+  onHCEMessage: _.mockAsync('onHCEMessage'),
+  sendHCEMessage: _.mockAsync('sendHCEMessage'),
 
-  startWifi: mockAsync('startWifi'),
-  stopWifi: mockAsync('stopWifi'),
-  connectWifi: mockAsync('connectWifi'),
-  getWifiList: mockAsync('getWifiList'),
-  onGetWifiList: mockAsync('onGetWifiList'),
-  setWifiList: mockAsync('setWifiList'),
-  onWifiConnected: mockAsync('onWifiConnected'),
-  getConnectedWifi: mockAsync('getConnectedWifi'),
+  startWifi: _.mockAsync('startWifi'),
+  stopWifi: _.mockAsync('stopWifi'),
+  connectWifi: _.mockAsync('connectWifi'),
+  getWifiList: _.mockAsync('getWifiList'),
+  onGetWifiList: _.mockAsync('onGetWifiList'),
+  setWifiList: _.mockAsync('setWifiList'),
+  onWifiConnected: _.mockAsync('onWifiConnected'),
+  getConnectedWifi: _.mockAsync('getConnectedWifi'),
 
-  showToast: mockAsync('showToast'),
-  showLoading: mockAsync('showLoading'),
-  hideToast: mockAsync('hideToast'),
-  hideLoading: mockAsync('hideLoading'),
-  showModal: mockAsync('showModal'),
-  showActionSheet: mockAsync('showActionSheet'),
+  showToast: _.mockAsync('showToast'),
+  showLoading: _.mockAsync('showLoading'),
+  hideToast: _.mockAsync('hideToast'),
+  hideLoading: _.mockAsync('hideLoading'),
+  showModal: _.mockAsync('showModal'),
+  showActionSheet: _.mockAsync('showActionSheet'),
 
-  setNavigationBarTitle: mockAsync('setNavigationBarTitle'),
-  showNavigationBarLoading: mockAsync('showNavigationBarLoading'),
-  hideNavigationBarLoading: mockAsync('hideNavigationBarLoading'),
-  setNavigationBarColor: mockAsync('setNavigationBarColor'),
+  setNavigationBarTitle: _.mockAsync('setNavigationBarTitle'),
+  showNavigationBarLoading: _.mockAsync('showNavigationBarLoading'),
+  hideNavigationBarLoading: _.mockAsync('hideNavigationBarLoading'),
+  setNavigationBarColor: _.mockAsync('setNavigationBarColor'),
 
-  setTabBarBadge: mockAsync('setTabBarBadge'),
-  removeTabBarBadge: mockAsync('removeTabBarBadge'),
-  showTabBarRedDot: mockAsync('showTabBarRedDot'),
-  hideTabBarRedDot: mockAsync('hideTabBarRedDot'),
-  setTabBarStyle: mockAsync('setTabBarStyle'),
-  setTabBarItem: mockAsync('setTabBarItem'),
-  showTabBar: mockAsync('showTabBar'),
-  hideTabBar: mockAsync('hideTabBar'),
+  setTabBarBadge: _.mockAsync('setTabBarBadge'),
+  removeTabBarBadge: _.mockAsync('removeTabBarBadge'),
+  showTabBarRedDot: _.mockAsync('showTabBarRedDot'),
+  hideTabBarRedDot: _.mockAsync('hideTabBarRedDot'),
+  setTabBarStyle: _.mockAsync('setTabBarStyle'),
+  setTabBarItem: _.mockAsync('setTabBarItem'),
+  showTabBar: _.mockAsync('showTabBar'),
+  hideTabBar: _.mockAsync('hideTabBar'),
 
-  setBackgroundColor: mockAsync('setBackgroundColor'),
-  setBackgroundTextStyle: mockAsync('setBackgroundTextStyle'),
+  setBackgroundColor: _.mockAsync('setBackgroundColor'),
+  setBackgroundTextStyle: _.mockAsync('setBackgroundTextStyle'),
 
-  setTopBarText: mockAsync('setTopBarText'),
+  setTopBarText: _.mockAsync('setTopBarText'),
 
   createAnimation(transition = {}) {
     return new Animation(transition)
   },
 
-  pageScrollTo: mockAsync('pageScrollTo'),
+  pageScrollTo: _.mockAsync('pageScrollTo'),
 
-  createCanvasContext: mockAsync('createCanvasContext'),
-  createContext: mockAsync('createContext'),
-  drawCanvas: mockAsync('drawCanvas'),
-  canvasToTempFilePath: mockAsync('canvasToTempFilePath'),
-  canvasGetImageData: mockAsync('canvasGetImageData'),
-  canvasPutImageData: mockAsync('canvasPutImageData'),
+  createCanvasContext: _.mockAsync('createCanvasContext'),
+  createContext: _.mockAsync('createContext'),
+  drawCanvas: _.mockAsync('drawCanvas'),
+  canvasToTempFilePath: _.mockAsync('canvasToTempFilePath'),
+  canvasGetImageData: _.mockAsync('canvasGetImageData'),
+  canvasPutImageData: _.mockAsync('canvasPutImageData'),
 
-  startPullDownRefresh: mockAsync('startPullDownRefresh'),
-  stopPullDownRefresh: mockAsync('stopPullDownRefresh'),
+  startPullDownRefresh: _.mockAsync('startPullDownRefresh'),
+  stopPullDownRefresh: _.mockAsync('stopPullDownRefresh'),
 
-  createSelectorQuery: mockAsync('createSelectorQuery'),
+  createSelectorQuery: _.mockAsync('createSelectorQuery'),
 
-  createIntersectionObserver: mockAsync('createIntersectionObserver'),
+  createIntersectionObserver: _.mockAsync('createIntersectionObserver'),
 
-  login: mockAsync('login'),
-  checkSession: mockAsync('checkSession'),
-
-  authorize: mockAsync('authorize'),
-
-  getUserInfo: mockAsync('getUserInfo'),
-
-  requestPayment: mockAsync('requestPayment'),
-
-  chooseAddress: mockAsync('chooseAddress'),
-
-  addCard: mockAsync('addCard'),
-  openCard: mockAsync('openCard'),
-
-  openSetting: mockAsync('openSetting'),
-  getSetting: mockAsync('getSetting'),
-
-  getWeRunData: mockAsync('getWeRunData'),
-
-  navigateToMiniProgram: mockAsync('navigateToMiniProgram'),
-  navigateBackMiniProgram: mockAsync('navigateBackMiniProgram'),
-
-  chooseInvoiceTitle: mockAsync('chooseInvoiceTitle'),
-
-  checkIsSupportSoterAuthentication: mockAsync('checkIsSupportSoterAuthentication'),
-  startSoterAuthentication: mockAsync('startSoterAuthentication'),
-  checkIsSoterEnrolledInDevice: mockAsync('checkIsSoterEnrolledInDevice'),
-
-  getUpdateManager: mockAsync('getUpdateManager'),
-
-  createWorker: mockAsync('createWorker'),
+  createWorker: _.mockAsync('createWorker'),
 
   // network
   // TODO
@@ -257,38 +221,37 @@ module.exports = {
       horizontalAccuracy: 65,
     })
   },
-  openLocation: mockAsync('openLocation'),
+  openLocation: _.mockAsync('openLocation'),
   
   // device
   // TODO
   
   // open
-  // TODO
-  getAccountInfoSync: mockSync({
-    miniprogram: { appId: 'wx4f4bc4dec97d474b' },
-  }),
+  ...openApi,
 
   // update
-  // TODO
+  getUpdateManager() {
+    return new UpdateManager()
+  },
   
   // worker
   // TODO
   
   // report
-  reportMonitor: mockSync(null),
+  reportMonitor: _.mockSync(null),
   
   // miniprogram
   // TODO
   
   // base
-  canIUse: mockSync(true),
+  canIUse: _.mockSync(true),
 
   // canvas
   // TODO
 
   // debug
-  getLogManager: mockSync(console),
-  setEnableDebug: mockSync(null),
+  getLogManager: _.mockSync(console),
+  setEnableDebug: _.mockSync(null),
 
   // thirdparty
   getExtConfig(options = {}) {
@@ -305,11 +268,11 @@ module.exports = {
   // TODO
 
   // route
-  navigateTo: mockAsync('navigateTo'),
-  redirectTo: mockAsync('redirectTo'),
-  switchTab: mockAsync('switchTab'),
-  navigateBack: mockAsync('navigateBack'),
-  reLaunch: mockAsync('reLaunch'),
+  navigateTo: _.mockAsync('navigateTo'),
+  redirectTo: _.mockAsync('redirectTo'),
+  switchTab: _.mockAsync('switchTab'),
+  navigateBack: _.mockAsync('navigateBack'),
+  reLaunch: _.mockAsync('reLaunch'),
 
   // share
   getShareInfo(options = {}) {
@@ -319,9 +282,9 @@ module.exports = {
       iv: 'r7BXXKkLb8qrSNn05n0qiA==',
     })
   },
-  hideShareMenu: mockAsync('hideShareMenu'),
-  showShareMenu: mockAsync('showShareMenu'),
-  updateShareMenu: mockAsync('updateShareMenu'),
+  hideShareMenu: _.mockAsync('hideShareMenu'),
+  showShareMenu: _.mockAsync('showShareMenu'),
+  updateShareMenu: _.mockAsync('updateShareMenu'),
 
   // system
   getSystemInfo(options = {}) {
