@@ -8,6 +8,7 @@
 ## 0.1.5
 
 * 调整 wx 异步接口的 errMsg 字段值
+* 补充 this.selectComponent 和 this.selectComponents 接口
 
 ## next version
 

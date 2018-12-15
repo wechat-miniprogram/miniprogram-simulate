@@ -1,4 +1,5 @@
 const Animation = require('./animation')
+const MapContext = require('./map')
 const UpdateManager = require('./update-manager')
 const dataApi = require('./data')
 const openApi = require('./open')
@@ -265,7 +266,9 @@ module.exports = {
   },
 
   // map
-  // TODO
+  createMapContext(...args) {
+    return new MapContext(...args)
+  },
 
   // route
   navigateTo: _.mockAsync('navigateTo'),
