@@ -3,6 +3,7 @@ const MapContext = require('./map')
 const UpdateManager = require('./update-manager')
 const dataApi = require('./data')
 const openApi = require('./open')
+const wxmlApi = require('./wxml')
 const _ = require('./utils')
 
 module.exports = {
@@ -182,10 +183,6 @@ module.exports = {
   startPullDownRefresh: _.mockAsync('startPullDownRefresh'),
   stopPullDownRefresh: _.mockAsync('stopPullDownRefresh'),
 
-  createSelectorQuery: _.mockAsync('createSelectorQuery'),
-
-  createIntersectionObserver: _.mockAsync('createIntersectionObserver'),
-
   createWorker: _.mockAsync('createWorker'),
 
   // network
@@ -319,4 +316,5 @@ module.exports = {
 
   // wxml
   // TODO
+  ...wxmlApi,
 }

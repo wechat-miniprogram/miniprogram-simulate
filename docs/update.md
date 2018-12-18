@@ -9,7 +9,11 @@
 
 * 调整 wx 异步接口的 errMsg 字段值
 * 补充 this.selectComponent 和 this.selectComponents 接口
+* 补充部分 wx 对象内置接口支持
+
+## 0.1.7
+
+* 支持 selectorQuery
+* 补充部分 wx 对象内置接口支持
 
 ## next version
-
-* 补充部分 wx 对象内置接口支持
