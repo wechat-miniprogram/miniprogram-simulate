@@ -163,6 +163,27 @@ function sleep(time = 0) {
   })
 }
 
+/**
+ * 模拟滚动
+ */
+function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
+  if (!comp || !comp.dom || times <= 0) throw new Error('invalid params')
+
+  destOffset = destOffset < 0 ? 0 : destOffset
+
+  const dom = comp.dom
+  const delta = destOffset - dom[propName]
+  const unit = ~~(delta / times)
+
+  for (let i = 0; i < times; i++) {
+    if (i === times - 1) dom[propName] = destOffset
+    else dom[propName] += unit
+
+    dom.dispatchEvent(new Event('scroll', { bubbles: true, cancelable: false }))
+  }
+}
+
+
 injectPolyfill()
 injectDefinition()
 
@@ -172,4 +193,5 @@ module.exports = {
   render,
   match,
   sleep,
+  scroll,
 }

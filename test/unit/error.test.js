@@ -35,4 +35,12 @@ test('error', () => {
 
     expect(simulate.render(123)).toBe(undefined)
     expect(simulate.match(null)).toBe(false)
+
+    catchErr = null
+    try {
+        simulate.scroll()
+    } catch (err) {
+        catchErr = err
+    }
+    expect(catchErr.message).toBe('invalid params')
 })

@@ -16,4 +16,9 @@
 * 支持 selectorQuery
 * 补充部分 wx 对象内置接口支持
 
+## 0.1.8
+
+* 补充 scroll 接口，用于模拟滚动
+* 补充部分 wx 对象内置接口支持
+
 ## next version

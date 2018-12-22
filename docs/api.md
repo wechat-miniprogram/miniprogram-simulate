@@ -5,6 +5,7 @@
 * [render](#rendercomponentid-properties)
 * [match](#matchdom-html)
 * [sleep](#sleeptimeout)
+* [scroll](#scrollcomponent-destoffset-times-propname)
 * [Class: Component](#class-component)
 * [Class: RootComponent](#class-rootcomponent)
 
@@ -117,6 +118,14 @@ const isMatch = simulate.match(dom, '<view>123</view>')
 
 ```js
 await simulate.sleep(300) // 等待 300ms 后再继续后续代码的执行
+```
+
+## scroll(component, destOffset, times, propName)
+
+模拟元素滚动。destOffset 为滚动的目标数值；times 为触发 scroll 事件的次数，默认为 20 次；propName 为滚动字段，默认为 scrollTop。
+
+```js
+simulate.scroll(component, 100, 15) // 纵向滚动到 scrollTop 为 100 的位置，期间会触发 15 次 scroll 事件
 ```
 
 ## Class: Component

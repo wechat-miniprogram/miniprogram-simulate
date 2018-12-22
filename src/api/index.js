@@ -3,7 +3,6 @@ const MapContext = require('./map')
 const UpdateManager = require('./update-manager')
 const dataApi = require('./data')
 const openApi = require('./open')
-const wxmlApi = require('./wxml')
 const _ = require('./utils')
 
 module.exports = {
@@ -315,6 +314,14 @@ module.exports = {
   },
 
   // wxml
-  // TODO
-  ...wxmlApi,
+  createSelectorQuery() {
+    return {
+      in(compInst) {
+        return compInst.createSelectorQuery()
+      },
+    }
+  },
+  createIntersectionObserver(compInst, options) {
+    return compInst.createIntersectionObserver(options)
+  },
 }

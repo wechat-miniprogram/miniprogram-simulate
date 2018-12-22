@@ -21,5 +21,21 @@ test('createSelectorQuery', () => {
 })
 
 test('createIntersectionObserver', () => {
-    // TODO
+    const id = simulate.load({
+        template: `<view></view>`,
+        methods: {
+            getIntersectionObserver() {
+                return wx.createIntersectionObserver(this)
+            },
+            getIntersectionObserver2() {
+                return this.createIntersectionObserver()
+            },
+        },
+    })
+    const comp = simulate.render(id)
+
+    const intersectionObserver = comp.instance.getIntersectionObserver()
+    const intersectionObserver2 = comp.instance.getIntersectionObserver2()
+    expect(intersectionObserver.constructor).toBe(intersectionObserver2.constructor)
+    expect(intersectionObserver._exparserNode).toBe(intersectionObserver2._exparserNode)
 })
