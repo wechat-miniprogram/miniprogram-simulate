@@ -1,7 +1,7 @@
 # 接口
 
 * [behavior](#behaviordefinition)
-* [load](#loadcomponentpath-tagname--loaddefinition)
+* [load](#loadcomponentpath-tagname-options--loaddefinition)
 * [render](#rendercomponentid-properties)
 * [match](#matchdom-html)
 * [sleep](#sleeptimeout)
@@ -23,7 +23,7 @@ const behavior = simulate.behavior({
 });
 ```
 
-## load(componentPath, tagName) / load(definition)
+## load(componentPath, tagName, options) / load(definition)
 
 加载自定义组件，返回 componentId。加载方式有两种，一种是传入自定义组件的路径，另一种是传入自定义组件的定义对象。
 
@@ -45,6 +45,14 @@ const comp = simulate.render(definition)
 
 console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 ```
+
+### options
+
+可选字段，加载自定义组件时传入的一些配置参数，支持如下字段：
+
+| 属性名 | 类型 | 描述 |
+|---|---|---|
+| less | Boolean | 自定义组件的 wxss 是否需要经过 less 编译 |
 
 ### definition
 
@@ -94,7 +102,7 @@ let id = simulate.load({
 
 ### componentId
 
-调用 [load](#loadcomponentpath-tagname--loaddefinition) 接口返回的 id。
+调用 [load](#loadcomponentpath-tagname-options--loaddefinition) 接口返回的 id。
 
 ### properties
 

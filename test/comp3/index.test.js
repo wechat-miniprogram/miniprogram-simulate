@@ -6,7 +6,7 @@ test('comp3', () => {
         id: 'abc',
         template: '<div><slot/></div>',
     })
-    const id = simulate.load(path.join(__dirname, './index'))
+    const id = simulate.load(path.join(__dirname, './index'), { less: true })
     const comp = simulate.render(id)
 
     const parent = document.createElement('parent-wrapper')
@@ -14,6 +14,7 @@ test('comp3', () => {
 
     const view = comp.querySelector('.index')
     expect(view.dom.innerHTML).toBe('<div>index.properties</div>')
+    expect(window.getComputedStyle(comp.querySelector('.inner').dom).color).toBe('red')
     
     view.dispatchEvent('touchstart')
     view.dispatchEvent('touchend')

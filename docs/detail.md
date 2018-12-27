@@ -10,7 +10,7 @@
 
 ## class 前缀化
 
-小程序中为了达到类似 web components 的效果，对于自定义组件中的 class 会进行前缀化处理，用于实现样式隔离。为了支持这个效果，在调用 [load](./api.md#loadcomponentpath-tagname--loaddefinition) 接口时传入 tagName 参数，这样在渲染自定义组件时会使用 tagName 作为 class 的前缀。默认 tagName 为 main，即前缀为 main。
+小程序中为了达到类似 web components 的效果，对于自定义组件中的 class 会进行前缀化处理，用于实现样式隔离。为了支持这个效果，在调用 [load](./api.md#loadcomponentpath-tagname-options--loaddefinition) 接口时传入 tagName 参数，这样在渲染自定义组件时会使用 tagName 作为 class 的前缀。默认 tagName 为 main，即前缀为 main。
 
 假设自定义组件 comp 的模板为：
 

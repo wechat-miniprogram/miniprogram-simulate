@@ -41,7 +41,9 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
+    "csso": "^3.5.1",
     "j-component": "latest",
+    "less": "^3.9.0",
     "postcss": "^7.0.7"
   }
 }

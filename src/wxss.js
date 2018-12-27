@@ -1,5 +1,7 @@
 const postcss = require('postcss')
 const path = require('path')
+const less = require('less')
+const csso = require('csso')
 
 const _ = require('./utils')
 
@@ -72,11 +74,20 @@ function getContent(filePath) {
 /**
  * 编译 wxss
  */
-function compile(wxss, prefix) {
-  return postcss([addClassPrefixPlugin(prefix)]).process(wxss, {
+function compile(wxss, options = {}) {
+  if (options.less) {
+    less.render(wxss, (err, output) => {
+      wxss = output.css
+    })
+  }
+
+  wxss = postcss([addClassPrefixPlugin(options.prefix)]).process(wxss, {
     from: undefined, // 主要是不想看到那个 warning
     map: null,
   }).css
+
+  // 压缩
+  return csso.minify(wxss, { restructure: false }).css
 }
 
 /**

@@ -1,1 +1,4 @@
 <abc class="index" bindtap="onTap">{{prop}}</abc>
+<div class="index">
+    <div class="inner">321</div>
+</div>

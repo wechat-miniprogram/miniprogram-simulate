@@ -14,6 +14,6 @@ test('comp2', () => {
     `)).toBe(true)
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe('100px')
-    expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('yellow')
+    expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('rgb(255, 255, 0)')
     expect(comp.dom.tagName).toBe('CUSTOM-COMP')
 })

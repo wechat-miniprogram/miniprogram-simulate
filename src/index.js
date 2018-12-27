@@ -92,7 +92,10 @@ function register(componentPath, tagName, cache) {
   delete require.cache[require.resolve(componentPath)]
 
   // 保存追加了已编译的 wxss
-  cache.wxss.push(wxss.compile(component.wxss, tagName))
+  cache.wxss.push(wxss.compile(component.wxss, {
+    prefix: tagName,
+    ...cache.options,
+  }))
 
   // 缓存 wxml
   componentPath[componentPath] == component.wxml
@@ -105,9 +108,15 @@ function register(componentPath, tagName, cache) {
 /**
  * 加载自定义组件
  */
-function load(componentPath, tagName) {
+function load(componentPath, tagName, options = {}) {
+  if (typeof tagName === 'object') {
+    options = tagName
+    tagName = ''
+  }
+
   const cache = {
     wxss: [],
+    options,
   }
   const id = register(componentPath, tagName, cache)
 
