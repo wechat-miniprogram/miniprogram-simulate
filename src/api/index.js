@@ -67,8 +67,6 @@ module.exports = {
   removeSavedFile: _.mockAsync('removeSavedFile'),
   openDocument: _.mockAsync('openDocument'),
 
-  createMapContext: _.mockAsync('createMapContext'),
-
   onMemoryWarning: _.mockAsync('onMemoryWarning'),
 
   getNetworkType: _.mockAsync('getNetworkType'),
