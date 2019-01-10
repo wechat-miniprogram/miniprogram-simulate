@@ -1,7 +1,7 @@
 const path = require('path')
 const simulate = require('../../index')
 
-test('comp3', () => {
+test('comp3', async () => {
     const childId = simulate.load({
         id: 'abc',
         template: '<div><slot/></div>',
@@ -18,6 +18,7 @@ test('comp3', () => {
     
     view.dispatchEvent('touchstart')
     view.dispatchEvent('touchend')
+    await simulate.sleep(10)
     expect(view.dom.innerHTML).toBe('<div>comp3.properties</div>')
 
     expect(comp.instance.print()).toBe(123)

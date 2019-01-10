@@ -25,4 +25,8 @@
 
 * 自定义组件 wxss 支持 less 编写
 
+## 依赖 j-component 更新 1.0.7
+
+* setData 的回调、事件监听器改为异步触发，以模拟更真实的情况
+
 ## next version
