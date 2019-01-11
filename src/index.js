@@ -71,6 +71,9 @@ function register(componentPath, tagName, cache) {
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
   component.json = _.readJson(`${componentPath}.json`)
 
+  // 缓存 wxml 内容
+  wxmlCache[componentPath] = component.wxml
+
   if (!component.json) {
     throw new Error(`invalid componentPath: ${componentPath}`)
   }
