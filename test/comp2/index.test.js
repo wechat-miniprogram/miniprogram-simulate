@@ -2,7 +2,7 @@ const path = require('path')
 const simulate = require('../../index')
 
 test('comp2', () => {
-    const id = simulate.load(path.join(__dirname, './index'), 'custom-comp')
+    const id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp')
     const comp = simulate.render(id, {prop: 'index.test.properties'})
 
     const parent = document.createElement('parent-wrapper')
