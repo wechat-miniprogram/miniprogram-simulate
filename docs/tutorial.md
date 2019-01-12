@@ -68,7 +68,7 @@ describe('component', () => {
 
 # 使用指南
 
-以下均以 miniprogram-simulate + jest 的方式来介绍。
+以下均**以 miniprogram-simulate + jest 的方式**来介绍。
 
 ## 引入测试工具
 
