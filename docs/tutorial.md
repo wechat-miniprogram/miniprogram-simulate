@@ -25,7 +25,7 @@ module.exports = function(config) {
     config.set({
         // 其他配置 ......
         files: [
-            'node_modules/miniprogram-simulate/build.js', // miniprogram-simulate
+            'node_modules/miniprogram-simulate/build.js', // 注入 miniprogram-simulate，会在 window 下挂载 simulate 对象
             'test/spec/*.spec.js', // 测试用例
             'src/component/*', // 组件文件
         ],
@@ -54,6 +54,8 @@ const expect = require('chai').expect
 
 describe('component', () => {
     it ('should run successfully', () => {
+        // 此处直接使用 simulate 或者 window.simulate 即可，不需要再做 require
+
         const id = simulate.load(path.resolve(__dirname, '../src/component/index'))
         const comp = simulate.render(id, {prop: 'index.test.properties'})
 
