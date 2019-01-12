@@ -1,3 +1,5 @@
+const _ = require('./utils')
+
 /**
  * Touch polyfill
  */
@@ -19,5 +21,11 @@ class Touch {
 }
 
 module.exports = function () {
-  global.Touch = window.Touch = Touch
+  if (_.getEnv() === 'nodejs') {
+    try {
+      global.Touch = window.Touch = Touch
+    } catch (err) {
+      // ignore
+    }
+  }
 }

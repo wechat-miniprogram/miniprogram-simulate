@@ -15,15 +15,15 @@ function runInAsync(options, res) {
 function getSize(string) {
   let total = 0
   for (let i = 0, len = string.length; i < len; i++) {
-    const charCode = string.charCodeAt(i);
+    const charCode = string.charCodeAt(i)
     if (charCode <= 0x007f) {
-      total += 1;
+      total += 1
     } else if (charCode <= 0x07ff) {
-      total += 2;
+      total += 2
     } else if (charCode <= 0xffff) {
-      total += 3;
+      total += 3
     } else {
-      total += 4;
+      total += 4
     }
   }
 
@@ -40,7 +40,7 @@ function mockSync(ret) {
 /**
  * 快速模拟异步接口
  */
-function mockAsync(name){
+function mockAsync(name) {
   return (options = {}) => {
     const res = {
       errMsg: `${name}:ok`,

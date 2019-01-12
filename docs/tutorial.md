@@ -1,3 +1,69 @@
+# 框架选择
+
+可搭配大部分流行框架使用，只要其满足 js 运行环境和 dom 环境即可。以下简单介绍下 jest 和 karma：
+
+## jest
+
+jest 是直接在 nodejs 环境进行测试，使用 jsdom 进行 dom 环境的模拟。在使用时需要将 jest 的 `testEnvironment` 配置为 `jsdom`。
+
+> jest 内置 jsdom，所有不需要额外引入。
+
+## karma
+
+karma 可使用浏览器真实环境来运行测试用例，但是因为小程序自定义组件的文件是割裂的，而浏览器环境没有文件系统支持，因此需要做一些特殊处理。
+
+安装 preprocessor：
+
+```
+npm install --save-dev karma-dirname-preprocessor karma-filemap-preprocessor karma-webpack
+```
+
+配置 karma.conf.js 中的 files、preprocessors、webpack 字段：
+
+```js
+module.exports = function(config) {
+    config.set({
+        // 其他配置 ......
+        files: [
+            'node_modules/miniprogram-simulate/build.js', // miniprogram-simulate
+            'test/spec/*.spec.js', // 测试用例
+            'src/component/*', // 组件文件
+        ],
+        preprocessors: {
+            'src/component/*': ['filemap'], // 组件文件使用 filemap 将各个文件内容注入到浏览器
+            'test/spec/*.spec.js': ['webpack', 'dirname'], // 使用 webpack 进行打包，使用 dirname 处理测试用例中的 __dirname 变量
+        },
+        webpack: {
+            optimization: {
+                minimize: false, // 不做压缩，方便调试
+            },
+            node: {
+                __dirname: false, // 不注入 __dirname，由 preprocessor 来处理
+            },
+        },
+        // 其他配置 ......
+    })
+}
+```
+
+然后测试用例如下方式来编写（以使用 mocha + chai 的方式为例）：
+
+```js
+const path = require('path')
+const expect = require('chai').expect
+
+describe('component', () => {
+    it ('should run successfully', () => {
+        const id = simulate.load(path.resolve(__dirname, '../src/component/index'))
+        const comp = simulate.render(id, {prop: 'index.test.properties'})
+
+        comp.attach(document.body) // 挂载在 body 下面
+
+        expect(simulate.match(comp.dom, '<wx-view class="main--index">index.test.properties</wx-view>')).to.equal(true)
+    })
+})
+```
+
 # 使用指南
 
 以下均以 miniprogram-simulate + jest 的方式来介绍。

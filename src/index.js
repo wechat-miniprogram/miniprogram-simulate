@@ -1,3 +1,4 @@
+/* global Event */
 const path = require('path')
 const jComponent = require('j-component')
 
@@ -89,10 +90,8 @@ function register(componentPath, tagName, cache) {
     usingComponents[key] = id
   }
 
-  // require 自定义组件的 js
-  // eslint-disable-next-line import/no-dynamic-require
-  require(componentPath)
-  delete require.cache[require.resolve(componentPath)]
+  // 执行自定义组件的 js
+  _.runJs(componentPath)
 
   // 保存追加了已编译的 wxss
   cache.wxss.push(wxss.compile(component.wxss, {
@@ -101,7 +100,7 @@ function register(componentPath, tagName, cache) {
   }))
 
   // 缓存 wxml
-  componentPath[componentPath] == component.wxml
+  componentPath[componentPath] = component.wxml
 
   nowLoad = oldLoad
 
@@ -185,13 +184,21 @@ function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
 
   const dom = comp.dom
   const delta = destOffset - dom[propName]
+  // eslint-disable-next-line no-bitwise
   const unit = ~~(delta / times)
+  const env = _.getEnv()
 
   for (let i = 0; i < times; i++) {
-    if (i === times - 1) dom[propName] = destOffset
-    else dom[propName] += unit
+    if (env === 'nodejs') {
+      // 模拟异步触发
+      setTimeout(() => {
+        if (i === times - 1) dom[propName] = destOffset
+        else dom[propName] += unit
 
-    dom.dispatchEvent(new Event('scroll', { bubbles: true, cancelable: false }))
+        dom.dispatchEvent(new Event('scroll', {bubbles: true, cancelable: false}))
+      }, 0)
+    } else if (i === times - 1) dom[propName] = destOffset
+    else dom[propName] += unit
   }
 }
 

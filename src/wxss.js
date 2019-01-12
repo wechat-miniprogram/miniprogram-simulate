@@ -59,7 +59,7 @@ function getContent(filePath) {
 
   if (wxss) {
     const importList = getImportList(wxss, filePath)
-    
+
     importList.forEach(item => {
       wxss = wxss.replace(item.code, getContent(item.path))
     })
@@ -77,7 +77,7 @@ function getContent(filePath) {
 function compile(wxss, options = {}) {
   if (options.less) {
     less.render(wxss, (err, output) => {
-      wxss = output.css
+      if (!err) wxss = output.css
     })
   }
 
@@ -87,7 +87,7 @@ function compile(wxss, options = {}) {
   }).css
 
   // 压缩
-  return csso.minify(wxss, { restructure: false }).css
+  return csso.minify(wxss, {restructure: false}).css
 }
 
 /**

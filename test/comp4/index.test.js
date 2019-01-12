@@ -1,7 +1,7 @@
 const path = require('path')
 const simulate = require('../../index')
 
-test('comp2', () => {
+test('comp4', () => {
     const id = simulate.load(path.resolve(__dirname, './index'))
     const comp = simulate.render(id)
 

@@ -187,7 +187,7 @@ module.exports = {
 
   // media
   // TOOD
-  
+
   // file
   // TODO
 
@@ -217,10 +217,10 @@ module.exports = {
     })
   },
   openLocation: _.mockAsync('openLocation'),
-  
+
   // device
   // TODO
-  
+
   // open
   ...openApi,
 
@@ -228,16 +228,16 @@ module.exports = {
   getUpdateManager() {
     return new UpdateManager()
   },
-  
+
   // worker
   // TODO
-  
+
   // report
   reportMonitor: _.mockSync(null),
-  
+
   // miniprogram
   // TODO
-  
+
   // base
   canIUse: _.mockSync(true),
 

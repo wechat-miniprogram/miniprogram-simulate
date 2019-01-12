@@ -1,12 +1,14 @@
 {
   "name": "miniprogram-simulate",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
-    "test": "jest ./test/* --silent --bail",
-    "coverage": "jest ./test/* --coverage --bail",
-    "codecov": "jest ./test/* --coverage && codecov",
+    "build": "webpack",
+    "karma": "karma start",
+    "test": "jest ./test/**/*.test.js --silent --bail",
+    "coverage": "jest ./test/**/*.test.js --coverage --bail",
+    "codecov": "jest ./test/***/*.test.js --coverage && codecov",
     "lint": "eslint \"src/**/*.js\" --fix"
   },
   "jest": {
@@ -32,13 +34,24 @@
   "author": "wechat-miniprogram",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.2.0",
     "codecov": "^3.1.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^3.8.0",
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "karma": "^3.1.4",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-dirname-preprocessor": "0.0.4",
+    "karma-filemap-preprocessor": "0.0.2",
+    "karma-mocha": "^1.3.0",
+    "karma-webpack": "^3.0.5",
+    "mocha": "^5.2.0",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   },
   "dependencies": {
     "csso": "^3.5.1",

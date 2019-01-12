@@ -2,7 +2,7 @@ const _ = require('./utils')
 
 module.exports = {
   getAccountInfoSync: _.mockSync({
-    miniprogram: { appId: 'wx4f4bc4dec97d474b' },
+    miniprogram: {appId: 'wx4f4bc4dec97d474b'},
   }),
   chooseAddress(options = {}) {
     _.runInAsync(options, {
@@ -19,13 +19,11 @@ module.exports = {
   },
   authorize: _.mockAsync('authorize'),
   addCard(options = {}) {
-    const cardList = (options.cardList || []).map(item => {
-      return {
-        code: 'this is a mock code',
-        isSuccess: true,
-        ...item,
-      }
-    })
+    const cardList = (options.cardList || []).map(item => ({
+      code: 'this is a mock code',
+      isSuccess: true,
+      ...item,
+    }))
 
     _.runInAsync(options, {
       errMsg: 'addCard:ok',

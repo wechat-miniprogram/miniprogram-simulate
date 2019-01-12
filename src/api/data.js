@@ -1,8 +1,9 @@
+/* global localStorage */
 const _ = require('./utils')
 
 module.exports = {
   clearStorage(options) {
-    const res = { errMsg: 'clearStorage:ok' }
+    const res = {errMsg: 'clearStorage:ok'}
     try {
       wx.clearStorageSync()
     } catch (err) {
@@ -15,7 +16,7 @@ module.exports = {
     localStorage.clear()
   },
   getStorage(options) {
-    const res = { errMsg: 'getStorage:ok' }
+    const res = {errMsg: 'getStorage:ok'}
     try {
       res.data = wx.getStorageSync(options.key)
     } catch (err) {
@@ -28,7 +29,7 @@ module.exports = {
     return JSON.parse(localStorage.getItem(key))
   },
   getStorageInfo(options) {
-    let res = { errMsg: 'getStorageInfo:ok' }
+    let res = {errMsg: 'getStorageInfo:ok'}
     try {
       const data = wx.getStorageInfoSync()
       res = Object.assign(res, data)
@@ -56,7 +57,7 @@ module.exports = {
     }
   },
   removeStorage(options) {
-    const res = { errMsg: 'removeStorage:ok' }
+    const res = {errMsg: 'removeStorage:ok'}
     try {
       wx.removeStorageSync(options.key)
     } catch (err) {
@@ -69,7 +70,7 @@ module.exports = {
     localStorage.removeItem(key)
   },
   setStorage(options) {
-    const res = { errMsg: 'setStorage:ok' }
+    const res = {errMsg: 'setStorage:ok'}
     try {
       wx.setStorageSync(options.key, options.data)
     } catch (err) {
