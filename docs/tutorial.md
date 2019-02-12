@@ -6,7 +6,7 @@
 
 jest 是直接在 nodejs 环境进行测试，使用 jsdom 进行 dom 环境的模拟。在使用时需要将 jest 的 `testEnvironment` 配置为 `jsdom`。
 
-> jest 内置 jsdom，所有不需要额外引入。
+> jest 内置 jsdom，所以不需要额外引入。
 
 ## karma
 
