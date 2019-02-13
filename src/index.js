@@ -188,17 +188,29 @@ function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
   const unit = ~~(delta / times)
   const env = _.getEnv()
 
-  for (let i = 0; i < times; i++) {
-    if (env === 'nodejs') {
-      // 模拟异步触发
+  if (env === 'nodejs') {
+    for (let i = 0; i < times; i++) {
+      // nodejs 环境
       setTimeout(() => {
         if (i === times - 1) dom[propName] = destOffset
         else dom[propName] += unit
 
+        // 模拟异步触发
         dom.dispatchEvent(new Event('scroll', {bubbles: true, cancelable: false}))
       }, 0)
-    } else if (i === times - 1) dom[propName] = destOffset
-    else dom[propName] += unit
+    }
+  } else {
+    // 浏览器
+    let i = 0
+    const timer = setInterval(() => {
+      if (i === times - 1) {
+        dom[propName] = destOffset
+        clearInterval(timer)
+      } else {
+        dom[propName] += unit
+        i++
+      }
+    }, 16)
   }
 }
 

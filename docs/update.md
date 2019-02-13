@@ -33,4 +33,8 @@
 
 * 支持接入 karma 测试（浏览器环境）
 
+## 0.3.0
+
+* 修复 karma 环境下 scroll 事件触发次数不足的问题
+
 ## next version

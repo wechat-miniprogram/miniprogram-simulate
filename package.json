@@ -1,11 +1,11 @@
 {
   "name": "miniprogram-simulate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "karma": "karma start",
+    "karma": "npm run build && karma start",
     "test": "jest ./test/**/*.test.js --silent --bail",
     "coverage": "jest ./test/**/*.test.js --coverage --bail",
     "codecov": "jest ./test/***/*.test.js --coverage && codecov",
