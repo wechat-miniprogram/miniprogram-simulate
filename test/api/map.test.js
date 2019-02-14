@@ -3,7 +3,7 @@ const _ = require('../utils')
 const MapContext = require('../../src/api/map')
 
 test('createMapContext', async () => {
-    const id = simulate.load({
+    const id = await simulate.load({
         template: `<div><map id="abc"></map></div>`,
         attached() {
             this.ctx = wx.createMapContext('abc', this)

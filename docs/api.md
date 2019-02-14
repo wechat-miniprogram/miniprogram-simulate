@@ -1,10 +1,10 @@
 # 接口
 
 * [behavior](#behaviordefinition)
-* [load](#loadcomponentpath-tagname-options--loaddefinition)
+* [load](#async-loadcomponentpath-tagname-options--loaddefinition)
 * [render](#rendercomponentid-properties)
 * [match](#matchdom-html)
-* [sleep](#sleeptimeout)
+* [sleep](#async-sleeptimeout)
 * [scroll](#scrollcomponent-destoffset-times-propname)
 * [Class: Component](#class-component)
 * [Class: RootComponent](#class-rootcomponent)
@@ -23,7 +23,7 @@ const behavior = simulate.behavior({
 });
 ```
 
-## load(componentPath, tagName, options) / load(definition)
+## async load(componentPath, tagName, options) / load(definition)
 
 加载自定义组件，返回 componentId。加载方式有两种，一种是传入自定义组件的路径，另一种是传入自定义组件的定义对象。
 
@@ -120,7 +120,7 @@ const rootComp = simulate.render(id)
 const isMatch = simulate.match(dom, '<view>123</view>')
 ```
 
-## sleep(timeout)
+## async sleep(timeout)
 
 延迟一定时间执行后续代码，主要用于处理需要等待一定时间才能往后续进行操作的情况。此方法会返回一个 promise 对象。
 

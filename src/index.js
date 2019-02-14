@@ -4,12 +4,22 @@ const jComponent = require('j-component')
 
 const _ = require('./utils')
 const wxss = require('./wxss')
+const compile = require('./compile')
 const injectPolyfill = require('./polyfill')
 const injectDefinition = require('./definition')
 
 const componentMap = {}
-const wxmlCache = {}
 let nowLoad = null
+
+// 全局配置
+let globalConfig = {
+  compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
+  rootPath: '', // 项目根路径
+
+  hasConfig: false, // 开发者是否已调用过 config 方法
+  wxmlGwx: null,
+  wxssGwx: null,
+}
 
 /**
  * 自定义组件构造器
@@ -47,7 +57,7 @@ function behavior(definition) {
 /**
  * 注册自定义组件
  */
-function register(componentPath, tagName, cache) {
+async function register(componentPath, tagName, cache) {
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
@@ -68,12 +78,9 @@ function register(componentPath, tagName, cache) {
 
   // 读取自定义组件的静态内容
   component.tagName = tagName
-  component.wxml = wxmlCache[componentPath] || _.readFile(`${componentPath}.wxml`)
+  component.wxml = await compile.getWxml(componentPath, globalConfig)
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
   component.json = _.readJson(`${componentPath}.json`)
-
-  // 缓存 wxml 内容
-  wxmlCache[componentPath] = component.wxml
 
   if (!component.json) {
     throw new Error(`invalid componentPath: ${componentPath}`)
@@ -85,7 +92,7 @@ function register(componentPath, tagName, cache) {
   for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
     const key = usingComponentKeys[i]
     const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
-    const id = register(usingPath, key, cache)
+    const id = await register(usingPath, key, cache)
 
     usingComponents[key] = id
   }
@@ -110,7 +117,7 @@ function register(componentPath, tagName, cache) {
 /**
  * 加载自定义组件
  */
-function load(componentPath, tagName, options = {}) {
+async function load(componentPath, tagName, options = {}) {
   if (typeof tagName === 'object') {
     options = tagName
     tagName = ''
@@ -120,7 +127,7 @@ function load(componentPath, tagName, options = {}) {
     wxss: [],
     options,
   }
-  const id = register(componentPath, tagName, cache)
+  const id = await register(componentPath, tagName, cache)
 
   // 存入缓存
   componentMap[id] = cache

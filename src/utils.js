@@ -1,8 +1,9 @@
 const path = require('path')
 
-let fs = null
-let runJs = null // 执行 js
 let env = 'nodejs'
+let fs = null
+let compiler = null
+let runJs = null // 执行 js
 
 /**
  * 获取当前环境
@@ -17,6 +18,7 @@ function getEnv() {
 function setNodeJsEnv() {
   env = 'nodejs'
   fs = require('fs')
+  compiler = require('miniprogram-compiler')
   runJs = filePath => {
     // eslint-disable-next-line import/no-dynamic-require
     require(filePath)
@@ -97,6 +99,13 @@ function transformRpx(style) {
   return style.replace(/(\d+)rpx/ig, '$1px')
 }
 
+/**
+ * 获取 wxml、wxss 编译器
+ */
+function getCompiler() {
+  return compiler
+}
+
 module.exports = {
   getEnv,
   setNodeJsEnv,
@@ -105,4 +114,5 @@ module.exports = {
   readFile,
   readJson,
   transformRpx,
+  getCompiler,
 }
