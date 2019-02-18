@@ -50,9 +50,11 @@ console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 
 可选字段，加载自定义组件时传入的一些配置参数，支持如下字段：
 
-| 属性名 | 类型 | 描述 |
-|---|---|---|
-| less | Boolean | 自定义组件的 wxss 是否需要经过 less 编译 |
+| 属性名 | 类型 | 默认值 | 描述 |
+|---|---|---|---|
+| compiler | String | official | wxml 编译器类型，传入 official 表示使用官方编译器，传入 simulate 表示使用 js 实现的模拟编译器 |
+| rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板 |
+| less | Boolean | false | 自定义组件的 wxss 是否需要经过 less 编译 |
 
 ### definition
 

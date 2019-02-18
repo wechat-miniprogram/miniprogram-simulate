@@ -8,6 +8,7 @@ test('comp2', async () => {
     const parent = document.createElement('parent-wrapper')
     comp.attach(parent)
 
+    console.log(comp.dom.innerHTML)
     expect(simulate.match(comp.dom, `
         <wx-view class="custom-comp--index">index.test.properties</wx-view>
         <other-comp class="custom-comp--other"><wx-view class="other-comp--index">other.properties</wx-view></other-comp>

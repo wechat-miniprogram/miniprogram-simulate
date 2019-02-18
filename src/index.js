@@ -11,16 +11,6 @@ const injectDefinition = require('./definition')
 const componentMap = {}
 let nowLoad = null
 
-// 全局配置
-let globalConfig = {
-  compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
-  rootPath: '', // 项目根路径
-
-  hasConfig: false, // 开发者是否已调用过 config 方法
-  wxmlGwx: null,
-  wxssGwx: null,
-}
-
 /**
  * 自定义组件构造器
  */
@@ -74,13 +64,10 @@ async function register(componentPath, tagName, cache) {
   }
 
   const oldLoad = nowLoad
-  const component = nowLoad = {}
-
-  // 读取自定义组件的静态内容
-  component.tagName = tagName
-  component.wxml = await compile.getWxml(componentPath, globalConfig)
-  component.wxss = wxss.getContent(`${componentPath}.wxss`)
-  component.json = _.readJson(`${componentPath}.json`)
+  const component = nowLoad = {
+    tagName,
+    json: _.readJson(`${componentPath}.json`),
+  }
 
   if (!component.json) {
     throw new Error(`invalid componentPath: ${componentPath}`)
@@ -96,6 +83,10 @@ async function register(componentPath, tagName, cache) {
 
     usingComponents[key] = id
   }
+
+  // 读取自定义组件的静态内容
+  component.wxml = await compile.getWxml(componentPath, cache.options, usingComponents)
+  component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
   // 执行自定义组件的 js
   _.runJs(componentPath)
@@ -121,6 +112,18 @@ async function load(componentPath, tagName, options = {}) {
   if (typeof tagName === 'object') {
     options = tagName
     tagName = ''
+  }
+
+  if (typeof componentPath === 'string') {
+    options = Object.assign({
+      compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
+      rootPath: path.dirname(componentPath), // 项目根路径
+    }, options)
+  } else {
+    options = Object.assign({
+      compiler: 'simulate',
+      rootPath: '',
+    }, options)
   }
 
   const cache = {

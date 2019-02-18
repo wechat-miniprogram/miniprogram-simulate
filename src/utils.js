@@ -1,5 +1,16 @@
 const path = require('path')
 
+const officialTagList = [
+  'view', 'scroll-view', 'swiper', 'movable-view', 'cover-view', 'cover-view',
+  'icon', 'text', 'rich-text', 'progress',
+  'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'radio', 'slider', 'switch', 'textarea',
+  'navigator', 'function-page-navigator',
+  'audio', 'image', 'video', 'camera', 'live-player', 'live-pusher',
+  'map',
+  'canvas',
+  'open-data', 'web-view', 'ad'
+]
+
 let env = 'nodejs'
 let fs = null
 let compiler = null
@@ -106,6 +117,13 @@ function getCompiler() {
   return compiler
 }
 
+/**
+ * 获取内置组件标签列表
+ */
+function getOfficialTagList() {
+  return officialTagList
+}
+
 module.exports = {
   getEnv,
   setNodeJsEnv,
@@ -115,4 +133,5 @@ module.exports = {
   readJson,
   transformRpx,
   getCompiler,
+  getOfficialTagList,
 }

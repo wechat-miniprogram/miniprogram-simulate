@@ -1,0 +1,31 @@
+<include src="head.wxml"/>
+<import src="tmpl.wxml"/>
+<template is="tmpl"/>
+<template name="msgItem">
+    <view>
+        <text>{{index}}: {{msg}}</text>
+        <text>Time: {{time}}</text>
+    </view>
+</template>
+<template is="msgItem" data="{{...tmplData}}"></template>
+<wxs module="m1">
+  module.exports.getMessage = function(name) {
+    name = name || 'world';
+    return 'hello ' + name;
+  };
+</wxs>
+<view>{{m1.getMessage('june')}}</view>
+<view>
+    <view wx:if="{{flag}}">if</view>
+    <view wx:else>else {{elseData}}</view>
+    <view id="xx" attr="{{attrValue}}" bindtap="onTap">{{content}}</view>
+    <comp a="123" b="{{aa}}">
+        <view>I am slot</view>
+    </comp>
+    <view wx:for="{{list}}" wx:key="id">{{item.name}}-item</view>
+    <block>
+        <view>in block1</view>
+        <text>in block2</text>
+    </block>
+</view>
+<include src="./foot.wxml"></include>

@@ -37,6 +37,6 @@
 
 * 修复浏览器环境下 scroll 事件触发次数不足的问题
 * 调整 load 方法为 async 方法
-* 默认使用官方编译器进行 wxml 和 wxss 编译
+* 支持官方编译器，并且默认使用官方编译器进行 wxml 编译
 
 ## next version

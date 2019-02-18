@@ -57,7 +57,7 @@
     "csso": "^3.5.1",
     "j-component": "latest",
     "less": "^3.9.0",
-    "miniprogram-compiler": "0.0.1",
+    "miniprogram-compiler": "latest",
     "postcss": "^7.0.14"
   }
 }
