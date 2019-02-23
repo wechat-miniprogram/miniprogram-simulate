@@ -3,7 +3,7 @@ const expect = require('chai').expect
 
 describe('comp2', () => {
     it ('should run successfully', () => {
-        const id = simulate.load(path.resolve(__dirname, '../comp2/index'), 'custom-comp')
+        const id = simulate.load(path.resolve(__dirname, '../comp2/index'), 'custom-comp', { compiler: 'simulate' })
         const comp = simulate.render(id, {prop: 'index.test.properties'})
 
         comp.attach(document.body)

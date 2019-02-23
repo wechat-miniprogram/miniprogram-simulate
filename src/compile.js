@@ -113,7 +113,7 @@ module.exports = {
   /**
    * 获取 wxml
    */
-  async getWxml(componentPath, config, usingComponents) {
+  getWxml(componentPath, config, usingComponents) {
     let wxml = wxmlCache[componentPath]
 
     if (config.compiler === 'official') {
@@ -121,7 +121,7 @@ module.exports = {
       if (!compiler) throw new Error('not support official compiler, please use simulate compiler')
 
       window.__webview_engine_version__ = 0.02
-      const compileString = await compiler.wxmlToJs(config.rootPath)
+      const compileString = compiler.wxmlToJs(config.rootPath)
       const compileFunc = new Function(compileString)
 
       const gwx = compileFunc()

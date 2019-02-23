@@ -1,9 +1,9 @@
 const simulate = require('../../index')
 
-test('error', async () => {
+test('error', () => {
     let catchErr = null
     try {
-        await simulate.load(123)
+        simulate.load(123)
     } catch (err) {
         catchErr = err
     }
@@ -11,7 +11,7 @@ test('error', async () => {
 
     catchErr = null
     try {
-        await simulate.load('./index')
+        simulate.load('./index')
     } catch (err) {
         catchErr = err
     }

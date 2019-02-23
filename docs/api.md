@@ -1,7 +1,7 @@
 # 接口
 
 * [behavior](#behaviordefinition)
-* [load](#async-loadcomponentpath-tagname-options--loaddefinition)
+* [load](#loadcomponentpath-tagname-options--loaddefinition)
 * [render](#rendercomponentid-properties)
 * [match](#matchdom-html)
 * [sleep](#async-sleeptimeout)
@@ -23,7 +23,7 @@ const behavior = simulate.behavior({
 });
 ```
 
-## async load(componentPath, tagName, options) / load(definition)
+## load(componentPath, tagName, options) / load(definition)
 
 加载自定义组件，返回 componentId。加载方式有两种，一种是传入自定义组件的路径，另一种是传入自定义组件的定义对象。
 

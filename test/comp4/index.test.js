@@ -1,8 +1,8 @@
 const path = require('path')
 const simulate = require('../../index')
 
-test('comp4', async () => {
-    const id = await simulate.load(path.resolve(__dirname, './index'))
+test('comp4', () => {
+    const id = simulate.load(path.resolve(__dirname, './index'))
     const comp = simulate.render(id)
 
     const parent = document.createElement('parent-wrapper')

@@ -1,7 +1,7 @@
 const simulate = require('../../index')
 
-test('createSelectorQuery', async () => {
-    const id = await simulate.load({
+test('createSelectorQuery', () => {
+    const id = simulate.load({
         template: `<view></view>`,
         methods: {
             getSelectorQuery() {
@@ -20,8 +20,8 @@ test('createSelectorQuery', async () => {
     expect(selectorQuery._exparserNode).toBe(selectorQuery2._exparserNode)
 })
 
-test('createIntersectionObserver', async () => {
-    const id = await simulate.load({
+test('createIntersectionObserver', () => {
+    const id = simulate.load({
         template: `<view></view>`,
         methods: {
             getIntersectionObserver() {

@@ -2,11 +2,11 @@ const path = require('path')
 const simulate = require('../../index')
 
 test('comp3', async () => {
-    const childId = await simulate.load({
+    const childId = simulate.load({
         id: 'abc',
         template: '<div><slot/></div>',
     })
-    const id = await simulate.load(path.resolve(__dirname, './index'), { less: true })
+    const id = simulate.load(path.resolve(__dirname, './index'), { less: true })
     const comp = simulate.render(id)
 
     const parent = document.createElement('parent-wrapper')

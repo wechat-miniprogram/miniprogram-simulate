@@ -11,6 +11,7 @@ const officialTagList = [
   'open-data', 'web-view', 'ad'
 ]
 
+const compilerName = 'miniprogram-compiler' // 为了在 webpack 构建打包时不被分析出此依赖
 let env = 'nodejs'
 let fs = null
 let compiler = null
@@ -29,7 +30,7 @@ function getEnv() {
 function setNodeJsEnv() {
   env = 'nodejs'
   fs = require('fs')
-  compiler = require('miniprogram-compiler')
+  compiler = require(compilerName)
   runJs = filePath => {
     // eslint-disable-next-line import/no-dynamic-require
     require(filePath)
