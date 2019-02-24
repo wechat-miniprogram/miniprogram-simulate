@@ -1,12 +1,7 @@
 const path = require('path')
 const simulate = require('../../index')
 
-test('comp3', async () => {
-    const childId = simulate.load({
-        id: 'abc',
-        template: '<div><slot/></div>',
-    })
-    const id = simulate.load(path.resolve(__dirname, './index'), { less: true })
+async function runTest(id) {
     const comp = simulate.render(id)
 
     const parent = document.createElement('parent-wrapper')
@@ -22,4 +17,18 @@ test('comp3', async () => {
     expect(view.dom.innerHTML).toBe('<div>comp3.properties</div>')
 
     expect(comp.instance.print()).toBe(123)
+}
+
+test('comp3', async () => {
+    simulate.load({
+        id: 'abc',
+        template: '<div><slot/></div>',
+    })
+    let id = simulate.load(path.resolve(__dirname, './index'), { less: true })
+    await runTest(id)
+
+    jest.resetModules() // https://github.com/facebook/jest/issues/5120
+
+    id = simulate.load(path.resolve(__dirname, './index'), { less: true, compiler: 'simulate' })
+    await runTest(id)
 })

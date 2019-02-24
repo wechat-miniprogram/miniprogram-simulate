@@ -53,8 +53,10 @@ console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 | 属性名 | 类型 | 默认值 | 描述 |
 |---|---|---|---|
 | compiler | String | official | wxml 编译器类型，传入 official 表示使用官方编译器，传入 simulate 表示使用 js 实现的模拟编译器 |
-| rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板 |
+| rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板，不传则取当前组件所在目录作为其值 |
 | less | Boolean | false | 自定义组件的 wxss 是否需要经过 less 编译 |
+
+> PS：在使用 karma 测试时只支持官方编译器编译 wxml 文件，不支持使用 js 模拟的编译器，因此就算在 simulate.load 方法中配置了 `compiler: 'simulate'` 也不会生效。
 
 ### definition
 
@@ -133,6 +135,8 @@ await simulate.sleep(300) // 等待 300ms 后再继续后续代码的执行
 ## scroll(component, destOffset, times, propName)
 
 模拟元素滚动。destOffset 为滚动的目标数值；times 为触发 scroll 事件的次数，默认为 20 次；propName 为滚动字段，默认为 scrollTop。
+
+> PS：在真实浏览器环境下 times 无效，具体 scroll 事件的触发次数取决于浏览器自身的实现。
 
 ```js
 simulate.scroll(component, 100, 15) // 纵向滚动到 scrollTop 为 100 的位置，期间会触发 15 次 scroll 事件

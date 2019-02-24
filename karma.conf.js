@@ -7,7 +7,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: path.resolve(__dirname, 'test'),
 
 
     // frameworks to use
@@ -17,12 +17,13 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        './build.js',
-        'test/spec/*.spec.js',
-        'test/comp1/*',
-        'test/comp2/*',
-        'test/comp3/*',
-        'test/comp4/*',
+        '../build.js',
+        'spec/*.spec.js',
+        'comp1/*',
+        'comp2/*',
+        'comp3/*',
+        'comp4/*',
+        'comp5/*',
     ],
 
 
@@ -34,11 +35,12 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'test/comp1/*': ['filemap'],
-        'test/comp2/*': ['filemap'],
-        'test/comp3/*': ['filemap'],
-        'test/comp4/*': ['filemap'],
-        'test/spec/*.spec.js': ['webpack', 'dirname'],
+        'comp1/*': ['filemap'],
+        'comp2/*': ['filemap'],
+        'comp3/*': ['filemap'],
+        'comp4/*': ['filemap'],
+        'comp5/*': ['filemap'],
+        'spec/*.spec.js': ['webpack', 'dirname'],
     },
 
 

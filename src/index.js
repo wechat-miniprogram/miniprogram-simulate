@@ -97,9 +97,6 @@ function register(componentPath, tagName, cache) {
     ...cache.options,
   }))
 
-  // 缓存 wxml
-  componentPath[componentPath] = component.wxml
-
   nowLoad = oldLoad
 
   return component.id
@@ -188,7 +185,8 @@ function sleep(time = 0) {
  * 模拟滚动
  */
 function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
-  if (!comp || !comp.dom || times <= 0) throw new Error('invalid params')
+  if (!comp || !comp.dom) throw new Error('invalid params')
+  if (typeof times !== 'number' || times <= 0) times = 1
 
   destOffset = destOffset < 0 ? 0 : destOffset
 
@@ -211,16 +209,7 @@ function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
     }
   } else {
     // 浏览器
-    let i = 0
-    const timer = setInterval(() => {
-      if (i === times - 1) {
-        dom[propName] = destOffset
-        clearInterval(timer)
-      } else {
-        dom[propName] += unit
-        i++
-      }
-    }, 16)
+    dom[propName] = destOffset
   }
 }
 

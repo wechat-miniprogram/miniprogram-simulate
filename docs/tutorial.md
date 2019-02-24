@@ -18,12 +18,13 @@ karma 可使用浏览器真实环境来运行测试用例，但是因为小程�
 npm install --save-dev karma-dirname-preprocessor karma-filemap-preprocessor karma-webpack
 ```
 
-配置 karma.conf.js 中的 files、preprocessors、webpack 字段：
+配置 karma.conf.js 中的 basePath、files、preprocessors、webpack 字段：
 
 ```js
 module.exports = function(config) {
     config.set({
         // 其他配置 ......
+        basePath: path.resolve(__dirname, './test'), // 被测试组件所在根目录，因为编译器的限制，要求所有被测组件必须在此目录下
         files: [
             'node_modules/miniprogram-simulate/build.js', // 注入 miniprogram-simulate，会在 window 下挂载 simulate 对象
             'test/spec/*.spec.js', // 测试用例
@@ -65,6 +66,8 @@ describe('component', () => {
     })
 })
 ```
+
+> PS：在使用 karma 测试时只支持官方编译器编译 wxml 文件，不支持使用 js 模拟的编译器，因此就算在 simulate.load 方法中配置了 `compiler: 'simulate'` 也不会生效。
 
 # 使用指南
 

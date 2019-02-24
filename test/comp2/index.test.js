@@ -1,8 +1,7 @@
 const path = require('path')
 const simulate = require('../../index')
 
-test('comp2', () => {
-    const id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp')
+function runTest(id) {
     const comp = simulate.render(id, {prop: 'index.test.properties'})
 
     const parent = document.createElement('parent-wrapper')
@@ -15,5 +14,15 @@ test('comp2', () => {
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe('100px')
     expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('rgb(255, 255, 0)')
-    expect(comp.dom.tagName).toBe('CUSTOM-COMP')
+    expect(comp.dom.tagName).toBe('CUSTOM-COMP') 
+}
+
+test('comp2', () => {
+    let id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp')
+    runTest(id)
+
+    jest.resetModules() // https://github.com/facebook/jest/issues/5120
+
+    id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp', { compiler: 'simulate' })
+    runTest(id)
 })
