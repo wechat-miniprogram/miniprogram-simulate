@@ -9,7 +9,7 @@ module.exports = {
   /**
    * 获取 wxml
    */
-  getWxml(componentPath, config, usingComponents) {
+  getWxml(componentPath, config) {
     let wxml = wxmlCache[componentPath]
 
     if (wxml) return wxml
@@ -19,7 +19,7 @@ module.exports = {
         wxml = _.readFile(`${componentPath}.wxml`)
         if (typeof wxml !== 'function') {
           // 可能是用官方编译器编译好的函数，所以需要加此判断（如在 karma 测试）
-          throw new Error('not support official compiler, please use simulate compiler') 
+          throw new Error('not support official compiler, please use simulate compiler')
         }
       } else {
         let gwx
@@ -27,6 +27,7 @@ module.exports = {
           gwx = compilerResCache[config.rootPath]
         } else {
           const compileString = compiler.wxmlToJs(config.rootPath)
+          // eslint-disable-next-line no-new-func
           const compileFunc = new Function(compileString)
 
           gwx = compileFunc()

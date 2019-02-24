@@ -19,6 +19,7 @@ function getEnv() {
 function setNodeJsEnv() {
   env = 'nodejs'
   fs = require('fs')
+  // eslint-disable-next-line import/no-dynamic-require
   compiler = require(compilerName)
   runJs = filePath => {
     // eslint-disable-next-line import/no-dynamic-require
