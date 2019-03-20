@@ -37,4 +37,8 @@
 
 * 支持官方编译器，并且默认使用官方编译器进行 wxml 编译
 
+## 1.0.1 & 依赖 miniprogram-compiler 更新 0.1.0
+
+* 修复子组件路径拼接错误问题
+
 ## next version
