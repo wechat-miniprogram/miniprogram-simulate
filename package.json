@@ -6,14 +6,15 @@
   "scripts": {
     "build": "webpack",
     "karma": "npm run build && karma start",
-    "test": "jest ./test/**/*.test.js --silent --bail",
-    "coverage": "jest ./test/**/*.test.js --coverage --bail",
-    "codecov": "jest ./test/***/*.test.js --coverage && codecov",
+    "test": "jest --silent --bail",
+    "coverage": "jest --coverage --bail",
+    "codecov": "jest --coverage && codecov",
     "lint": "eslint \"src/**/*.js\" --fix"
   },
   "jest": {
     "testEnvironment": "jsdom",
     "testURL": "https://jest.test",
+    "testMatch": ["**/test/**/*.test.js"],
     "collectCoverageFrom": [
       "src/*.js"
     ],

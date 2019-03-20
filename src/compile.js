@@ -34,7 +34,8 @@ module.exports = {
           compilerResCache[config.rootPath] = gwx
         }
 
-        const relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
+        let relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
+        relativeWxmlPath = relativeWxmlPath.replace(/\\/g, '/')
 
         // 构建编译结果为函数
         wxml = gwx(relativeWxmlPath)
