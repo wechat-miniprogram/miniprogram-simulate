@@ -2,7 +2,7 @@ const path = require('path')
 const simulate = require('../../index')
 
 function runTest(id) {
-    const comp = simulate.render(id, {prop: 'index.test.properties'})
+    const comp = simulate.render(id, { prop: 'index.test.properties' })
 
     const parent = document.createElement('parent-wrapper')
     comp.attach(parent)
@@ -10,6 +10,8 @@ function runTest(id) {
     expect(simulate.match(comp.dom, '<wx-view class="main--index">index.test.properties</wx-view>')).toBe(true)
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(comp.dom.tagName).toBe('MAIN')
+
+    expect(comp.instance.data.observerArr).toEqual(['index.test.properties', 'index.properties'])
 }
 
 test('comp1', () => {

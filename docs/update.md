@@ -41,4 +41,8 @@
 
 * 修复子组件路径拼接错误问题
 
+## 依赖 j-component 更新 1.1.2
+
+* 修复初始传入字符串类型 property 时没有触发 observer 的问题
+
 ## next version
