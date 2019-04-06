@@ -27,5 +27,6 @@
         <view>in block1</view>
         <text>in block2</text>
     </block>
+    <comp id="aa" aa="{{aa}}"></comp>
 </view>
 <include src="./foot.wxml"></include>

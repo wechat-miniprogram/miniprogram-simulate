@@ -2,7 +2,12 @@ Component({
     properties: {
         aa: {
             type: String,
-            value: ''
+            value: '',
+            observer(newVal, oldVal) {
+                this.setData({
+                    observerArr: [newVal, oldVal],
+                })
+            },
         },
     },
 })
