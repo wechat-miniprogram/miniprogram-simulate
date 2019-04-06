@@ -18,11 +18,12 @@ async function runTest(id, data) {
 
 test('comp4', async () => {
     let id = simulate.load(path.resolve(__dirname, './index'))
-    // await runTest(id)
+    await runTest(id)
     await runTest(id, 998)
 
     jest.resetModules() // https://github.com/facebook/jest/issues/5120
 
-    // id = simulate.load(path.resolve(__dirname, './index'), { compiler: 'simulate' })
-    // await runTest(id)
+    id = simulate.load(path.resolve(__dirname, './index'), { compiler: 'simulate' })
+    await runTest(id)
+    await runTest(id, 998)
 })
