@@ -48,6 +48,9 @@ function behavior(definition) {
  * 注册自定义组件
  */
 function register(componentPath, tagName, cache) {
+  // 用于 wcc 编译器使用
+  if (window.__webview_engine_version__ !== 0.02) window.__webview_engine_version__ = 0.02
+
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
