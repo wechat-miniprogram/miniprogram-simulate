@@ -108,6 +108,16 @@ function getCompiler() {
   return compiler
 }
 
+/**
+ * 获取随机 id
+ */
+let seed = +new Date();
+const charString = 'abcdefghij';
+function getId() {
+  const id = ++seed;
+  return id.toString().split('').map(item => charString[+item]).join('');
+}
+
 module.exports = {
   getEnv,
   setNodeJsEnv,
@@ -117,4 +127,5 @@ module.exports = {
   readJson,
   transformRpx,
   getCompiler,
+  getId,
 }

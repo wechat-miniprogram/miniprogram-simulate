@@ -17,6 +17,7 @@ let nowLoad = null
 global.Component = options => {
   const component = nowLoad
   const definition = Object.assign({
+    id: component.id,
     template: component.wxml,
     usingComponents: component.json.usingComponents,
     tagName: component.tagName,
@@ -47,7 +48,7 @@ function behavior(definition) {
 /**
  * 注册自定义组件
  */
-function register(componentPath, tagName, cache) {
+function register(componentPath, tagName, cache, hasRegisterCache) {
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
@@ -63,29 +64,36 @@ function register(componentPath, tagName, cache) {
     tagName = 'main' // 默认标签名
   }
 
+  const id = _.getId()
+
+  if (hasRegisterCache[componentPath]) return hasRegisterCache[componentPath]
+  hasRegisterCache[componentPath] = id
+  
   const oldLoad = nowLoad
   const component = nowLoad = {
+    id,
     tagName,
     json: _.readJson(`${componentPath}.json`),
   }
-
+  
   if (!component.json) {
     throw new Error(`invalid componentPath: ${componentPath}`)
   }
-
+  
   // 先加载 using components
   const usingComponents = component.json.usingComponents || {}
   const usingComponentKeys = Object.keys(usingComponents)
   for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
     const key = usingComponentKeys[i]
     const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
-    const id = register(usingPath, key, cache)
-
+    const id = register(usingPath, key, cache, hasRegisterCache)
+    
     usingComponents[key] = id
   }
-
+  
   // 读取自定义组件的静态内容
-  component.wxml = compile.getWxml(componentPath, cache.options, usingComponents)
+  debugger
+  component.wxml = compile.getWxml(componentPath, cache.options)
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
   // 执行自定义组件的 js
@@ -127,7 +135,8 @@ function load(componentPath, tagName, options = {}) {
     wxss: [],
     options,
   }
-  const id = register(componentPath, tagName, cache)
+  const hasRegisterCache = {}
+  const id = register(componentPath, tagName, cache, hasRegisterCache)
 
   // 存入缓存
   componentMap[id] = cache

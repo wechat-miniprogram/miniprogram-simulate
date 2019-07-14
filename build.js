@@ -2123,11 +2123,11 @@ function setNodeJsEnv() {
   env = 'nodejs'
   fs = __webpack_require__(71)
   // eslint-disable-next-line import/no-dynamic-require
-  compiler = __webpack_require__(13)(compilerName)
+  compiler = __webpack_require__(14)(compilerName)
   runJs = filePath => {
     // eslint-disable-next-line import/no-dynamic-require
-    __webpack_require__(13)(filePath)
-    delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(13).resolve(filePath))]
+    __webpack_require__(14)(filePath)
+    delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(14).resolve(filePath))]
   }
 }
 
@@ -2211,6 +2211,16 @@ function getCompiler() {
   return compiler
 }
 
+/**
+ * 获取随机 id
+ */
+let seed = +new Date();
+const charString = 'abcdefghij';
+function getId() {
+  const id = ++seed;
+  return id.toString().split('').map(item => charString[+item]).join('');
+}
+
 module.exports = {
   getEnv,
   setNodeJsEnv,
@@ -2220,6 +2230,7 @@ module.exports = {
   readJson,
   transformRpx,
   getCompiler,
+  getId,
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
@@ -2334,6 +2345,190 @@ module.exports = {
 
 /***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const exparser = __webpack_require__(3);
+const CONSTANT = __webpack_require__(6);
+const _ = __webpack_require__(4);
+
+const transitionKeys = ['transition', 'transitionProperty', 'transform', 'transformOrigin', 'webkitTransition', 'webkitTransitionProperty', 'webkitTransform', 'webkitTransformOrigin'];
+
+/**
+ * 更新 exparser 节点的属性
+ */
+function updateAttrs(exparserNode, attrs) {
+  const isComponentNode = exparserNode instanceof exparser.Component;
+  const dataProxy = exparser.Component.getDataProxy(exparserNode);
+  let needDoUpdate = false;
+
+  exparserNode.dataset = exparserNode.dataset || {};
+
+  for (const { name, value } of attrs) {
+    if (name === 'id' || name === 'slot' || (isComponentNode && name === 'class')) {
+      // 普通属性
+      exparserNode[name] = value || '';
+    } else if (isComponentNode && name === 'style') {
+      // style
+      if (exparserNode.$$) {
+        let animationStyle = exparserNode.__animationStyle || {};
+
+        animationStyle = transitionKeys.map(key => {
+          const styleValue = animationStyle[key.replace('webkitT', 't')];
+
+          return styleValue !== undefined ? `${key.replace(/([A-Z]{1})/g, char => `-${char.toLowerCase()}`)}:${styleValue}` : '';
+        }).filter(item => !!item.trim()).join(';');
+
+        exparserNode.setNodeStyle(_.transformRpx(value || '', true) + animationStyle);
+      }
+    } else if (isComponentNode && exparser.Component.hasPublicProperty(exparserNode, name)) {
+      // public 属性，延迟处理
+      dataProxy.scheduleReplace([name], value);
+      needDoUpdate = true;
+    } else if (/^data-/.test(name)) {
+      // dataset
+      exparserNode.dataset[_.dashToCamelCase(name.slice(5).toLowerCase())] = value;
+      exparserNode.setAttribute(name, value);
+    } else if (isComponentNode && name === 'animation') {
+      // 动画
+      if (exparserNode.$$ && value && value.actions && value.actions.length > 0) {
+        let index = 0;
+        const actions = value.actions;
+        const length = actions.length;
+        const step = function () {
+          if (index < length) {
+            const styleObject = _.animationToStyle(actions[index]);
+            const extraStyle = styleObject.style;
+
+            transitionKeys.forEach(key => {
+              exparserNode.$$.style[key] = styleObject[key.replace('webkitT', 't')];
+            });
+
+            Object.keys(extraStyle).forEach(key => {
+              exparserNode.$$.style[key] = _.transformRpx(extraStyle[key]);
+            });
+
+            exparserNode.__animationStyle = styleObject;
+          }
+        };
+
+        exparserNode.addListener('transitionend', () => {
+          index += 1;
+          step();
+        });
+        step();
+      }
+    } else if (isComponentNode && exparserNode.hasExternalClass(_.camelToDashCase(name))) {
+      // 外部样式类
+      exparserNode.setExternalClass(_.camelToDashCase(name), value);
+    }
+  }
+
+  if (needDoUpdate) dataProxy.doUpdates(true);
+}
+
+/**
+ * 更新 exparser 节点的事件监听
+ */
+function updateEvent(exparserNode, event) {
+  const convertEventTarget = (target, currentTarget) => {
+    if (currentTarget && (target instanceof exparser.VirtualNode) && !target.id && !Object.keys(target.dataset).length) {
+      // 如果 target 是 slot 且 slot 未设置 id 和 dataset，则兼容以前的逻辑：target === currentTarget
+      target = currentTarget;
+    }
+
+    return {
+      id: target.id,
+      offsetLeft: target.$$ && target.$$.offsetLeft || 0,
+      offsetTop: target.$$ && target.$$.offsetTop || 0,
+      dataset: target.dataset,
+    };
+  };
+
+  Object.keys(event).forEach(key => {
+    const { name, isCapture, isCatch, handler } = event[key];
+
+    if (!handler) return;
+
+    event[key].id = exparser.addListenerToElement(exparserNode, name, function (evt) {
+      const shadowRoot = exparserNode.ownerShadowRoot;
+
+      if (shadowRoot) {
+        const host = shadowRoot.getHostNode();
+        const writeOnly = exparser.Component.getComponentOptions(host).writeOnly;
+
+        if (!writeOnly) {
+          const caller = exparser.Element.getMethodCaller(host);
+
+          if (typeof caller[handler] === 'function') {
+            caller[handler]({
+              type: evt.type,
+              timeStamp: evt.timeStamp,
+              target: convertEventTarget(evt.target, this),
+              currentTarget: convertEventTarget(this, null),
+              detail: evt.detail,
+              touches: evt.touches,
+              changedTouches: evt.changedTouches,
+            });
+          }
+        }
+      }
+
+      if (isCatch) return false;
+    }, { capture: isCapture });
+  });
+}
+
+/**
+ * 渲染成 exparser 节点
+ */
+function renderExparserNode(options, shadowRootHost, shadowRoot) {
+  const type = options.type;
+  const tagName = options.tagName;
+  const componentId = options.componentId;
+  let exparserNode;
+
+  if (type === CONSTANT.TYPE_TEXT) {
+    exparserNode = exparser.createTextNode(options.content); // save exparser node
+  } else {
+    if (type === CONSTANT.TYPE_ROOT) {
+      shadowRoot = exparser.ShadowRoot.create(shadowRootHost);
+      exparserNode = shadowRoot;
+    } else if (type === CONSTANT.TYPE_SLOT) {
+      exparserNode = exparser.VirtualNode.create(tagName);
+      exparser.Element.setSlotName(exparserNode, options.slotName);
+    } else if (type === CONSTANT.TYPE_TEMPLATE || type === CONSTANT.TYPE_IF || type === CONSTANT.TYPE_FOR || type === CONSTANT.TYPE_FORITEM) {
+      exparserNode = exparser.VirtualNode.create(tagName);
+      exparser.Element.setInheritSlots(exparserNode);
+    } else {
+      const componentTagName = _.getTagName(componentId || tagName) || tagName;
+      const componentName = componentId || tagName;
+      exparserNode = shadowRoot.createComponent(componentTagName, componentName, options.generics);
+    }
+
+    updateAttrs(exparserNode, options.attrs);
+    updateEvent(exparserNode, options.event);
+
+    // children
+    options.children.forEach(vt => {
+      const childExparserNode = renderExparserNode(vt, null, shadowRoot);
+      exparserNode.appendChild(childExparserNode);
+    });
+  }
+
+  options.exparserNode = exparserNode; // 保存 exparser node
+
+  return exparserNode;
+}
+
+module.exports = {
+  updateAttrs,
+  updateEvent,
+  renderExparserNode,
+};
+
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports) {
 
 function webpackEmptyContext(req) {
@@ -2344,10 +2539,10 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 13;
+webpackEmptyContext.id = 14;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2356,7 +2551,7 @@ webpackEmptyContext.id = 13;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _node = _interopRequireDefault(__webpack_require__(15));
+var _node = _interopRequireDefault(__webpack_require__(16));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2452,7 +2647,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2465,7 +2660,7 @@ var _cssSyntaxError = _interopRequireDefault(__webpack_require__(35));
 
 var _stringifier = _interopRequireDefault(__webpack_require__(36));
 
-var _stringify = _interopRequireDefault(__webpack_require__(16));
+var _stringify = _interopRequireDefault(__webpack_require__(17));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3063,7 +3258,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3088,7 +3283,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4885,7 +5080,7 @@ function isnan (val) {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4922,7 +5117,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4931,7 +5126,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _node = _interopRequireDefault(__webpack_require__(15));
+var _node = _interopRequireDefault(__webpack_require__(16));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4986,7 +5181,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4995,7 +5190,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(22));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5122,7 +5317,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5131,11 +5326,11 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(14));
+var _declaration = _interopRequireDefault(__webpack_require__(15));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(20));
 
-var _node = _interopRequireDefault(__webpack_require__(15));
+var _node = _interopRequireDefault(__webpack_require__(16));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5861,7 +6056,7 @@ function (_Node) {
     var _this = this;
 
     if (typeof nodes === 'string') {
-      var parse = __webpack_require__(18);
+      var parse = __webpack_require__(19);
 
       nodes = cleanSource(parse(nodes).nodes);
     } else if (Array.isArray(nodes)) {
@@ -5911,11 +6106,11 @@ function (_Node) {
 
       nodes = [new _declaration.default(nodes)];
     } else if (nodes.selector) {
-      var Rule = __webpack_require__(22);
+      var Rule = __webpack_require__(23);
 
       nodes = [new Rule(nodes)];
     } else if (nodes.name) {
-      var AtRule = __webpack_require__(20);
+      var AtRule = __webpack_require__(21);
 
       nodes = [new AtRule(nodes)];
     } else if (nodes.text) {
@@ -5998,7 +6193,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6007,7 +6202,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(22));
 
 var _list = _interopRequireDefault(__webpack_require__(43));
 
@@ -6123,7 +6318,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function createCustomError(name, message) {
@@ -6146,7 +6341,7 @@ module.exports = function createCustomError(name, message) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6324,7 +6519,7 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 function noop(value) {
@@ -6440,7 +6635,7 @@ module.exports = function(node, options) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6552,7 +6747,7 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Tokenizer = __webpack_require__(104);
@@ -7059,7 +7254,7 @@ module.exports = parse;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
@@ -7107,7 +7302,7 @@ module.exports = {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var lexer = __webpack_require__(1).lexer;
@@ -7623,7 +7818,7 @@ module.exports = {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -7780,14 +7975,14 @@ module.exports = {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(61);
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Expression = __webpack_require__(66);
@@ -7842,190 +8037,6 @@ module.exports = {
       return '';
     }).join('');
   },
-};
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const exparser = __webpack_require__(3);
-const CONSTANT = __webpack_require__(6);
-const _ = __webpack_require__(4);
-
-const transitionKeys = ['transition', 'transitionProperty', 'transform', 'transformOrigin', 'webkitTransition', 'webkitTransitionProperty', 'webkitTransform', 'webkitTransformOrigin'];
-
-/**
- * 更新 exparser 节点的属性
- */
-function updateAttrs(exparserNode, attrs) {
-  const isComponentNode = exparserNode instanceof exparser.Component;
-  const dataProxy = exparser.Component.getDataProxy(exparserNode);
-  let needDoUpdate = false;
-
-  exparserNode.dataset = exparserNode.dataset || {};
-
-  for (const { name, value } of attrs) {
-    if (name === 'id' || name === 'slot' || (isComponentNode && name === 'class')) {
-      // 普通属性
-      exparserNode[name] = value || '';
-    } else if (isComponentNode && name === 'style') {
-      // style
-      if (exparserNode.$$) {
-        let animationStyle = exparserNode.__animationStyle || {};
-
-        animationStyle = transitionKeys.map(key => {
-          const styleValue = animationStyle[key.replace('webkitT', 't')];
-
-          return styleValue !== undefined ? `${key.replace(/([A-Z]{1})/g, char => `-${char.toLowerCase()}`)}:${styleValue}` : '';
-        }).filter(item => !!item.trim()).join(';');
-
-        exparserNode.setNodeStyle(_.transformRpx(value || '', true) + animationStyle);
-      }
-    } else if (isComponentNode && exparser.Component.hasPublicProperty(exparserNode, name)) {
-      // public 属性，延迟处理
-      dataProxy.scheduleReplace([name], value);
-      needDoUpdate = true;
-    } else if (/^data-/.test(name)) {
-      // dataset
-      exparserNode.dataset[_.dashToCamelCase(name.slice(5).toLowerCase())] = value;
-      exparserNode.setAttribute(name, value);
-    } else if (isComponentNode && name === 'animation') {
-      // 动画
-      if (exparserNode.$$ && value && value.actions && value.actions.length > 0) {
-        let index = 0;
-        const actions = value.actions;
-        const length = actions.length;
-        const step = function () {
-          if (index < length) {
-            const styleObject = _.animationToStyle(actions[index]);
-            const extraStyle = styleObject.style;
-
-            transitionKeys.forEach(key => {
-              exparserNode.$$.style[key] = styleObject[key.replace('webkitT', 't')];
-            });
-
-            Object.keys(extraStyle).forEach(key => {
-              exparserNode.$$.style[key] = _.transformRpx(extraStyle[key]);
-            });
-
-            exparserNode.__animationStyle = styleObject;
-          }
-        };
-
-        exparserNode.addListener('transitionend', () => {
-          index += 1;
-          step();
-        });
-        step();
-      }
-    } else if (isComponentNode && exparserNode.hasExternalClass(_.camelToDashCase(name))) {
-      // 外部样式类
-      exparserNode.setExternalClass(_.camelToDashCase(name), value);
-    }
-  }
-
-  if (needDoUpdate) dataProxy.doUpdates(true);
-}
-
-/**
- * 更新 exparser 节点的事件监听
- */
-function updateEvent(exparserNode, event) {
-  const convertEventTarget = (target, currentTarget) => {
-    if (currentTarget && (target instanceof exparser.VirtualNode) && !target.id && !Object.keys(target.dataset).length) {
-      // 如果 target 是 slot 且 slot 未设置 id 和 dataset，则兼容以前的逻辑：target === currentTarget
-      target = currentTarget;
-    }
-
-    return {
-      id: target.id,
-      offsetLeft: target.$$ && target.$$.offsetLeft || 0,
-      offsetTop: target.$$ && target.$$.offsetTop || 0,
-      dataset: target.dataset,
-    };
-  };
-
-  Object.keys(event).forEach(key => {
-    const { name, isCapture, isCatch, handler } = event[key];
-
-    if (!handler) return;
-
-    event[key].id = exparser.addListenerToElement(exparserNode, name, function (evt) {
-      const shadowRoot = exparserNode.ownerShadowRoot;
-
-      if (shadowRoot) {
-        const host = shadowRoot.getHostNode();
-        const writeOnly = exparser.Component.getComponentOptions(host).writeOnly;
-
-        if (!writeOnly) {
-          const caller = exparser.Element.getMethodCaller(host);
-
-          if (typeof caller[handler] === 'function') {
-            caller[handler]({
-              type: evt.type,
-              timeStamp: evt.timeStamp,
-              target: convertEventTarget(evt.target, this),
-              currentTarget: convertEventTarget(this, null),
-              detail: evt.detail,
-              touches: evt.touches,
-              changedTouches: evt.changedTouches,
-            });
-          }
-        }
-      }
-
-      if (isCatch) return false;
-    }, { capture: isCapture });
-  });
-}
-
-/**
- * 渲染成 exparser 节点
- */
-function renderExparserNode(options, shadowRootHost, shadowRoot) {
-  const type = options.type;
-  const tagName = options.tagName;
-  const componentId = options.componentId;
-  let exparserNode;
-
-  if (type === CONSTANT.TYPE_TEXT) {
-    exparserNode = exparser.createTextNode(options.content); // save exparser node
-  } else {
-    if (type === CONSTANT.TYPE_ROOT) {
-      shadowRoot = exparser.ShadowRoot.create(shadowRootHost);
-      exparserNode = shadowRoot;
-    } else if (type === CONSTANT.TYPE_SLOT) {
-      exparserNode = exparser.VirtualNode.create(tagName);
-      exparser.Element.setSlotName(exparserNode, options.slotName);
-    } else if (type === CONSTANT.TYPE_TEMPLATE || type === CONSTANT.TYPE_IF || type === CONSTANT.TYPE_FOR || type === CONSTANT.TYPE_FORITEM) {
-      exparserNode = exparser.VirtualNode.create(tagName);
-      exparser.Element.setInheritSlots(exparserNode);
-    } else {
-      const componentTagName = _.getTagName(componentId || tagName) || tagName;
-      const componentName = componentId || tagName;
-      exparserNode = shadowRoot.createComponent(componentTagName, componentName, options.generics);
-    }
-
-    updateAttrs(exparserNode, options.attrs);
-    updateEvent(exparserNode, options.event);
-
-    // children
-    options.children.forEach(vt => {
-      const childExparserNode = renderExparserNode(vt, null, shadowRoot);
-      exparserNode.appendChild(childExparserNode);
-    });
-  }
-
-  options.exparserNode = exparserNode; // 保存 exparser node
-
-  return exparserNode;
-}
-
-module.exports = {
-  updateAttrs,
-  updateEvent,
-  renderExparserNode,
 };
 
 
@@ -9182,13 +9193,13 @@ exports.default = void 0;
 
 var _mapGenerator = _interopRequireDefault(__webpack_require__(77));
 
-var _stringify2 = _interopRequireDefault(__webpack_require__(16));
+var _stringify2 = _interopRequireDefault(__webpack_require__(17));
 
 var _warnOnce = _interopRequireDefault(__webpack_require__(87));
 
 var _result = _interopRequireDefault(__webpack_require__(88));
 
-var _parse = _interopRequireDefault(__webpack_require__(18));
+var _parse = _interopRequireDefault(__webpack_require__(19));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10435,7 +10446,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(22));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10568,7 +10579,7 @@ module.exports = exports.default;
 "use strict";
 
 
-var constants = __webpack_require__(24);
+var constants = __webpack_require__(25);
 var PUNCTUATION = constants.PUNCTUATION;
 var STOP_URL_RAW = constants.STOP_URL_RAW;
 var TYPE = constants.TYPE;
@@ -10827,8 +10838,8 @@ module.exports = {
 "use strict";
 
 
-var createCustomError = __webpack_require__(23);
-var generateGrammar = __webpack_require__(25);
+var createCustomError = __webpack_require__(24);
+var generateGrammar = __webpack_require__(26);
 
 function fromMatchResult(matchResult) {
     var tokens = matchResult.tokens;
@@ -10930,7 +10941,7 @@ module.exports = {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var createCustomError = __webpack_require__(23);
+var createCustomError = __webpack_require__(24);
 
 var SyntaxParseError = function(message, input, offset) {
     var error = createCustomError('SyntaxParseError', message);
@@ -11015,7 +11026,7 @@ module.exports = function(node, options, context) {
 /* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parse = __webpack_require__(27);
+var parse = __webpack_require__(28);
 
 var MATCH = { type: 'Match' };
 var MISMATCH = { type: 'Mismatch' };
@@ -12363,7 +12374,7 @@ module.exports = __webpack_require__(60)
 
 /* WEBPACK VAR INJECTION */(function(global) {/* global Event */
 const path = __webpack_require__(2)
-const jComponent = __webpack_require__(31)
+const jComponent = __webpack_require__(32)
 
 const _ = __webpack_require__(10)
 const wxss = __webpack_require__(72)
@@ -12380,6 +12391,7 @@ let nowLoad = null
 global.Component = options => {
   const component = nowLoad
   const definition = Object.assign({
+    id: component.id,
     template: component.wxml,
     usingComponents: component.json.usingComponents,
     tagName: component.tagName,
@@ -12410,7 +12422,7 @@ function behavior(definition) {
 /**
  * 注册自定义组件
  */
-function register(componentPath, tagName, cache) {
+function register(componentPath, tagName, cache, hasRegisterCache) {
   if (typeof componentPath === 'object') {
     // 直接传入定义对象
     const definition = componentPath
@@ -12426,29 +12438,33 @@ function register(componentPath, tagName, cache) {
     tagName = 'main' // 默认标签名
   }
 
+  const id = _.getId()
+  
   const oldLoad = nowLoad
   const component = nowLoad = {
+    id,
     tagName,
     json: _.readJson(`${componentPath}.json`),
   }
-
+  
   if (!component.json) {
     throw new Error(`invalid componentPath: ${componentPath}`)
   }
-
+  
   // 先加载 using components
   const usingComponents = component.json.usingComponents || {}
   const usingComponentKeys = Object.keys(usingComponents)
   for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
     const key = usingComponentKeys[i]
     const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
-    const id = register(usingPath, key, cache)
-
+    const id = register(usingPath, key, cache, hasRegisterCache)
+    
     usingComponents[key] = id
   }
-
+  
   // 读取自定义组件的静态内容
-  component.wxml = compile.getWxml(componentPath, cache.options, usingComponents)
+  debugger
+  component.wxml = compile.getWxml(componentPath, cache.options)
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
   // 执行自定义组件的 js
@@ -12490,7 +12506,8 @@ function load(componentPath, tagName, options = {}) {
     wxss: [],
     options,
   }
-  const id = register(componentPath, tagName, cache)
+  const hasRegisterCache = {}
+  const id = register(componentPath, tagName, cache, hasRegisterCache)
 
   // 存入缓存
   componentMap[id] = cache
@@ -12648,7 +12665,7 @@ const exparser = __webpack_require__(3);
 const compile = __webpack_require__(63);
 const transform = __webpack_require__(67);
 const diff = __webpack_require__(68);
-const render = __webpack_require__(33);
+const render = __webpack_require__(13);
 const _ = __webpack_require__(4);
 const SelectorQuery = __webpack_require__(69);
 const IntersectionObserver = __webpack_require__(34);
@@ -12755,7 +12772,7 @@ class ComponentManager {
               callback();
             }, 0);
           }
-        }
+        };
 
         Object.keys(methods).forEach(name => caller[name] = methods[name]);
         exparser.Element.setMethodCaller(this, caller);
@@ -12877,7 +12894,7 @@ module.exports = ComponentManager;
 
 const parse = __webpack_require__(64);
 const VirtualNode = __webpack_require__(65);
-const expr = __webpack_require__(32);
+const expr = __webpack_require__(33);
 const _ = __webpack_require__(4);
 const CONSTANT = __webpack_require__(6);
 
@@ -13205,7 +13222,7 @@ module.exports = function (content, handler = {}) {
 /* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const expr = __webpack_require__(32);
+const expr = __webpack_require__(33);
 const CONSTANT = __webpack_require__(6);
 
 class VirtualNode {
@@ -14122,7 +14139,7 @@ module.exports = function (generateFunc, usingComponents) {
 /***/ (function(module, exports, __webpack_require__) {
 
 const exparser = __webpack_require__(3);
-const render = __webpack_require__(33);
+const render = __webpack_require__(13);
 const CONSTANT = __webpack_require__(6);
 
 /**
@@ -14543,6 +14560,7 @@ module.exports = SelectorQuery;
 const exparser = __webpack_require__(3);
 const _ = __webpack_require__(4);
 const IntersectionObserver = __webpack_require__(34);
+const render = __webpack_require__(13)
 
 const MOVE_DELTA = 10;
 const LONGPRESS_TIME = 350;
@@ -14705,9 +14723,16 @@ class RootComponent extends Component {
     const id = componentManager.id;
     const tagName = _.getTagName(id);
     const exparserDef = componentManager.exparserDef;
-    this._exparserNode = exparser.createElement(tagName || id, exparserDef, properties); // create exparser node and render
+    this._exparserNode = exparser.createElement(tagName || id, exparserDef); // create exparser node and render
     this._isTapCancel = false;
     this._lastScrollTime = 0;
+
+    if (properties && typeof properties === 'object') {
+      // 对齐 observer 逻辑，走 updateAttr 来更新 property
+      const propertyList = []
+      Object.keys(properties).forEach(key => propertyList.push({ name: key, value: properties[key] }))
+      render.updateAttrs(this._exparserNode, propertyList);
+    }
 
     this.parentNode = null;
 
@@ -14989,23 +15014,23 @@ module.exports = {
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(14));
+var _declaration = _interopRequireDefault(__webpack_require__(15));
 
 var _processor = _interopRequireDefault(__webpack_require__(37));
 
-var _stringify = _interopRequireDefault(__webpack_require__(16));
+var _stringify = _interopRequireDefault(__webpack_require__(17));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(20));
 
-var _atRule = _interopRequireDefault(__webpack_require__(20));
+var _atRule = _interopRequireDefault(__webpack_require__(21));
 
 var _vendor = _interopRequireDefault(__webpack_require__(95));
 
-var _parse = _interopRequireDefault(__webpack_require__(18));
+var _parse = _interopRequireDefault(__webpack_require__(19));
 
 var _list = _interopRequireDefault(__webpack_require__(43));
 
-var _rule = _interopRequireDefault(__webpack_require__(22));
+var _rule = _interopRequireDefault(__webpack_require__(23));
 
 var _root = _interopRequireDefault(__webpack_require__(44));
 
@@ -15649,7 +15674,7 @@ exports.default = _default;
 module.exports = exports.default;
 //# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hcC1nZW5lcmF0b3IuZXM2Il0sIm5hbWVzIjpbIk1hcEdlbmVyYXRvciIsInN0cmluZ2lmeSIsInJvb3QiLCJvcHRzIiwibWFwT3B0cyIsIm1hcCIsImlzTWFwIiwicHJldmlvdXMiLCJsZW5ndGgiLCJwcmV2aW91c01hcHMiLCJ3YWxrIiwibm9kZSIsInNvdXJjZSIsImlucHV0IiwiaW5kZXhPZiIsInB1c2giLCJpc0lubGluZSIsImlubGluZSIsImFubm90YXRpb24iLCJzb21lIiwiaSIsImlzU291cmNlc0NvbnRlbnQiLCJzb3VyY2VzQ29udGVudCIsIndpdGhDb250ZW50IiwiY2xlYXJBbm5vdGF0aW9uIiwibm9kZXMiLCJ0eXBlIiwidGV4dCIsInJlbW92ZUNoaWxkIiwic2V0U291cmNlc0NvbnRlbnQiLCJhbHJlYWR5IiwiZnJvbSIsInJlbGF0aXZlIiwic2V0U291cmNlQ29udGVudCIsImNzcyIsImFwcGx5UHJldk1hcHMiLCJwcmV2IiwiZmlsZSIsInBhdGgiLCJkaXJuYW1lIiwibW96aWxsYSIsIlNvdXJjZU1hcENvbnN1bWVyIiwiY29uc3VtZXIiLCJhcHBseVNvdXJjZU1hcCIsImlzQW5ub3RhdGlvbiIsInRvQmFzZTY0Iiwic3RyIiwiQnVmZmVyIiwidG9TdHJpbmciLCJ3aW5kb3ciLCJidG9hIiwidW5lc2NhcGUiLCJlbmNvZGVVUklDb21wb25lbnQiLCJhZGRBbm5vdGF0aW9uIiwiY29udGVudCIsIm91dHB1dEZpbGUiLCJlb2wiLCJ0byIsImdlbmVyYXRlTWFwIiwiZ2VuZXJhdGVTdHJpbmciLCJ0ZXN0IiwicmVzb2x2ZSIsInNlcCIsInJlcGxhY2UiLCJzb3VyY2VQYXRoIiwiU291cmNlTWFwR2VuZXJhdG9yIiwibGluZSIsImNvbHVtbiIsImxpbmVzIiwibGFzdCIsInN0YXJ0IiwiYWRkTWFwcGluZyIsImdlbmVyYXRlZCIsIm9yaWdpbmFsIiwibWF0Y2giLCJsYXN0SW5kZXhPZiIsInAiLCJwYXJlbnQiLCJyYXdzIiwic2VtaWNv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QVFDLGdCQUFBQSxNQUFNLEVBQUVBLE1BQU0sR0FBRztBQUF6QjtBQUhPLGFBQXBCO0FBS0Q7QUFDRjtBQUNGO0FBQ0YsS0FwREQ7QUFxREQsRzs7U0FFRGMsUSxHQUFBLG9CQUFZO0FBQ1YsU0FBS3pELGVBQUw7O0FBRUEsUUFBSSxLQUFLbEIsS0FBTCxFQUFKLEVBQWtCO0FBQ2hCLGFBQU8sS0FBS29ELFdBQUwsRUFBUDtBQUNEOztBQUVELFFBQUl3QixNQUFNLEdBQUcsRUFBYjtBQUNBLFNBQUtqRixTQUFMLENBQWUsS0FBS0MsSUFBcEIsRUFBMEIsVUFBQWtCLENBQUMsRUFBSTtBQUM3QjhELE1BQUFBLE1BQU0sSUFBSTlELENBQVY7QUFDRCxLQUZEO0FBR0EsV0FBTyxDQUFDOEQsTUFBRCxDQUFQO0FBQ0QsRzs7Ozs7ZUFHWWxGLFkiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgbW96aWxsYSBmcm9tICdzb3VyY2UtbWFwJ1xuaW1wb3J0IHBhdGggZnJvbSAncGF0aCdcblxuY2xhc3MgTWFwR2VuZXJhdG9yIHtcbiAgY29uc3RydWN0b3IgKHN0cmluZ2lmeSwgcm9vdCwgb3B0cykge1xuICAgIHRoaXMuc3RyaW5naWZ5ID0gc3RyaW5naWZ5XG4gICAgdGhpcy5tYXBPcHRzID0gb3B0cy5tYXAgfHwgeyB9XG4gICAgdGhpcy5yb290ID0gcm9vdFxuICAgIHRoaXMub3B0cyA9IG9wdHNcbiAgfVxuXG4gIGlzTWFwICgpIHtcbiAgICBpZiAodHlwZW9mIHRoaXMub3B0cy5tYXAgIT09ICd1bmRlZmluZWQnKSB7XG4gICAgICByZXR1cm4gISF0aGlzLm9wdHMubWFwXG4gICAgfVxuICAgIHJldHVybiB0aGlzLnByZXZpb3VzKCkubGVuZ3RoID4gMFxuICB9XG5cbiAgcHJldmlvdXMgKCkge1xuICAgIGlmICghdGhpcy5wcmV2aW91c01hcHMpIHtcbiAgICAgIHRoaXMucHJldmlvdXNNYXBzID0gW11cbiAgICAgIHRoaXMucm9vdC53YWxrKG5vZGUgPT4ge1xuICAgICAgICBpZiAobm9kZS5zb3VyY2UgJiYgbm9kZS5zb3VyY2UuaW5wdXQubWFwKSB7XG4gICAgICAgICAgbGV0IG1hcCA9IG5vZGUuc291cmNlLmlucHV0Lm1hcFxuICAgICAgICAgIGlmICh0aGlzLnByZXZpb3VzTWFwcy5pbmRleE9mKG1hcCkgPT09IC0xKSB7XG4gICAgICAgICAgICB0aGlzLnByZXZpb3VzTWFwcy5wdXNoKG1hcClcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH0pXG4gICAgfVxuXG4gICAgcmV0dXJuIHRoaXMucHJldmlvdXNNYXBzXG4gIH1cblxuICBpc0lubGluZSAoKSB7XG4gICAgaWYgKHR5cGVvZiB0aGlzLm1hcE9wdHMuaW5saW5lICE9PSAndW5kZWZpbmVkJykge1xuICAgICAgcmV0dXJuIHRoaXMubWFwT3B0cy5pbmxpbmVcbiAgICB9XG5cbiAgICBsZXQgYW5ub3RhdGlvbiA9IHRoaXMubWFwT3B0cy5hbm5vdGF0aW9uXG4gICAgaWYgKHR5cGVvZiBhbm5vdGF0aW9uICE9PSAndW5kZWZpbmVkJyAmJiBhbm5vdGF0aW9uICE9PSB0cnVlKSB7XG4gICAgICByZXR1cm4gZmFsc2VcbiAgICB9XG5cbiAgICBpZiAodGhpcy5wcmV2aW91cygpLmxlbmd0aCkge1xuICAgICAgcmV0dXJuIHRoaXMucHJldmlvdXMoKS5zb21lKGkgPT4gaS5pbmxpbmUpXG4gICAgfVxuICAgIHJldHVybiB0cnVlXG4gIH1cblxuICBpc1NvdXJjZXNDb250ZW50ICgpIHtcbiAgICBpZiAodHlwZW9mIHRoaXMubWFwT3B0cy5zb3VyY2VzQ29udGVudCAhPT0gJ3VuZGVmaW5lZCcpIHtcbiAgICAgIHJldHVybiB0aGlzLm1hcE9wdHMuc291cmNlc0NvbnRlbnRcbiAgICB9XG4gICAgaWYgKHRoaXMucHJldmlvdXMoKS5sZW5ndGgpIHtcbiAgICAgIHJldHVybiB0aGlzLnByZXZpb3VzKCkuc29tZShpID0+IGkud2l0aENvbnRlbnQoKSlcbiAgICB9XG4gICAgcmV0dXJuIHRydWVcbiAgfVxuXG4gIGNsZWFyQW5ub3RhdGlvbiAoKSB7XG4gICAgaWYgKHRoaXMubWFwT3B0cy5hbm5vdGF0aW9uID09PSBmYWxzZSkgcmV0dXJuXG5cbiAgICBsZXQgbm9kZVxuICAgIGZvciAobGV0IGkgPSB0aGlzLnJvb3Qubm9kZXMubGVuZ3RoIC0gMTsgaSA+PSAwOyBpLS0pIHtcbiAgICAgIG5vZGUgPSB0aGlzLnJvb3Qubm9kZXNbaV1cbiAgICAgIGlmIChub2RlLnR5cGUgIT09ICdjb21tZW50JykgY29udGludWVcbiAgICAgIGlmIChub2RlLnRleHQuaW5kZXhPZignIyBzb3VyY2VNYXBwaW5nVVJMPScpID09PSAwKSB7XG4gICAgICAgIHRoaXMucm9vdC5yZW1vdmVDaGlsZChpKVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIHNldFNvdXJjZXNDb250ZW50ICgpIHtcbiAgICBsZXQgYWxyZWFkeSA9IHsgfVxuICAgIHRoaXMucm9vdC53YWxrKG5vZGUgPT4ge1xuICAgICAgaWYgKG5vZGUuc291cmNlKSB7XG4gICAgICAgIGxldCBmcm9tID0gbm9kZS5zb3VyY2UuaW5wdXQuZnJvbVxuICAgICAgICBpZiAoZnJvbSAmJiAhYWxyZWFkeVtmcm9tXSkge1xuICAgICAgICAgIGFscmVhZHlbZnJvbV0gPSB0cnVlXG4gICAgICAgICAgbGV0IHJlbGF0aXZlID0gdGhpcy5yZWxhdGl2ZShmcm9tKVxuICAgICAgICAgIHRoaXMubWFwLnNldFNvdXJjZUNvbnRlbnQocmVsYXRpdmUsIG5vZGUuc291cmNlLmlucHV0LmNzcylcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH0pXG4gIH1cblxuICBhcHBseVByZXZNYXBzICgpIHtcbiAgICBmb3IgKGxldCBwcmV2IG9mIHRoaXMucHJldmlvdXMoKSkge1xuICAgICAgbGV0IGZyb20gPSB0aGlzLnJlbGF0aXZlKHByZXYuZmlsZSlcbiAgICAgIGxldCByb290ID0gcHJldi5yb290IHx8IHBhdGguZGlybmFtZShwcmV2LmZpbGUpXG4gICAgICBsZXQgbWFwXG5cbiAgICAgIGlmICh0aGlzLm1hcE9wdHMuc291cmNlc0NvbnRlbnQgPT09IGZhbHNlKSB7XG4gICAgICAgIG1hcCA9IG5ldyBtb3ppbGxhLlNvdXJjZU1hcENvbnN1bWVyKHByZXYudGV4dClcbiAgICAgICAgaWYgKG1hcC5zb3VyY2VzQ29udGVudCkge1xuICAgICAgICAgIG1hcC5zb3VyY2VzQ29udGVudCA9IG1hcC5zb3VyY2VzQ29udGVudC5tYXAoKCkgPT4gbnVsbClcbiAgICAgICAgfVxuICAgICAgfSBlbHNlIHtcbiAgICAgICAgbWFwID0gcHJldi5jb25zdW1lcigpXG4gICAgICB9XG5cbiAgICAgIHRoaXMubWFwLmFwcGx5U291cmNlTWFwKG1hcCwgZnJvbSwgdGhpcy5yZWxhdGl2ZShyb290KSlcbiAgICB9XG4gIH1cblxuICBpc0Fubm90YXRpb24gKCkge1xuICAgIGlmICh0aGlzLmlzSW5saW5lKCkpIHtcbiAgICAgIHJldHVybiB0cnVlXG4gICAgfVxuICAgIGlmICh0eXBlb2YgdGhpcy5tYXBPcHRzLmFubm90YXRpb24gIT09ICd1bmRlZmluZWQnKSB7XG4gICAgICByZXR1cm4gdGhpcy5tYXBPcHRzLmFubm90YXRpb25cbiAgICB9XG4gICAgaWYgKHRoaXMucHJldmlvdXMoKS5sZW5ndGgpIHtcbiAgICAgIHJldHVybiB0aGlzLnByZXZpb3VzKCkuc29tZShpID0+IGkuYW5ub3RhdGlvbilcbiAgICB9XG4gICAgcmV0dXJuIHRydWVcbiAgfVxuXG4gIHRvQmFzZTY0IChzdHIpIHtcbiAgICBpZiAoQnVmZmVyKSB7XG4gICAgICByZXR1cm4gQnVmZmVyLmZyb20oc3RyKS50b1N0cmluZygnYmFzZTY0JylcbiAgICB9XG4gICAgcmV0dXJuIHdpbmRvdy5idG9hKHVuZXNjYXBlKGVuY29kZVVSSUNvbXBvbmVudChzdHIpKSlcbiAgfVxuXG4gIGFkZEFubm90YXRpb24gKCkge1xuICAgIGxldCBjb250ZW50XG5cbiAgICBpZiAodGhpcy5pc0lubGluZSgpKSB7XG4gICAgICBjb250ZW50ID0gJ2RhdGE6YXBwbGljYXRpb24vanNvbjtiYXNlNjQsJyArXG4gICAgICAgICAgICAgICAgdGhpcy50b0Jhc2U2NCh0aGlzLm1hcC50b1N0cmluZygpKVxuICAgIH0gZWxzZSBpZiAodHlwZW9mIHRoaXMubWFwT3B0cy5hbm5vdGF0aW9uID09PSAnc3RyaW5nJykge1xuICAgICAgY29udGVudCA9IHRoaXMubWFwT3B0cy5hbm5vdGF0aW9uXG4gICAgfSBlbHNlIHtcbiAgICAgIGNvbnRlbnQgPSB0aGlzLm91dHB1dEZpbGUoKSArICcubWFwJ1xuICAgIH1cblxuICAgIGxldCBlb2wgPSAnXFxuJ1xuICAgIGlmICh0aGlzLmNzcy5pbmRleE9mKCdcXHJcXG4nKSAhPT0gLTEpIGVvbCA9ICdcXHJcXG4nXG5cbiAgICB0aGlzLmNzcyArPSBlb2wgKyAnLyojIHNvdXJjZU1hcHBpbmdVUkw9JyArIGNvbnRlbnQgKyAnICovJ1xuICB9XG5cbiAgb3V0cHV0RmlsZSAoKSB7XG4gICAgaWYgKHRoaXMub3B0cy50bykge1xuICAgICAgcmV0dXJuIHRoaXMucmVsYXRpdmUodGhpcy5vcHRzLnRvKVxuICAgIH1cbiAgICBpZiAodGhpcy5vcHRzLmZyb20pIHtcbiAgICAgIHJldHVybiB0aGlzLnJlbGF0aXZlKHRoaXMub3B0cy5mcm9tKVxuICAgIH1cbiAgICByZXR1cm4gJ3RvLmNzcydcbiAgfVxuXG4gIGdlbmVyYXRlTWFwICgpIHtcbiAgICB0aGlzLmdlbmVyYXRlU3RyaW5nKClcbiAgICBpZiAodGhpcy5pc1NvdXJjZXNDb250ZW50KCkpIHRoaXMuc2V0U291cmNlc0NvbnRlbnQoKVxuICAgIGlmICh0aGlzLnByZXZpb3VzKCkubGVuZ3RoID4gMCkgdGhpcy5hcHBseVByZXZNYXBzKClcbiAgICBpZiAodGhpcy5pc0Fubm90YXRpb24oKSkgdGhpcy5hZGRBbm5vdGF0aW9uKClcblxuICAgIGlmICh0aGlzLmlzSW5saW5lKCkpIHtcbiAgICAgIHJldHVybiBbdGhpcy5jc3NdXG4gICAgfVxuICAgIHJldHVybiBbdGhpcy5jc3MsIHRoaXMubWFwXVxuICB9XG5cbiAgcmVsYXRpdmUgKGZpbGUpIHtcbiAgICBpZiAoZmlsZS5pbmRleE9mKCc8JykgPT09IDApIHJldHVybiBmaWxlXG4gICAgaWYgKC9eXFx3KzpcXC9cXC8vLnRlc3QoZmlsZSkpIHJldHVybiBmaWxlXG5cbiAgICBsZXQgZnJvbSA9IHRoaXMub3B0cy50byA/IHBhdGguZGlybmFtZSh0aGlzLm9wdHMudG8pIDogJy4nXG5cbiAgICBpZiAodHlwZW9mIHRoaXMubWFwT3B0cy5hbm5vdGF0aW9uID09PSAnc3RyaW5nJykge1xuICAgICAgZnJvbSA9IHBhdGguZGlybmFtZShwYXRoLnJlc29sdmUoZnJvbSwgdGhpcy5tYXBPcHRzLmFubm90YXRpb24pKVxuICAgIH1cblxuICAgIGZpbGUgPSBwYXRoLnJlbGF0aXZlKGZyb20sIGZpbGUpXG4gICAgaWYgKHBhdGguc2VwID09PSAnXFxcXCcpIHtcbiAgICAgIHJldHVybiBmaWxlLnJlcGxhY2UoL1xcXFwvZywgJy8nKVxuICAgIH1cbiAgICByZXR1cm4gZmlsZVxuICB9XG5cbiAgc291cmNlUGF0aCAobm9kZSkge1xuICAgIGlmICh0aGlzLm1hcE9wdHMuZnJvbSkge1xuICAgICAgcmV0dXJuIHRoaXMubWFwT3B0cy5mcm9tXG4gICAgfVxuICAgIHJldHVybiB0aGlzLnJlbGF0aXZlKG5vZGUuc291cmNlLmlucHV0LmZyb20pXG4gIH1cblxuICBnZW5lcmF0ZVN0cmluZyAoKSB7XG4gICAgdGhpcy5jc3MgPSAnJ1xuICAgIHRoaXMubWFwID0gbmV3IG1vemlsbGEuU291cmNlTWFwR2VuZXJhdG9yKHsgZmlsZTogdGhpcy5vdXRwdXRGaWxlKCkgfSlcblxuICAgIGxldCBsaW5lID0gMVxuICAgIGxldCBjb2x1bW4gPSAxXG5cbiAgICBsZXQgbGluZXMsIGxhc3RcbiAgICB0aGlzLnN0cmluZ2lmeSh0aGlzLnJvb3QsIChzdHIsIG5vZGUsIHR5cGUpID0+IHtcbiAgICAgIHRoaXMuY3NzICs9IHN0clxuXG4gICAgICBpZiAobm9kZSAmJiB0eXBlICE9PSAnZW5kJykge1xuICAgICAgICBpZiAobm9kZS5zb3VyY2UgJiYgbm9kZS5zb3VyY2Uuc3RhcnQpIHtcbiAgICAgICAgICB0aGlzLm1hcC5hZGRNYXBwaW5nKHtcbiAgICAgICAgICAgIHNvdXJjZTogdGhpcy5zb3VyY2VQYXRoKG5vZGUpLFxuICAgICAgICAgICAgZ2VuZXJhdGVkOiB7IGxpbmUsIGNvbHVtbjogY29sdW1uIC0gMSB9LFxuICAgICAgICAgICAgb3JpZ2luYWw6IHtcbiAgICAgICAgICAgICAgbGluZTogbm9kZS5zb3VyY2Uuc3RhcnQubGluZSxcbiAgICAgICAgICAgICAgY29sdW1uOiBub2RlLnNvdXJjZS5zdGFydC5jb2x1bW4gLSAxXG4gICAgICAgICAgICB9XG4gICAgICAgICAgfSlcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICB0aGlzLm1hcC5hZGRNYXBwaW5nKHtcbiAgICAgICAgICAgIHNvdXJjZTogJzxubyBzb3VyY2U+JyxcbiAgICAgICAgICAgIG9yaWdpbmFsOiB7IGxpbmU6IDEsIGNvbHVtbjogMCB9LFxuICAgICAgICAgICAgZ2VuZXJhdGVkOiB7IGxpbmUsIGNvbHVtbjogY29sdW1uIC0gMSB9XG4gICAgICAgICAgfSlcbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICBsaW5lcyA9IHN0ci5tYXRjaCgvXFxuL2cpXG4gICAgICBpZiAobGluZXMpIHtcbiAgICAgICAgbGluZSArPSBsaW5lcy5sZW5ndGhcbiAgICAgICAgbGFzdCA9IHN0ci5sYXN0SW5kZXhPZignXFxuJylcbiAgICAgICAgY29sdW1uID0gc3RyLmxlbmd0aCAtIGxhc3RcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIGNvbHVtbiArPSBzdHIubGVuZ3RoXG4gICAgICB9XG5cbiAgICAgIGlmIChub2RlICYmIHR5cGUgIT09ICdzdGFydCcpIHtcbiAgICAgICAgbGV0IHAgPSBub2RlLnBhcmVudCB8fCB7IHJhd3M6IHsgfSB9XG4gICAgICAgIGlmIChub2RlLnR5cGUgIT09ICdkZWNsJyB8fCBub2RlICE9PSBwLmxhc3QgfHwgcC5yYXdzLnNlbWljb2xvbikge1xuICAgICAgICAgIGlmIChub2RlLnNvdXJjZSAmJiBub2RlLnNvdXJjZS5lbmQpIHtcbiAgICAgICAgICAgIHRoaXMubWFwLmFkZE1hcHBpbmcoe1xuICAgICAgICAgICAgICBzb3VyY2U6IHRoaXMuc291cmNlUGF0aChub2RlKSxcbiAgICAgICAgICAgICAgZ2VuZXJhdGVkOiB7IGxpbmUsIGNvbHVtbjogY29sdW1uIC0gMiB9LFxuICAgICAgICAgICAgICBvcmlnaW5hbDoge1xuICAgICAgICAgICAgICAgIGxpbmU6IG5vZGUuc291cmNlLmVuZC5saW5lLFxuICAgICAgICAgICAgICAgIGNvbHVtbjogbm9kZS5zb3VyY2UuZW5kLmNvbHVtbiAtIDFcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgdGhpcy5tYXAuYWRkTWFwcGluZyh7XG4gICAgICAgICAgICAgIHNvdXJjZTogJzxubyBzb3VyY2U+JyxcbiAgICAgICAgICAgICAgb3JpZ2luYWw6IHsgbGluZTogMSwgY29sdW1uOiAwIH0sXG4gICAgICAgICAgICAgIGdlbmVyYXRlZDogeyBsaW5lLCBjb2x1bW46IGNvbHVtbiAtIDEgfVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9KVxuICB9XG5cbiAgZ2VuZXJhdGUgKCkge1xuICAgIHRoaXMuY2xlYXJBbm5vdGF0aW9uKClcblxuICAgIGlmICh0aGlzLmlzTWFwKCkpIHtcbiAgICAgIHJldHVybiB0aGlzLmdlbmVyYXRlTWFwKClcbiAgICB9XG5cbiAgICBsZXQgcmVzdWx0ID0gJydcbiAgICB0aGlzLnN0cmluZ2lmeSh0aGlzLnJvb3QsIGkgPT4ge1xuICAgICAgcmVzdWx0ICs9IGlcbiAgICB9KVxuICAgIHJldHVybiBbcmVzdWx0XVxuICB9XG59XG5cbmV4cG9ydCBkZWZhdWx0IE1hcEdlbmVyYXRvclxuIl0sImZpbGUiOiJtYXAtZ2VuZXJhdG9yLmpzIn0=
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(17).Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(18).Buffer))
 
 /***/ }),
 /* 78 */
@@ -18271,17 +18296,17 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(14));
+var _declaration = _interopRequireDefault(__webpack_require__(15));
 
 var _tokenize = _interopRequireDefault(__webpack_require__(91));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(20));
 
-var _atRule = _interopRequireDefault(__webpack_require__(20));
+var _atRule = _interopRequireDefault(__webpack_require__(21));
 
 var _root = _interopRequireDefault(__webpack_require__(44));
 
-var _rule = _interopRequireDefault(__webpack_require__(22));
+var _rule = _interopRequireDefault(__webpack_require__(23));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19571,7 +19596,7 @@ exports.default = _default;
 module.exports = exports.default;
 //# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInByZXZpb3VzLW1hcC5lczYiXSwibmFtZXMiOlsiZnJvbUJhc2U2NCIsInN0ciIsIkJ1ZmZlciIsImZyb20iLCJ0b1N0cmluZyIsIndpbmRvdyIsImF0b2IiLCJQcmV2aW91c01hcCIsImNzcyIsIm9wdHMiLCJsb2FkQW5ub3RhdGlvbiIsImlubGluZSIsInN0YXJ0V2l0aCIsImFubm90YXRpb24iLCJwcmV2IiwibWFwIiwidW5kZWZpbmVkIiwidGV4dCIsImxvYWRNYXAiLCJjb25zdW1lciIsImNvbnN1bWVyQ2FjaGUiLCJtb3ppbGxhIiwiU291cmNlTWFwQ29uc3VtZXIiLCJ3aXRoQ29udGVudCIsInNvdXJjZXNDb250ZW50IiwibGVuZ3RoIiwic3RyaW5nIiwic3RhcnQiLCJzdWJzdHIiLCJtYXRjaCIsInRyaW0iLCJkZWNvZGVJbmxpbmUiLCJiYXNlQ2hhcnNldFVyaSIsImJhc2VVcmkiLCJ1cmkiLCJkZWNvZGVVUklDb21wb25lbnQiLCJ0ZXN0IiwiUmVnRXhwIiwibGFzdE1hdGNoIiwiZW5jb2RpbmciLCJFcnJvciIsImZpbGUiLCJwcmV2UGF0aCIsImZzIiwiZXhpc3RzU3luYyIsInJlYWRGaWxlU3luYyIsIlNvdXJjZU1hcEdlbmVyYXRvciIsImZyb21Tb3VyY2VNYXAiLCJpc01hcCIsIkpTT04iLCJzdHJpbmdpZnkiLCJwYXRoIiwiam9pbiIsImRpcm5hbWUiLCJyb290IiwibWFwcGluZ3MiLCJfbWFwcGluZ3MiXSwibWFwcGluZ3MiOiI7Ozs7O0FBQUE7O0FBQ0E7O0FBQ0E7Ozs7QUFFQSxTQUFTQSxVQUFULENBQXFCQyxHQUFyQixFQUEwQjtBQUN4QixNQUFJQyxNQUFKLEVBQVk7QUFDVixXQUFPQSxNQUFNLENBQUNDLElBQVAsQ0FBWUYsR0FBWixFQUFpQixRQUFqQixFQUEyQkcsUUFBM0IsRUFBUDtBQUNELEdBRkQsTUFFTztBQUNMLFdBQU9DLE1BQU0sQ0FBQ0MsSUFBUCxDQUFZTCxHQUFaLENBQVA7QUFDRDtBQUNGO0FBRUQ7Ozs7Ozs7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LElBQWIsQ0FBVixFQUE4QjFCLEdBQTlCLENBQU47QUFFVixXQUFLdUMsSUFBTCxHQUFZSCxjQUFLRSxPQUFMLENBQWF0QyxHQUFiLENBQVo7O0FBQ0EsVUFBSTRCLFlBQUdDLFVBQUgsSUFBaUJELFlBQUdDLFVBQUgsQ0FBYzdCLEdBQWQsQ0FBckIsRUFBeUM7QUFDdkMsZUFBTzRCLFlBQUdFLFlBQUgsQ0FBZ0I5QixHQUFoQixFQUFxQixPQUFyQixFQUE4QlgsUUFBOUIsR0FBeUMwQixJQUF6QyxFQUFQO0FBQ0QsT0FGRCxNQUVPO0FBQ0wsZUFBTyxLQUFQO0FBQ0Q7QUFDRjtBQUNGLEc7O1NBRURrQixLLEdBQUEsZUFBT2pDLEdBQVAsRUFBWTtBQUNWLFFBQUksT0FBT0EsR0FBUCxLQUFlLFFBQW5CLEVBQTZCLE9BQU8sS0FBUDtBQUM3QixXQUFPLE9BQU9BLEdBQUcsQ0FBQ3dDLFFBQVgsS0FBd0IsUUFBeEIsSUFBb0MsT0FBT3hDLEdBQUcsQ0FBQ3lDLFNBQVgsS0FBeUIsUUFBcEU7QUFDRCxHOzs7OztlQUdZakQsVyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBtb3ppbGxhIGZyb20gJ3NvdXJjZS1tYXAnXG5pbXBvcnQgcGF0aCBmcm9tICdwYXRoJ1xuaW1wb3J0IGZzIGZyb20gJ2ZzJ1xuXG5mdW5jdGlvbiBmcm9tQmFzZTY0IChzdHIpIHtcbiAgaWYgKEJ1ZmZlcikge1xuICAgIHJldHVybiBCdWZmZXIuZnJvbShzdHIsICdiYXNlNjQnKS50b1N0cmluZygpXG4gIH0gZWxzZSB7XG4gICAgcmV0dXJuIHdpbmRvdy5hdG9iKHN0cilcbiAgfVxufVxuXG4vKipcbiAqIFNvdXJjZSBtYXAgaW5mb3JtYXRpb24gZnJvbSBpbnB1dCBDU1MuXG4gKiBGb3IgZXhhbXBsZSwgc291cmNlIG1hcCBhZnRlciBTYXNzIGNvbXBpbGVyLlxuICpcbiAqIFRoaXMgY2xhc3Mgd2lsbCBhdXRvbWF0aWNhbGx5IGZpbmQgc291cmNlIG1hcCBpbiBpbnB1dCBDU1Mgb3IgaW4gZmlsZSBzeXN0ZW1cbiAqIG5lYXIgaW5wdXQgZmlsZSAoYWNjb3JkaW5nIGBmcm9tYCBvcHRpb24pLlxuICpcbiAqIEBleGFtcGxlXG4gKiBjb25zdCByb290ID0gcG9zdGNzcy5wYXJzZShjc3MsIHsgZnJvbTogJ2Euc2Fzcy5jc3MnIH0pXG4gKiByb290LmlucHV0Lm1hcCAvLz0+IFByZXZpb3VzTWFwXG4gKi9cbmNsYXNzIFByZXZpb3VzTWFwIHtcbiAgLyoqXG4gICAqIEBwYXJhbSB7c3RyaW5nfSAgICAgICAgIGNzcyAgICBJbnB1dCBDU1Mgc291cmNlLlxuICAgKiBAcGFyYW0ge3Byb2Nlc3NPcHRpb25zfSBbb3B0c10ge0BsaW5rIFByb2Nlc3NvciNwcm9jZXNzfSBvcHRpb25zLlxuICAgKi9cbiAgY29uc3RydWN0b3IgKGNzcywgb3B0cykge1xuICAgIHRoaXMubG9hZEFubm90YXRpb24oY3NzKVxuICAgIC8qKlxuICAgICAqIFdhcyBzb3VyY2UgbWFwIGlubGluZWQgYnkgZGF0YS11cmkgdG8gaW5wdXQgQ1NTLlxuICAgICAqXG4gICAgICogQHR5cGUge2Jvb2xlYW59XG4gICAgICovXG4gICAgdGhpcy5pbmxpbmUgPSB0aGlzLnN0YXJ0V2l0aCh0aGlzLmFubm90YXRpb24sICdkYXRhOicpXG5cbiAgICBsZXQgcHJldiA9IG9wdHMubWFwID8gb3B0cy5tYXAucHJldiA6IHVuZGVmaW5lZFxuICAgIGxldCB0ZXh0ID0gdGhpcy5sb2FkTWFwKG9wdHMuZnJvbSwgcHJldilcbiAgICBpZiAodGV4dCkgdGhpcy50ZXh0ID0gdGV4dFxuICB9XG5cbiAgLyoqXG4gICAqIENyZWF0ZSBhIGluc3RhbmNlIG9mIGBTb3VyY2VNYXBHZW5lcmF0b3JgIGNsYXNzXG4gICAqIGZyb20gdGhlIGBzb3VyY2UtbWFwYCBsaWJyYXJ5IHRvIHdvcmsgd2l0aCBzb3VyY2UgbWFwIGluZm9ybWF0aW9uLlxuICAgKlxuICAgKiBJdCBpcyBsYXp5IG1ldGhvZCwgc28gaXQgd2lsbCBjcmVhdGUgb2JqZWN0IG9ubHkgb24gZmlyc3QgY2FsbFxuICAgKiBhbmQgdGhlbiBpdCB3aWxsIHVzZSBjYWNoZS5cbiAgICpcbiAgICogQHJldHVybiB7U291cmNlTWFwR2VuZXJhdG9yfSBPYmplY3Qgd2l0aCBzb3VyY2UgbWFwIGluZm9ybWF0aW9uLlxuICAgKi9cbiAgY29uc3VtZXIgKCkge1xuICAgIGlmICghdGhpcy5jb25zdW1lckNhY2hlKSB7XG4gICAgICB0aGlzLmNvbnN1bWVyQ2FjaGUgPSBuZXcgbW96aWxsYS5Tb3VyY2VNYXBDb25zdW1lcih0aGlzLnRleHQpXG4gICAgfVxuICAgIHJldHVybiB0aGlzLmNvbnN1bWVyQ2FjaGVcbiAgfVxuXG4gIC8qKlxuICAgKiBEb2VzIHNvdXJjZSBtYXAgY29udGFpbnMgYHNvdXJjZXNDb250ZW50YCB3aXRoIGlucHV0IHNvdXJjZSB0ZXh0LlxuICAgKlxuICAgKiBAcmV0dXJuIHtib29sZWFufSBJcyBgc291cmNlc0NvbnRlbnRgIHByZXNlbnQuXG4gICAqL1xuICB3aXRoQ29udGVudCAoKSB7XG4gICAgcmV0dXJuICEhKHRoaXMuY29uc3VtZXIoKS5zb3VyY2VzQ29udGVudCAmJlxuICAgICAgICAgICAgICB0aGlzLmNvbnN1bWVyKCkuc291cmNlc0NvbnRlbnQubGVuZ3RoID4gMClcbiAgfVxuXG4gIHN0YXJ0V2l0aCAoc3RyaW5nLCBzdGFydCkge1xuICAgIGlmICghc3RyaW5nKSByZXR1cm4gZmFsc2VcbiAgICByZXR1cm4gc3RyaW5nLnN1YnN0cigwLCBzdGFydC5sZW5ndGgpID09PSBzdGFydFxuICB9XG5cbiAgbG9hZEFubm90YXRpb24gKGNzcykge1xuICAgIGxldCBtYXRjaCA9IGNzcy5tYXRjaCgvXFwvXFwqXFxzKiMgc291cmNlTWFwcGluZ1VSTD0oLiopXFxzKlxcKlxcLy8pXG4gICAgaWYgKG1hdGNoKSB0aGlzLmFubm90YXRpb24gPSBtYXRjaFsxXS50cmltKClcbiAgfVxuXG4gIGRlY29kZUlubGluZSAodGV4dCkge1xuICAgIGxldCBiYXNlQ2hhcnNldFVyaSA9IC9eZGF0YTphcHBsaWNhdGlvblxcL2pzb247Y2hhcnNldD11dGYtPzg7YmFzZTY0LC9cbiAgICBsZXQgYmFzZVVyaSA9IC9eZGF0YTphcHBsaWNhdGlvblxcL2pzb247YmFzZTY0LC9cbiAgICBsZXQgdXJpID0gJ2RhdGE6YXBwbGljYXRpb24vanNvbiwnXG5cbiAgICBpZiAodGhpcy5zdGFydFdpdGgodGV4dCwgdXJpKSkge1xuICAgICAgcmV0dXJuIGRlY29kZVVSSUNvbXBvbmVudCh0ZXh0LnN1YnN0cih1cmkubGVuZ3RoKSlcbiAgICB9XG5cbiAgICBpZiAoYmFzZUNoYXJzZXRVcmkudGVzdCh0ZXh0KSB8fCBiYXNlVXJpLnRlc3QodGV4dCkpIHtcbiAgICAgIHJldHVybiBmcm9tQmFzZTY0KHRleHQuc3Vic3RyKFJlZ0V4cC5sYXN0TWF0Y2gubGVuZ3RoKSlcbiAgICB9XG5cbiAgICBsZXQgZW5jb2RpbmcgPSB0ZXh0Lm1hdGNoKC9kYXRhOmFwcGxpY2F0aW9uXFwvanNvbjsoW14sXSspLC8pWzFdXG4gICAgdGhyb3cgbmV3IEVycm9yKCdVbnN1cHBvcnRlZCBzb3VyY2UgbWFwIGVuY29kaW5nICcgKyBlbmNvZGluZylcbiAgfVxuXG4gIGxvYWRNYXAgKGZpbGUsIHByZXYpIHtcbiAgICBpZiAocHJldiA9PT0gZmFsc2UpIHJldHVybiBmYWxzZVxuXG4gICAgaWYgKHByZXYpIHtcbiAgICAgIGlmICh0eXBlb2YgcHJldiA9PT0gJ3N0cmluZycpIHtcbiAgICAgICAgcmV0dXJuIHByZXZcbiAgICAgIH0gZWxzZSBpZiAodHlwZW9mIHByZXYgPT09ICdmdW5jdGlvbicpIHtcbiAgICAgICAgbGV0IHByZXZQYXRoID0gcHJldihmaWxlKVxuICAgICAgICBpZiAocHJldlBhdGggJiYgZnMuZXhpc3RzU3luYyAmJiBmcy5leGlzdHNTeW5jKHByZXZQYXRoKSkge1xuICAgICAgICAgIHJldHVybiBmcy5yZWFkRmlsZVN5bmMocHJldlBhdGgsICd1dGYtOCcpLnRvU3RyaW5nKCkudHJpbSgpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgdGhyb3cgbmV3IEVycm9yKFxuICAgICAgICAgICAgJ1VuYWJsZSB0byBsb2FkIHByZXZpb3VzIHNvdXJjZSBtYXA6ICcgKyBwcmV2UGF0aC50b1N0cmluZygpKVxuICAgICAgICB9XG4gICAgICB9IGVsc2UgaWYgKHByZXYgaW5zdGFuY2VvZiBtb3ppbGxhLlNvdXJjZU1hcENvbnN1bWVyKSB7XG4gICAgICAgIHJldHVybiBtb3ppbGxhLlNvdXJjZU1hcEdlbmVyYXRvci5mcm9tU291cmNlTWFwKHByZXYpLnRvU3RyaW5nKClcbiAgICAgIH0gZWxzZSBpZiAocHJldiBpbnN0YW5jZW9mIG1vemlsbGEuU291cmNlTWFwR2VuZXJhdG9yKSB7XG4gICAgICAgIHJldHVybiBwcmV2LnRvU3RyaW5nKClcbiAgICAgIH0gZWxzZSBpZiAodGhpcy5pc01hcChwcmV2KSkge1xuICAgICAgICByZXR1cm4gSlNPTi5zdHJpbmdpZnkocHJldilcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihcbiAgICAgICAgICAnVW5zdXBwb3J0ZWQgcHJldmlvdXMgc291cmNlIG1hcCBmb3JtYXQ6ICcgKyBwcmV2LnRvU3RyaW5nKCkpXG4gICAgICB9XG4gICAgfSBlbHNlIGlmICh0aGlzLmlubGluZSkge1xuICAgICAgcmV0dXJuIHRoaXMuZGVjb2RlSW5saW5lKHRoaXMuYW5ub3RhdGlvbilcbiAgICB9IGVsc2UgaWYgKHRoaXMuYW5ub3RhdGlvbikge1xuICAgICAgbGV0IG1hcCA9IHRoaXMuYW5ub3RhdGlvblxuICAgICAgaWYgKGZpbGUpIG1hcCA9IHBhdGguam9pbihwYXRoLmRpcm5hbWUoZmlsZSksIG1hcClcblxuICAgICAgdGhpcy5yb290ID0gcGF0aC5kaXJuYW1lKG1hcClcbiAgICAgIGlmIChmcy5leGlzdHNTeW5jICYmIGZzLmV4aXN0c1N5bmMobWFwKSkge1xuICAgICAgICByZXR1cm4gZnMucmVhZEZpbGVTeW5jKG1hcCwgJ3V0Zi04JykudG9TdHJpbmcoKS50cmltKClcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHJldHVybiBmYWxzZVxuICAgICAgfVxuICAgIH1cbiAgfVxuXG4gIGlzTWFwIChtYXApIHtcbiAgICBpZiAodHlwZW9mIG1hcCAhPT0gJ29iamVjdCcpIHJldHVybiBmYWxzZVxuICAgIHJldHVybiB0eXBlb2YgbWFwLm1hcHBpbmdzID09PSAnc3RyaW5nJyB8fCB0eXBlb2YgbWFwLl9tYXBwaW5ncyA9PT0gJ3N0cmluZydcbiAgfVxufVxuXG5leHBvcnQgZGVmYXVsdCBQcmV2aW91c01hcFxuIl0sImZpbGUiOiJwcmV2aW91cy1tYXAuanMifQ==
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(17).Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(18).Buffer))
 
 /***/ }),
 /* 94 */
@@ -32599,7 +32624,7 @@ require('./polyfill-done.js');
 
 },{"./lib/core.js":101,"./lib/es6-extensions.js":102,"./polyfill-done.js":103,"asap":98}]},{},[2])(2)
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5), __webpack_require__(17).Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5), __webpack_require__(18).Buffer))
 
 /***/ }),
 /* 97 */
@@ -32788,7 +32813,7 @@ var createGenerator = __webpack_require__(113);
 var createConvertor = __webpack_require__(122);
 var createWalker = __webpack_require__(123);
 var clone = __webpack_require__(124);
-var names = __webpack_require__(26);
+var names = __webpack_require__(27);
 var mix = __webpack_require__(125);
 
 function assign(dest, src) {
@@ -32866,7 +32891,7 @@ exports.create = function(config) {
 
 var CssSyntaxError = __webpack_require__(101);
 
-var constants = __webpack_require__(24);
+var constants = __webpack_require__(25);
 var TYPE = constants.TYPE;
 var NAME = constants.NAME;
 var SYMBOL_TYPE = constants.SYMBOL_TYPE;
@@ -33502,7 +33527,7 @@ module.exports = Tokenizer;
 "use strict";
 
 
-var createCustomError = __webpack_require__(23);
+var createCustomError = __webpack_require__(24);
 var MAX_LINE_LENGTH = 100;
 var OFFSET_CORRECTION = 60;
 var TAB_REPLACEMENT = '    ';
@@ -33595,10 +33620,10 @@ module.exports = CssSyntaxError;
 
 var SyntaxReferenceError = __webpack_require__(46).SyntaxReferenceError;
 var MatchError = __webpack_require__(46).MatchError;
-var names = __webpack_require__(26);
+var names = __webpack_require__(27);
 var generic = __webpack_require__(103);
-var parse = __webpack_require__(27);
-var generate = __webpack_require__(25);
+var parse = __webpack_require__(28);
+var generate = __webpack_require__(26);
 var walk = __webpack_require__(48);
 var astToTokens = __webpack_require__(105);
 var buildMatchGraph = __webpack_require__(49).buildMatchGraph;
@@ -33929,7 +33954,7 @@ var findIdentifierEnd = tokenizerUtils.findIdentifierEnd;
 var findNumberEnd = tokenizerUtils.findNumberEnd;
 var findDecimalNumberEnd = tokenizerUtils.findDecimalNumberEnd;
 var isHex = tokenizerUtils.isHex;
-var tokenizerConst = __webpack_require__(24);
+var tokenizerConst = __webpack_require__(25);
 var SYMBOL_TYPE = tokenizerConst.SYMBOL_TYPE;
 var IDENTIFIER = tokenizerConst.TYPE.Identifier;
 var PLUSSIGN = tokenizerConst.TYPE.PlusSign;
@@ -35342,8 +35367,8 @@ module.exports = {
 
 module.exports = {
     SyntaxParseError: __webpack_require__(47).SyntaxParseError,
-    parse: __webpack_require__(27),
-    generate: __webpack_require__(25),
+    parse: __webpack_require__(28),
+    generate: __webpack_require__(26),
     walk: __webpack_require__(48)
 };
 
@@ -38084,7 +38109,7 @@ module.exports = {
     generic: true,
     types: data.types,
     properties: data.properties,
-    node: __webpack_require__(28)
+    node: __webpack_require__(29)
 };
 
 
@@ -38926,7 +38951,7 @@ module.exports = {
 /* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isCustomProperty = __webpack_require__(26).isCustomProperty;
+var isCustomProperty = __webpack_require__(27).isCustomProperty;
 var TYPE = __webpack_require__(0).TYPE;
 
 var IDENTIFIER = TYPE.Identifier;
@@ -40553,7 +40578,7 @@ module.exports = {
     scope: __webpack_require__(169),
     atrule: __webpack_require__(175),
     pseudo: __webpack_require__(181),
-    node: __webpack_require__(28)
+    node: __webpack_require__(29)
 };
 
 
@@ -41040,7 +41065,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    node: __webpack_require__(28)
+    node: __webpack_require__(29)
 };
 
 
@@ -41624,9 +41649,9 @@ var handlers = {
     Number: __webpack_require__(11),
     String: __webpack_require__(213),
     Url: __webpack_require__(214),
-    HexColor: __webpack_require__(29).compressHex,
-    Identifier: __webpack_require__(29).compressIdent,
-    Function: __webpack_require__(29).compressFunction
+    HexColor: __webpack_require__(30).compressHex,
+    Identifier: __webpack_require__(30).compressIdent,
+    Function: __webpack_require__(30).compressFunction
 };
 
 module.exports = function(ast) {
@@ -42489,7 +42514,7 @@ module.exports = function rejoinAtrule(ast, options) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(31);
 
 function processRule(node, item, list) {
     var selectors = node.prelude.children;
@@ -43326,7 +43351,7 @@ module.exports = function restructBlock(ast) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(31);
 
 /*
     At this step all rules has single simple selector. We try to join by equal
@@ -43419,7 +43444,7 @@ module.exports = function mergeRule(ast) {
 
 var List = __webpack_require__(1).List;
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(31);
 
 function calcSelectorLength(list) {
     var length = 0;
@@ -43580,7 +43605,7 @@ module.exports = function restructRule(ast) {
 /* 227 */
 /***/ (function(module) {
 
-module.exports = {"_from":"csso","_id":"csso@3.5.1","_inBundle":false,"_integrity":"sha512-vrqULLffYU1Q2tLdJvaCYbONStnfkfimRxXNaGjxMldI0C7JPBC4rB1RyjhfdZ4m1frm8pM9uRPKH3d2knZ8gg==","_location":"/csso","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"csso","name":"csso","escapedName":"csso","rawSpec":"","saveSpec":null,"fetchSpec":"latest"},"_requiredBy":["#USER","/"],"_resolved":"https://registry.npmjs.org/csso/-/csso-3.5.1.tgz","_shasum":"7b9eb8be61628973c1b261e169d2f024008e758b","_spec":"csso","_where":"/Users/june_01/workspace/wechat-miniprogram/miniprogram-simulate","author":{"name":"Sergey Kryzhanovsky","email":"skryzhanovsky@ya.ru","url":"https://github.com/afelix"},"bugs":{"url":"https://github.com/css/csso/issues"},"bundleDependencies":false,"dependencies":{"css-tree":"1.0.0-alpha.29"},"deprecated":false,"description":"CSS minifier with structural optimisations","devDependencies":{"browserify":"^13.0.0","coveralls":"^2.11.6","eslint":"^2.2.0","istanbul":"^0.4.2","jscs":"~3.0.7","mocha":"^3.5.3","package-json-versionify":"^1.0.4","source-map":"^0.5.6","uglify-js":"^2.6.1"},"engines":{"node":">=0.10.0"},"eslintConfig":{"env":{"node":true,"mocha":true,"es6":true},"rules":{"no-duplicate-case":2,"no-undef":2,"no-unused-vars":[2,{"vars":"all","args":"after-used"}]}},"files":["dist/csso-browser.js","lib","HISTORY.md","LICENSE","README.md"],"homepage":"https://github.com/css/csso","keywords":["css","compress","minifier","minify","optimise","optimisation","csstree"],"license":"MIT","main":"./lib/index","maintainers":[{"name":"Roman Dvornov","email":"rdvornov@gmail.com"}],"name":"csso","repository":{"type":"git","url":"git+https://github.com/css/csso.git"},"scripts":{"browserify":"browserify -t package-json-versionify --standalone csso lib/index.js | uglifyjs --compress --mangle -o dist/csso-browser.js","codestyle":"jscs lib test && eslint lib test","codestyle-and-test":"npm run codestyle && npm test","coverage":"istanbul cover _mocha -- -R dot","coveralls":"istanbul cover _mocha --report lcovonly -- -R dot && cat ./coverage/lcov.info | coveralls","gh-pages":"git clone --depth=1 -b gh-pages https://github.com/css/csso.git .gh-pages && npm run browserify && cp dist/csso-browser.js .gh-pages/ && cd .gh-pages && git commit -am \"update\" && git push && cd .. && rm -rf .gh-pages","hydrogen":"node --trace-hydrogen --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=code.asm --trace_hydrogen_file=code.cfg --print-opt-code bin/csso --stat -o /dev/null","postpublish":"npm run gh-pages","prepublish":"npm run browserify","test":"mocha --reporter dot","travis":"npm run codestyle-and-test && npm run coveralls"},"version":"3.5.1"};
+module.exports = {"_args":[["csso@3.5.1","/Users/june_01/workspace/wechat-miniprogram/miniprogram-simulate"]],"_from":"csso@3.5.1","_id":"csso@3.5.1","_inBundle":false,"_integrity":"sha512-vrqULLffYU1Q2tLdJvaCYbONStnfkfimRxXNaGjxMldI0C7JPBC4rB1RyjhfdZ4m1frm8pM9uRPKH3d2knZ8gg==","_location":"/csso","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"csso@3.5.1","name":"csso","escapedName":"csso","rawSpec":"3.5.1","saveSpec":null,"fetchSpec":"3.5.1"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/csso/-/csso-3.5.1.tgz","_spec":"3.5.1","_where":"/Users/june_01/workspace/wechat-miniprogram/miniprogram-simulate","author":{"name":"Sergey Kryzhanovsky","email":"skryzhanovsky@ya.ru","url":"https://github.com/afelix"},"bugs":{"url":"https://github.com/css/csso/issues"},"dependencies":{"css-tree":"1.0.0-alpha.29"},"description":"CSS minifier with structural optimisations","devDependencies":{"browserify":"^13.0.0","coveralls":"^2.11.6","eslint":"^2.2.0","istanbul":"^0.4.2","jscs":"~3.0.7","mocha":"^3.5.3","package-json-versionify":"^1.0.4","source-map":"^0.5.6","uglify-js":"^2.6.1"},"engines":{"node":">=0.10.0"},"eslintConfig":{"env":{"node":true,"mocha":true,"es6":true},"rules":{"no-duplicate-case":2,"no-undef":2,"no-unused-vars":[2,{"vars":"all","args":"after-used"}]}},"files":["dist/csso-browser.js","lib","HISTORY.md","LICENSE","README.md"],"homepage":"https://github.com/css/csso","keywords":["css","compress","minifier","minify","optimise","optimisation","csstree"],"license":"MIT","main":"./lib/index","maintainers":[{"name":"Roman Dvornov","email":"rdvornov@gmail.com"}],"name":"csso","repository":{"type":"git","url":"git+https://github.com/css/csso.git"},"scripts":{"browserify":"browserify -t package-json-versionify --standalone csso lib/index.js | uglifyjs --compress --mangle -o dist/csso-browser.js","codestyle":"jscs lib test && eslint lib test","codestyle-and-test":"npm run codestyle && npm test","coverage":"istanbul cover _mocha -- -R dot","coveralls":"istanbul cover _mocha --report lcovonly -- -R dot && cat ./coverage/lcov.info | coveralls","gh-pages":"git clone --depth=1 -b gh-pages https://github.com/css/csso.git .gh-pages && npm run browserify && cp dist/csso-browser.js .gh-pages/ && cd .gh-pages && git commit -am \"update\" && git push && cd .. && rm -rf .gh-pages","hydrogen":"node --trace-hydrogen --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=code.asm --trace_hydrogen_file=code.cfg --print-opt-code bin/csso --stat -o /dev/null","postpublish":"npm run gh-pages","prepublish":"npm run browserify","test":"mocha --reporter dot","travis":"npm run codestyle-and-test && npm run coveralls"},"version":"3.5.1"};
 
 /***/ }),
 /* 228 */
@@ -43622,7 +43647,8 @@ module.exports = {
           compilerResCache[config.rootPath] = gwx
         }
 
-        const relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
+        let relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
+        relativeWxmlPath = relativeWxmlPath.replace(/\\/g, '/')
 
         // 构建编译结果为函数
         wxml = gwx(relativeWxmlPath)
@@ -43682,7 +43708,7 @@ module.exports = function () {
 /* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {const jComponent = __webpack_require__(31)
+/* WEBPACK VAR INJECTION */(function(global) {const jComponent = __webpack_require__(32)
 
 const api = __webpack_require__(231)
 
