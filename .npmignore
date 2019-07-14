@@ -12,3 +12,4 @@ test
 node_modules
 coverage
 docs
+build.js
