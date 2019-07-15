@@ -109,7 +109,7 @@ function insert(wxss, id) {
   style.innerHTML = _.transformRpx(wxss.join(''))
 
   const head = document.getElementsByTagName('head')
-  if (head) head.item(0).appendChild(style)
+  if (head && head.length) head.item(0).appendChild(style)
 }
 
 
