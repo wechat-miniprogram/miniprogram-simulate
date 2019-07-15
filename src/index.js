@@ -95,7 +95,6 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
   }
   
   // 读取自定义组件的静态内容
-  debugger
   component.wxml = compile.getWxml(componentPath, cache.options)
   component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
