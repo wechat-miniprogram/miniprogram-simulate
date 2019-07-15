@@ -108,7 +108,8 @@ function insert(wxss, id) {
   style.id = id
   style.innerHTML = _.transformRpx(wxss.join(''))
 
-  document.getElementsByTagName('head').item(0).appendChild(style)
+  const head = document.getElementsByTagName('head')
+  if (head) head.item(0).appendChild(style)
 }
 
 
