@@ -49,4 +49,8 @@
 
 * 修复编译器生成结构缺少虚拟节点问题
 
+## 1.0.3 & 依赖 j-component 更新 1.1.5 & 依赖 miniprogram-compiler 更新 0.1.1
+
+* 修复自嵌套组件无法渲染的问题
+
 ## next version

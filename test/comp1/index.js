@@ -1,5 +1,9 @@
 Component({
   properties: {
+    hasChild: {
+      type: Boolean,
+      value: false,
+    },
     prop: {
       type: String,
       value: 'index.properties',

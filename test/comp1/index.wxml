@@ -1,3 +1,2 @@
 <view class="index">{{prop}}</view>
-<!-- TODO，自嵌套实现有bug -->
-<!-- <comp1 prop="inner"></comp1> -->
+<comp1 wx:if="{{hasChild}}" prop="inner"></comp1>
