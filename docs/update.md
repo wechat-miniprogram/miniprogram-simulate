@@ -53,4 +53,9 @@
 
 * 修复自嵌套组件无法渲染的问题
 
+## 1.0.7 & 依赖 j-component 更新 1.1.6
+
+* 更新 miniprogram-exparser 到 2.7.7
+* 支持 observer
+
 ## next version
