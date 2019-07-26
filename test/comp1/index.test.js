@@ -2,7 +2,7 @@ const path = require('path')
 const simulate = require('../../index')
 
 function runTest(id) {
-    const comp = simulate.render(id, { prop: 'index.test.properties', hasChild: true })
+    const comp = simulate.render(id, {prop: 'index.test.properties', hasChild: true})
 
     const parent = document.createElement('parent-wrapper')
     comp.attach(parent)
@@ -20,6 +20,6 @@ test('comp1', () => {
 
     jest.resetModules() // https://github.com/facebook/jest/issues/5120
 
-    id = simulate.load(path.resolve(__dirname, './index'), { compiler: simulate })
+    id = simulate.load(path.resolve(__dirname, './index'), {compiler: simulate})
     runTest(id)
 })

@@ -46,7 +46,7 @@ function runTest(id) {
         aa: 'hehe',
     })
     expect(simulate.match(comp.dom, getDest('hehe'))).toBe(true)
-    expect(comp.querySelector('#aa').instance.data.observerArr).toEqual([ 'hehe', 'haha' ])
+    expect(comp.querySelector('#aa').instance.data.observerArr).toEqual(['hehe', 'haha'])
 }
 
 test('comp5', () => {

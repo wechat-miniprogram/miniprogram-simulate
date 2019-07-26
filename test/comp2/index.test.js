@@ -14,7 +14,7 @@ function runTest(id) {
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe('100px')
     expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('rgb(255, 255, 0)')
-    expect(comp.dom.tagName).toBe('CUSTOM-COMP') 
+    expect(comp.dom.tagName).toBe('CUSTOM-COMP')
 }
 
 test('comp2', () => {
@@ -23,6 +23,6 @@ test('comp2', () => {
 
     jest.resetModules() // https://github.com/facebook/jest/issues/5120
 
-    id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp', { compiler: 'simulate' })
+    id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp', {compiler: 'simulate'})
     runTest(id)
 })

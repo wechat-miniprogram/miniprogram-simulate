@@ -26,12 +26,12 @@ test('readFile', () => {
 })
 
 test('transformRpx', () => {
-    expect(utils.transformRpx('width: 123rpx;')).toBe('width: 123px;');
-    expect(utils.transformRpx('width: aaarpx;')).toBe('width: aaarpx;');
-    expect(utils.transformRpx('width: 123px;')).toBe('width: 123px;');
-    expect(utils.transformRpx('width: 12.3rpx;')).toBe('width: 12.3px;');
-    expect(utils.transformRpx('width: 0.3rpx;')).toBe('width: 0.3px;');
-});
+    expect(utils.transformRpx('width: 123rpx;')).toBe('width: 123px;')
+    expect(utils.transformRpx('width: aaarpx;')).toBe('width: aaarpx;')
+    expect(utils.transformRpx('width: 123px;')).toBe('width: 123px;')
+    expect(utils.transformRpx('width: 12.3rpx;')).toBe('width: 12.3px;')
+    expect(utils.transformRpx('width: 0.3rpx;')).toBe('width: 0.3px;')
+})
 
 test('browser', () => {
     expect(utils.getEnv()).toBe('nodejs')
@@ -57,4 +57,4 @@ test('browser', () => {
     utils.setNodeJsEnv()
 
     expect(utils.getEnv()).toBe('nodejs')
-});
+})

@@ -1,8 +1,8 @@
-const path = require('path')
+/* global simulate */
 const expect = require('chai').expect
 
 describe('scroll', () => {
-    it ('should run successfully', async () => {
+    it('should run successfully', async() => {
         const comp = {
             dom: document.createElement('div')
         }
@@ -10,12 +10,12 @@ describe('scroll', () => {
         document.body.appendChild(comp.dom)
         comp.dom.style.cssText = 'position: relative; width: 100px; height: 100px; overflow: scroll;'
         comp.dom.appendChild(child)
-        child.style.cssText = 'position: relative; width: 1000px; height: 1000px;';
+        child.style.cssText = 'position: relative; width: 1000px; height: 1000px;'
 
         expect(comp.dom.scrollTop).to.equal(0)
         let scrollTopList = []
         let scrollLeftList = []
-        comp.dom.addEventListener('scroll', evt => {
+        comp.dom.addEventListener('scroll', () => {
             scrollTopList.push(comp.dom.scrollTop)
             scrollLeftList.push(comp.dom.scrollLeft)
         })

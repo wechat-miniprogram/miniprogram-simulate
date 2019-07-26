@@ -1,6 +1,6 @@
 const simulate = require('../../index')
 
-test('sleep', async () => {
+test('sleep', async() => {
     let start = +new Date()
     await simulate.sleep(50)
     expect(+new Date() - start >= 50).toBe(true)
@@ -14,7 +14,7 @@ test('sleep', async () => {
     expect(+new Date() - start >= 0).toBe(true)
 })
 
-test('scroll', async () => {
+test('scroll', async() => {
     const comp = {
         dom: document.createElement('div')
     }
@@ -22,7 +22,7 @@ test('scroll', async () => {
     expect(comp.dom.scrollTop).toBe(0)
     let scrollTopList = []
     let scrollLeftList = []
-    comp.dom.addEventListener('scroll', evt => {
+    comp.dom.addEventListener('scroll', () => {
         scrollTopList.push(comp.dom.scrollTop)
         scrollLeftList.push(comp.dom.scrollLeft)
     })

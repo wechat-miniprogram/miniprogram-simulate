@@ -1,8 +1,8 @@
 Component({
-  properties: {
-    prop: {
-      type: String,
-      value: 'index.properties'
+    properties: {
+        prop: {
+            type: String,
+            value: 'index.properties'
+        },
     },
-  },
 })

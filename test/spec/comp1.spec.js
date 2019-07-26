@@ -1,8 +1,9 @@
+/* global simulate */
 const path = require('path')
 const expect = require('chai').expect
 
 describe('comp1', () => {
-    it ('should run successfully', () => {
+    it('should run successfully', () => {
         const id = simulate.load(path.resolve(__dirname, '../comp1/index'))
         const comp = simulate.render(id, {prop: 'index.test.properties'})
 

@@ -9,7 +9,7 @@
     "test": "jest --silent --bail",
     "coverage": "jest --coverage --bail",
     "codecov": "jest --coverage && codecov",
-    "lint": "eslint \"src/**/*.js\" --fix"
+    "lint": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix"
   },
   "jest": {
     "testEnvironment": "jsdom",

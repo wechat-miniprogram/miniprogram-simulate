@@ -82,8 +82,8 @@ module.exports = {
       'error',
       'never'
     ],
-
-    // 补充规则
+    'indent': ['error', 4],
+    'space-before-function-paren': ['error', 'never'],
     'max-len': 'off',
   },
   'globals': {

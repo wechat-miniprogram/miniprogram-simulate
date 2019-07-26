@@ -1,8 +1,9 @@
+/* global simulate */
 const path = require('path')
 const expect = require('chai').expect
 
 describe('comp4', () => {
-    it ('should run successfully', async () => {
+    it('should run successfully', async() => {
         const id = simulate.load(path.resolve(__dirname, '../comp4/index'))
         const comp = simulate.render(id)
 
