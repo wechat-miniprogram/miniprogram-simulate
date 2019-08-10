@@ -22,7 +22,7 @@ function setNodeJsEnv() {
     // eslint-disable-next-line import/no-dynamic-require
     compiler = require(compilerName)
     runJs = filePath => {
-    // eslint-disable-next-line import/no-dynamic-require
+        // eslint-disable-next-line import/no-dynamic-require
         require(filePath)
         delete require.cache[require.resolve(filePath)]
     }
@@ -60,10 +60,10 @@ function setBrowserEnv() {
 
 try {
     if (typeof global === 'object' && typeof process === 'object') {
-    // nodejs
+        // nodejs
         setNodeJsEnv()
     } else {
-    // 浏览器
+        // 浏览器
         setBrowserEnv()
     }
 } catch (err) {

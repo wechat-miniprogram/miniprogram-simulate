@@ -32,6 +32,11 @@ describe('comp5', () => {
                 <wx-view>3-item</wx-view>
                 <wx-view>in block1</wx-view>
                 <wx-text>in block2</wx-text>
+                <comp>
+                    <wx-view>
+                        <wx-text>haha I am comp</wx-text>
+                    </wx-view>
+                </comp>
             </wx-view>
             <wx-view>foot</wx-view>
         `)).to.equal(true)

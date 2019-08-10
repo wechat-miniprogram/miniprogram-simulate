@@ -7,8 +7,8 @@ const compilerResCache = {}
 
 module.exports = {
     /**
-   * 获取 wxml
-   */
+     * 获取 wxml
+     */
     getWxml(componentPath, config) {
         let wxml = wxmlCache[componentPath]
 

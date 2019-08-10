@@ -53,7 +53,7 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     if (window.__webview_engine_version__ !== 0.02) window.__webview_engine_version__ = 0.02
 
     if (typeof componentPath === 'object') {
-    // 直接传入定义对象
+        // 直接传入定义对象
         const definition = componentPath
 
         return jComponent.register(definition)
@@ -155,7 +155,7 @@ function render(id, properties) {
     const cache = componentMap[id]
 
     if (cache) {
-    // 注入 wxss
+        // 注入 wxss
         wxss.insert(cache.wxss, id)
     }
 
@@ -219,7 +219,7 @@ function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
             }, 0)
         }
     } else {
-    // 浏览器
+        // 浏览器
         dom[propName] = destOffset
     }
 }

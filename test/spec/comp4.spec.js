@@ -10,6 +10,6 @@ describe('comp4', () => {
         const parent = document.createElement('parent-wrapper')
         comp.attach(parent)
 
-        expect(comp.dom.innerHTML).to.equal('<other-comp><wx-view>component b</wx-view></other-comp>')
+        expect(comp.dom.innerHTML).to.equal('<wx-view>1</wx-view><other-comp><wx-view>component b</wx-view></other-comp>')
     })
 })
