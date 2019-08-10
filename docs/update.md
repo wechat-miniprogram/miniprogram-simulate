@@ -58,4 +58,8 @@
 * 更新 miniprogram-exparser 到 2.7.7
 * 支持 observer
 
+## 1.0.8
+
+* 修复 wxss 处理前缀化时会将小数点也判断为 class 选择器前缀的问题
+
 ## next version
