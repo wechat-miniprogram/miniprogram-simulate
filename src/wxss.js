@@ -19,7 +19,7 @@ const addClassPrefixPlugin = function(prefix = '') {
 
                 child.selectors.forEach(selector => {
                     // 处理 class 选择器
-                    selectors.push(selector.replace(/(.)?\.([-_a-zA-Z0-9]+)/igs, (all, $1, $2) => (/\d/.test($1) ? all : `.${prefix}--${$2}`)))
+                    selectors.push(selector.replace(/(.)?\.([-_a-zA-Z0-9]+)/igs, (all, $1, $2) => /\d/.test($1) ? all : `${$1 ? $1 : ''}.${prefix}--${$2}`))
                 })
 
                 child.selectors = selectors
