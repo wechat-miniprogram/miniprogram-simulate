@@ -25,6 +25,38 @@ test('getContent', () => {
     background-color: yellow;
     background-repeat: no-repeat;
     font-size: 13px;
+    color: #ddd !important;
+}\n
+@keyframes headShake {
+    0% {
+        transform: translateX(0);
+        transform: translateX(0);
+    }
+  
+    6.5% {
+        transform: translateX(-6px) rotateY(-9deg);
+        transform: translateX(-6px) rotateY(-9deg);
+    }
+  
+    18.5% {
+        transform: translateX(5px) rotateY(7deg);
+        transform: translateX(5px) rotateY(7deg);
+    }
+  
+    31.5% {
+        transform: translateX(-3px) rotateY(-5deg);
+        transform: translateX(-3px) rotateY(-5deg);
+    }
+  
+    43.5% {
+        transform: translateX(2px) rotateY(3deg);
+        transform: translateX(2px) rotateY(3deg);
+    }
+  
+    50% {
+        transform: translateX(0);
+        transform: translateX(0);
+    }
 }\n`)
 })
 
@@ -81,6 +113,29 @@ test('compile', () => {
             }
         }
     `, {prefix: 'l', less: true})).toBe('.l--class .l--inner-class-1{width:100%}.l--class .l--inner-class-2{width:100rpx}')
+    expect(wxss.compile(`
+        @keyframes headShake {
+            0% {
+                transform: translateX(0);
+                transform: translateX(0);
+            }
+        
+            6.5% {
+                transform: translateX(-6px) rotateY(-9deg);
+                transform: translateX(-6px) rotateY(-9deg);
+            }
+        
+            18.5% {
+                transform: translateX(5px) rotateY(7deg);
+                transform: translateX(5px) rotateY(7deg);
+            }
+        
+            50% {
+                transform: translateX(0);
+                transform: translateX(0);
+            }
+        }
+    `, {prefix: 'some'})).toBe('@keyframes headShake{0%{transform:translateX(0);transform:translateX(0)}6.5%{transform:translateX(-6px) rotateY(-9deg);transform:translateX(-6px) rotateY(-9deg)}18.5%{transform:translateX(5px) rotateY(7deg);transform:translateX(5px) rotateY(7deg)}50%{transform:translateX(0);transform:translateX(0)}}')
 })
 
 test('insert', () => {
