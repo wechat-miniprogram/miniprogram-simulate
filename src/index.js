@@ -21,10 +21,10 @@ global.Component = options => {
         template: component.wxml,
         usingComponents: component.json.usingComponents,
         tagName: component.tagName,
-        options: {
-            classPrefix: component.tagName,
-        },
     }, options)
+    definition.options = Object.assign({
+        classPrefix: component.tagName,
+    }, definition.options || {})
 
     component.id = jComponent.register(definition)
 }

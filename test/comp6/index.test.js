@@ -7,7 +7,6 @@ function runTest(id) {
     const parent = document.createElement('parent-wrapper')
     comp.attach(parent)
 
-    console.log(comp.dom.innerHTML)
     expect(simulate.match(comp.dom, `
         <wx-view class="main--index">index.test.properties</wx-view>
         <wx-view>index.test.properties</wx-view>

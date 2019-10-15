@@ -85,6 +85,7 @@ module.exports = {
     'indent': ['error', 4],
     'space-before-function-paren': ['error', 'never'],
     'max-len': 'off',
+    'no-restricted-syntax': 'off',
   },
   'globals': {
     'window': true,

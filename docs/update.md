@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.1.0
+
+* 修复调用 Component 构造器时如果传入 options 会导致 class 前缀化错误的问题
+
 ## 1.0.9
 
 * 补充 karma 测试需要的 ./build.js
