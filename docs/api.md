@@ -41,7 +41,7 @@ const id = simulate.load('/path/to/component')
 
 ```js
 const id = simulate.load('/path/to/component', 'custom-comp')
-const comp = simulate.render(definition)
+const comp = simulate.render(id)
 
 console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 ```
