@@ -3,11 +3,10 @@ const MapContext = require('./map')
 const UpdateManager = require('./update-manager')
 const dataApi = require('./data')
 const openApi = require('./open')
+const requestApi = require('./request')
 const _ = require('./utils')
 
 module.exports = {
-    request: _.mockAsync('request'),
-
     uploadFile: _.mockAsync('uploadFile'),
     downloadFile: _.mockAsync('downloadFile'),
 
@@ -193,6 +192,9 @@ module.exports = {
 
     // data
     ...dataApi,
+    
+    //request
+    ...requestApi,
 
     // location
     chooseLocation(options = {}) {
