@@ -12,22 +12,38 @@ module.exports = {
             'Transfer-Encoding': "chunked"
         }
 
-        function request (options) {
-            const self = this;
-            this.isAbort = false;
-            this._onHeadersReceivedFun = null;
-            let _headers = Object.assign({},DEFAULT_HEADERS, options.header);
-            setTimeout(function(){
-                if(self.isAbort) return;
-                if(options.success && typeof options.success === 'function'){
+        class Request {
+            constructor (options) {
+                this.isAbort = false;
+                this._onHeadersReceivedFun = null;
+                this._options = options;
+            }
+            _complete () {
+                let _headers = Object.assign({},DEFAULT_HEADERS, options.header);
+                let _datas = Object.assign({}, options.data);
+                let _statusCode = Number(options.statusCode) || 200;
+                if(this.isAbort) return;
+                if(_statusCode === 200 && options.success && typeof options.success === 'function'){
                     options.success({
                         cookies: [],
                         data: {
                             code: 200,
                             msg: 'success',
-                            data: {}
+                            data: _datas
                         },
                         errMsg: 'request: ok',
+                        header: _headers,
+                        statusCode: 200
+                    });
+                }else if(options.fail && typeof options.fail === 'function'){
+                    options.fail({
+                        cookies: [],
+                        data: {
+                            code: _statusCode,
+                            msg: 'fail',
+                            data: _datas
+                        },
+                        errMsg: 'request: fail',
                         header: _headers,
                         statusCode: 200
                     });
@@ -36,31 +52,35 @@ module.exports = {
                     options.complete({
                         cookies: [],
                         data: {
-                            code: 200,
+                            code: _statusCode,
                             msg: 'success',
-                            data: {}
+                            data: _datas
                         },
                         errMsg: 'request: ok',
                         header: _headers,
-                        statusCode: 200
+                        statusCode: _statusCode
                     });
                 }
                 if(this._onHeadersReceivedFun && typeof this._onHeadersReceivedFun === 'function'){
-                    options.onHeadersReceived();
+                    this._onHeadersReceivedFun(_headers);
                 }
-            }, 1000);
+            }
+            abort () {
+                this.isAbort = true;
+            }
+            offHeadersReceived () {
+                this.isOnHeadersReceived = false;
+                this._onHeadersReceivedFun = null;
+            }
+            onHeadersReceived (fun) {
+                if(fun && typeof this.fun === 'function');
+                this._onHeadersReceivedFun = fun;
+            }
         };
-        request.prototype.abort = function() {
-            this.isAbort = true;
-        };
-        request.prototype.offHeadersReceived = function() {
-            this.isOnHeadersReceived = false;
-            this._onHeadersReceivedFun = null;
-        };
-        request.prototype.onHeadersReceived = function(fun) {
-            if(fun && this.fun === 'function');
-            this._onHeadersReceivedFun = fun;
-        };
-        return new request(options);
+        const _request = new Request(options);
+        setTimeout(function(){
+            _request._complete();
+        }, 1000);
+        return _request;
     }
 }
