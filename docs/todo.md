@@ -9,6 +9,6 @@
 
 > PS：若使用官方编译器则无以下问题，因此推荐使用官方编译器
 
-* [template 模板](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/template.html)
-* [外链 wxs](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxs/01wxs-module.html)
-* [外链 wxml](https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/import.html)
+* [template 模板](https://developers.weixin.qq.com/miniprogram/dev/reference/wxml/template.html)
+* [外链 wxs](https://developers.weixin.qq.com/miniprogram/dev/reference/wxs/01wxs-module.html)
+* [外链 wxml](https://developers.weixin.qq.com/miniprogram/dev/reference/wxml/import.html)

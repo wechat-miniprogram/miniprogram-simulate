@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "karma": "npm run build && karma start",
-    "test": "jest --silent --bail",
+    "test": "jest --bail",
     "coverage": "jest --coverage --bail",
     "codecov": "jest --coverage && codecov",
     "lint": "eslint \"src/**/*.js\" --fix && eslint \"test/**/*.js\" --fix"
@@ -60,7 +60,7 @@
     "csso": "^3.5.1",
     "j-component": "^1.1.9",
     "less": "^3.9.0",
-    "miniprogram-compiler": "latest",
+    "miniprogram-compiler": "^0.1.2",
     "postcss": "^7.0.17"
   }
 }
