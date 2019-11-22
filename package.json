@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-simulate",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
@@ -38,7 +38,7 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
-    "codecov": "^3.5.0",
+    "codecov": "^3.6.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -54,13 +54,13 @@
     "karma-webpack": "^3.0.5",
     "mocha": "^5.2.0",
     "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "csso": "^3.5.1",
-    "j-component": "^1.1.9",
-    "less": "^3.9.0",
+    "j-component": "^1.1.10",
+    "less": "^3.10.3",
     "miniprogram-compiler": "^0.1.2",
-    "postcss": "^7.0.17"
+    "postcss": "^7.0.23"
   }
 }

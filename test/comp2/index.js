@@ -5,4 +5,7 @@ Component({
             value: 'index.properties'
         },
     },
+    data: {
+        list: ['haha', 'hehe'],
+    },
 })

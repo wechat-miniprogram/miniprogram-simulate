@@ -1,2 +1,3 @@
 <view class="index">{{prop}}</view>
+<view wx:for="{{list}}" wx:for-item="str" wx:key="*this" data-index="{{index}}" data-type="{{str === 'haha' ? 3 : 4}}">{{str}}</view>
 <other-comp class="other"></other-comp>

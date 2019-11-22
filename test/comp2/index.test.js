@@ -9,6 +9,8 @@ function runTest(id) {
 
     expect(simulate.match(comp.dom, `
         <wx-view class="custom-comp--index">index.test.properties</wx-view>
+        <wx-view data-index="0" data-type="3">haha</wx-view>
+        <wx-view data-index="1" data-type="4">hehe</wx-view>
         <other-comp class="custom-comp--other"><wx-view class="other-comp--index">other.properties</wx-view></other-comp>
     `)).toBe(true)
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
