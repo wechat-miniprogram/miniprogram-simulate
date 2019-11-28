@@ -4,7 +4,7 @@ const expect = require('chai').expect
 
 describe('comp5', () => {
     it('should run successfully', async() => {
-        const id = simulate.load(path.resolve(__dirname, '../comp5/index'))
+        const id = simulate.load(path.join(__dirname, '../comp5/index'))
         const comp = simulate.render(id)
 
         const parent = document.createElement('parent-wrapper')

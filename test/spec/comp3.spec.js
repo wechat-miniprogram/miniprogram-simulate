@@ -8,7 +8,7 @@ describe('comp3', () => {
             id: 'abc',
             template: '<div><slot/></div>',
         }, {compiler: 'simulate'})
-        const id = simulate.load(path.resolve(__dirname, '../comp3/index'), {less: true})
+        const id = simulate.load(path.join(__dirname, '../comp3/index'), {less: true})
         const comp = simulate.render(id)
 
         comp.attach(document.body)
