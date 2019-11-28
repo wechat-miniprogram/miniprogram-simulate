@@ -40,7 +40,6 @@ module.exports = function(config) {
             },
             node: {
                 __dirname: false, // 不注入 __dirname，由 preprocessor 来处理
-                fs: 'empty',
             },
         },
         // 其他配置 ......
