@@ -28,10 +28,10 @@ module.exports = function(config) {
         files: [
             'node_modules/miniprogram-simulate/build.js', // 注入 miniprogram-simulate，会在 window 下挂载 simulate 对象
             'test/spec/*.spec.js', // 测试用例
-            'src/component/*', // 组件文件
+            'src/component/*', // 组件文件，路径尽量不要包含 ../ 或者 ./，不然 wcc 编译器可能识别不了
         ],
         preprocessors: {
-            'src/component/*': ['filemap'], // 组件文件使用 filemap 将各个文件内容注入到浏览器
+            'src/component/*': ['filemap'], // 组件文件使用 filemap 将各个文件内容注入到浏览器，路径尽量不要包含 ../ 或者 ./，不然 wcc 编译器可能识别不了
             'test/spec/*.spec.js': ['webpack', 'dirname'], // 使用 webpack 进行打包，使用 dirname 处理测试用例中的 __dirname 变量
         },
         webpack: {
