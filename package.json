@@ -4,6 +4,7 @@
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
+    "dev": "webpack --watch",
     "build": "webpack",
     "karma": "npm run build && karma start",
     "test": "jest --bail",

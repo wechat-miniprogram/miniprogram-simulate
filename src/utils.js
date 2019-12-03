@@ -36,7 +36,14 @@ function setBrowserEnv() {
     fs = {
         readFileSync(filePath) {
             const fileMap = window.__FILE_MAP__ || {}
-            return fileMap[filePath] || null
+            if (fileMap[filePath]) {
+                return fileMap[filePath]
+            } else if (filePath[0] === '/') {
+                // path.resolve 可能会加上 /，在 windows 下会有问题
+                return fileMap[filePath.substr(1)] || null
+            }
+
+            return null
         }
     }
     window.require = runJs = filePath => {
