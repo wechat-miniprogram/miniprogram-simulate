@@ -1,6 +1,6 @@
 {
   "name": "miniprogram-simulate",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
   "scripts": {
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "csso": "^3.5.1",
-    "j-component": "^1.1.11",
+    "j-component": "^1.2.0",
     "less": "^3.10.3",
     "miniprogram-compiler": "^0.1.2",
     "postcss": "^7.0.23"
