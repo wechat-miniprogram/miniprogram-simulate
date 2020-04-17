@@ -125,6 +125,16 @@ function getId() {
     return id.toString().split('').map(item => charString[+item]).join('')
 }
 
+/**
+ * 判断是否是绝对路径
+ */
+function isAbsolute(input) {
+    if (typeof input !== 'string') return false
+    if (!input.length) return false
+
+    return /^(\/|\\|([a-zA-Z]:[\/\\]))/.test(input)
+}
+
 module.exports = {
     getEnv,
     setNodeJsEnv,
@@ -135,4 +145,5 @@ module.exports = {
     transformRpx,
     getCompiler,
     getId,
+    isAbsolute,
 }

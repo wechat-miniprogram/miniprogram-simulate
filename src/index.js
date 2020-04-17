@@ -88,7 +88,8 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     const usingComponentKeys = Object.keys(usingComponents)
     for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
         const key = usingComponentKeys[i]
-        const usingPath = path.join(path.dirname(componentPath), usingComponents[key])
+        const value = usingComponents[key]
+        const usingPath = _.isAbsolute(value) ? value : path.join(path.dirname(componentPath), value)
         const id = register(usingPath, key, cache, hasRegisterCache)
 
         usingComponents[key] = id
