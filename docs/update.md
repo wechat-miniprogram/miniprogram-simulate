@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.2.1
+
+* usingComponents 支持绝对路径
+
 ## 依赖 j-component 更新 1.2.0
 
 * 更新 miniprogram-exparser 到 2.10.4
