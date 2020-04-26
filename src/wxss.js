@@ -32,7 +32,7 @@ const addClassPrefixPlugin = function(prefix = '') {
  * 获取 import 列表
  */
 function getImportList(wxss, filePath) {
-    const reg = /@import\s+(?:(?:"([^"]+)")|(?:'([^"]+)'));/ig
+    const reg = /@import\s+(?:(?:"([^"]+)")|(?:'([^']+)'));/ig
     const importList = []
     let execRes = reg.exec(wxss)
 
