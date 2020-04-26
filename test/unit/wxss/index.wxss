@@ -1,3 +1,6 @@
+@import "./sub1.wxss";
+@import "./sub2.wxss";
+
 @import "./I_am_Special-Name.wxss";
 
 .a {

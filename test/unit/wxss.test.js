@@ -3,7 +3,13 @@ const path = require('path')
 const wxss = require('../../src/wxss')
 
 test('getContent', () => {
-    expect(wxss.getContent(path.join(__dirname, './wxss/index.wxss'))).toBe(`#id {
+    expect(wxss.getContent(path.join(__dirname, './wxss/index.wxss'))).toBe(`.sub1 {
+    width: 10px;
+}\n
+.sub2 {
+    width: 20px;
+}\n\n
+#id {
     position: absolute;
     left: 0;
     right: 0;
