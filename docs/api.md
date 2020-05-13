@@ -211,6 +211,14 @@ comp.dispatchEvent('customevent', {
 comp.triggerLifeTime('moved')
 ```
 
+##### toJSON()
+
+将节点组件下的节点树生成一个 JSON 树
+
+```js
+comp.toJSON()
+```
+
 ## Class: RootComponent
 
 根组件，继承自 [Component](#class-component)。亦即是说，所有 Component 支持的属性/接口，RootComponent 都支持。
