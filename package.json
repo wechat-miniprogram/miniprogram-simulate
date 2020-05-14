@@ -3,6 +3,7 @@
   "version": "1.2.2",
   "description": "tools for miniprogram custom component unit test",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "dev": "webpack --watch",
     "build": "webpack",
