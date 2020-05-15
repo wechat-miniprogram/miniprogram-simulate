@@ -1,2 +1,2 @@
 <view class="index">{{prop}}</view>
-<view wx:for="{{observerArr}}">{{item}}</view>
+<view wx:for="{{observerArr}}" wx:key="*this">{{item}}</view>
