@@ -3,6 +3,8 @@
 ## 1.2.3
 
 * 支持 relations
+* 添加 typescript 类型文件
+* 添加 jest-snapshot-plugin
 
 ## 1.2.2
 
