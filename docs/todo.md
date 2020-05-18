@@ -1,7 +1,6 @@
 # 暂不支持特性
 
 * [抽象节点](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/generics.html)
-* [组件间关系](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/relations.html)
 * 插件（未来几乎不会考虑支持）
 * ...
 
