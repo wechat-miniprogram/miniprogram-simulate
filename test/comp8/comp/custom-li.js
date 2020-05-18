@@ -3,13 +3,12 @@ Component({
     './custom-ul': {
       type: 'parent',
       linked(target) {
-        console.log('child linked to ', target)
-      },
-      linkChanged(target) {
-        
+        window._relations.liLink++
+        window._relations.liLinkTargetList.push(target)
       },
       unlinked(target) {
-
+        window._relations.liUnlink++
+        window._relations.liUnlinkTargetList.push(target)
       },
     },
   },

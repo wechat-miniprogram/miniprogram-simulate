@@ -26,6 +26,8 @@ module.exports = function(config) {
         'comp5/*',
         'comp5/comp/*',
         'comp7/*',
+        'comp8/*',
+        'comp8/comp/*',
     ],
 
 
@@ -44,6 +46,8 @@ module.exports = function(config) {
         'comp5/*': ['filemap'],
         'comp5/comp/*': ['filemap'],
         'comp7/*': ['filemap'],
+        'comp8/*': ['filemap'],
+        'comp8/comp/*': ['filemap'],
         'spec/*.spec.js': ['webpack', 'dirname'],
     },
 

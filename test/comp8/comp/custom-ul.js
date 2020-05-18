@@ -1,23 +1,15 @@
-// path/to/custom-ul.js
 Component({
   relations: {
     './custom-li': {
       type: 'child',
       linked(target) {
-        console.log('[custom-ul] a child is linked: ', target)
-      },
-      linkChanged(target) {
-
+        window._relations.ulLink++
+        window._relations.ulLinkTargetList.push(target)
       },
       unlinked(target) {
-
+        window._relations.ulUnlink++
+        window._relations.ulUnlinkTargetList.push(target)
       },
     },
-  },
-  methods: {
-    getAllLi() {
-      var nodes = this.getRelationNodes('./custom-li-component')
-      console.log(nodes)
-    }
   },
 })

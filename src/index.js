@@ -16,8 +16,10 @@ let nowLoad = null
  */
 global.Component = options => {
     const component = nowLoad
+    const pathToIdMap = component.pathToIdMap
     const definition = Object.assign({
         id: component.id,
+        path: component.path,
         template: component.wxml,
         usingComponents: component.json.usingComponents,
         tagName: component.tagName,
@@ -26,7 +28,23 @@ global.Component = options => {
         classPrefix: component.tagName,
     }, definition.options || {})
 
-    component.id = jComponent.register(definition)
+    // 处理 relations
+    if (definition.relations) {
+        Object.keys(definition.relations).forEach(key => {
+            const value = definition.relations[key]
+            const componentPath = _.isAbsolute(key) ? key : path.join(path.dirname(component.path), key)
+            const id = pathToIdMap[componentPath]
+
+            if (id) {
+                // 将涉及到的自定义组件路径转成 id
+                value.target = id
+                definition.relations[id] = value
+                delete definition.relations[key]
+            }
+        })
+    }
+
+    jComponent.register(definition)
 }
 
 /**
@@ -72,9 +90,9 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     if (hasRegisterCache[componentPath]) return hasRegisterCache[componentPath]
     hasRegisterCache[componentPath] = id
 
-    const oldLoad = nowLoad
-    const component = nowLoad = {
+    const component = {
         id,
+        path: componentPath,
         tagName,
         json: _.readJson(`${componentPath}.json`),
     }
@@ -99,16 +117,14 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     component.wxml = compile.getWxml(componentPath, cache.options)
     component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
-    // 执行自定义组件的 js
-    _.runJs(componentPath)
+    // 存入需要执行的自定义组件 js
+    cache.needRunJsList.push([componentPath, component])
 
     // 保存追加了已编译的 wxss
     cache.wxss.push(wxss.compile(component.wxss, {
         prefix: tagName,
         ...cache.options,
     }))
-
-    nowLoad = oldLoad
 
     return component.id
 }
@@ -137,9 +153,21 @@ function load(componentPath, tagName, options = {}) {
     const cache = {
         wxss: [],
         options,
+        needRunJsList: [],
     }
     const hasRegisterCache = {}
     const id = register(componentPath, tagName, cache, hasRegisterCache)
+
+    // 执行自定义组件 js
+    cache.needRunJsList.forEach(item => {
+        const oldLoad = nowLoad
+
+        nowLoad = item[1] // nowLoad 用于执行用户代码调用 Component 构造器时注入额外的参数给 j-component
+        nowLoad.pathToIdMap = hasRegisterCache
+        _.runJs(item[0])
+
+        nowLoad = oldLoad
+    })
 
     // 存入缓存
     componentMap[id] = cache
