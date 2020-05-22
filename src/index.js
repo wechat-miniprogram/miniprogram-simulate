@@ -34,7 +34,6 @@ global.Component = options => {
             const value = definition.relations[key]
             const componentPath = _.isAbsolute(key) ? key : path.join(path.dirname(component.path), key)
             const id = pathToIdMap[componentPath]
-
             if (id) {
                 // 将涉及到的自定义组件路径转成 id
                 value.target = id
@@ -63,12 +62,13 @@ function behavior(definition) {
     return jComponent.behavior(definition)
 }
 
+/* eslint-disable complexity */
 /**
  * 注册自定义组件
  */
 function register(componentPath, tagName, cache, hasRegisterCache) {
     // 用于 wcc 编译器使用
-    if (window.__webview_engine_version__ !== 0.02) window.__webview_engine_version__ = 0.02
+    window.__webview_engine_version__ = 0.02
 
     if (typeof componentPath === 'object') {
         // 直接传入定义对象
@@ -103,15 +103,20 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
 
     // 先加载 using components
     const usingComponents = component.json.usingComponents || {}
+    const overrideUsingComponents = cache.options.usingComponents || {}
     const usingComponentKeys = Object.keys(usingComponents)
     for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
         const key = usingComponentKeys[i]
+
+        if (Object.prototype.hasOwnProperty.call(overrideUsingComponents, key)) continue // 被 override 的跳过
+
         const value = usingComponents[key]
         const usingPath = _.isAbsolute(value) ? value : path.join(path.dirname(componentPath), value)
         const id = register(usingPath, key, cache, hasRegisterCache)
 
         usingComponents[key] = id
     }
+    Object.assign(usingComponents, overrideUsingComponents)
 
     // 读取自定义组件的静态内容
     component.wxml = compile.getWxml(componentPath, cache.options)
