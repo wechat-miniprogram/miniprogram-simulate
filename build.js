@@ -12546,7 +12546,6 @@ global.Component = options => {
             const value = definition.relations[key]
             const componentPath = _.isAbsolute(key) ? key : path.join(path.dirname(component.path), key)
             const id = pathToIdMap[componentPath]
-
             if (id) {
                 // 将涉及到的自定义组件路径转成 id
                 value.target = id
@@ -12575,12 +12574,13 @@ function behavior(definition) {
     return jComponent.behavior(definition)
 }
 
+/* eslint-disable complexity */
 /**
  * 注册自定义组件
  */
 function register(componentPath, tagName, cache, hasRegisterCache) {
     // 用于 wcc 编译器使用
-    if (window.__webview_engine_version__ !== 0.02) window.__webview_engine_version__ = 0.02
+    window.__webview_engine_version__ = 0.02
 
     if (typeof componentPath === 'object') {
         // 直接传入定义对象
@@ -12615,15 +12615,20 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
 
     // 先加载 using components
     const usingComponents = component.json.usingComponents || {}
+    const overrideUsingComponents = cache.options.usingComponents || {}
     const usingComponentKeys = Object.keys(usingComponents)
     for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
         const key = usingComponentKeys[i]
+
+        if (Object.prototype.hasOwnProperty.call(overrideUsingComponents, key)) continue // 被 override 的跳过
+
         const value = usingComponents[key]
         const usingPath = _.isAbsolute(value) ? value : path.join(path.dirname(componentPath), value)
         const id = register(usingPath, key, cache, hasRegisterCache)
 
         usingComponents[key] = id
     }
+    Object.assign(usingComponents, overrideUsingComponents)
 
     // 读取自定义组件的静态内容
     component.wxml = compile.getWxml(componentPath, cache.options)
@@ -12887,7 +12892,6 @@ class ComponentManager {
   constructor(definition) {
     this.id = definition.id || _.getId(true)
     this.path = _.normalizeAbsolute(definition.path)
-    this.isGlobal = !!definition.id // 是否全局组件
     this.definition = definition
 
     if (definition.tagName) _.setTagName(this.id, definition.tagName) // 保存标签名
@@ -13071,6 +13075,7 @@ class TemplateEngine {
     instance.idMap = {}
     instance.slots = {}
     instance.shadowRoot = render.renderExparserNode(instance._vt, exparserNode, null) // 渲染成 exparser 树
+    instance.shadowRoot._vt = instance._vt
     instance.listeners = []
 
     TemplateEngine.collectIdMapAndSlots(instance.shadowRoot, instance.idMap, instance.slots)
@@ -13228,12 +13233,14 @@ module.exports = function (template, data, usingComponents) {
         type = CONSTANT.TYPE_WXS
       } else if (_.isHtmlTag(tagName)) {
         type = CONSTANT.TYPE_NATIVE
+        id = tagName
       } else {
         type = CONSTANT.TYPE_COMPONENT
         id = usingComponents[tagName]
         componentManager = id ? _.cache(id) : _.cache(tagName)
 
         if (!componentManager) throw new Error(`component ${tagName} not found`)
+        else id = componentManager.id
       }
 
       const {statement, event, normalAttrs} = filterAttrs(attrs)
@@ -13429,11 +13436,9 @@ module.exports = function (content, handler = {}) {
       const attrs = []
 
       rest.replace(attrReg, (all, $1, $2, $3, $4) => {
-        const value = $2 || $3 || $4
-
         attrs.push({
           name: $1,
-          value,
+          value: $2 !== undefined ? $2 : $3 !== undefined ? $3 : $4 !== undefined ? $4 : true,
         })
       })
 
@@ -13519,7 +13524,7 @@ class VirtualNode {
         // slot 名
         this.slotName = value || ''
       } else {
-        if (value) attr.value = expr.getExpression(value)
+        if (value && typeof value === 'string') attr.value = expr.getExpression(value)
         filterAttrs.push(attr)
       }
     }
@@ -14353,7 +14358,7 @@ function transformCompileResTree(obj, parent, usingComponents) {
     node = {
       type,
       tagName,
-      componentId: usingComponents[tagName],
+      componentId: usingComponents[tagName] || tagName,
       content: '', // 文本节点的内容
       key, // 节点的 key，diff 用
       children,
@@ -14410,6 +14415,7 @@ function diffVt(oldVt, newVt) {
     if (newVt.type !== CONSTANT.TYPE_TEXT || newVt.content !== oldVt.content) {
       if (parent) {
         const newNode = render.renderExparserNode(newVt, null, parent.ownerShadowRoot)
+        newNode._vt = newVt
         parent.replaceChild(newNode, node)
       }
     }
@@ -14420,6 +14426,7 @@ function diffVt(oldVt, newVt) {
       // 新节点是文本节点
       if (parent) {
         const newNode = render.renderExparserNode(newVt, null, parent.ownerShadowRoot)
+        newNode._vt = newVt
         parent.replaceChild(newNode, node)
       }
     } else if (newVt.type === oldVt.type && newVt.componentId === oldVt.componentId && newVt.key === oldVt.key) {
@@ -14442,7 +14449,7 @@ function diffVt(oldVt, newVt) {
       // 检查子节点
       const oldChildren = oldVt.children
       const newChildren = newVt.children
-      const diffs = oldVt.type === CONSTANT.TYPE_IF || oldVt.type === CONSTANT.TYPE_FOR || oldVt.type === CONSTANT.TYPE_FORITEM || oldVt.type === CONSTANT.TYPE_ROOT ? diffList(oldChildren, newChildren) : {children: newChildren, moves: null} // only statement need diff
+      const diffs = diffList(oldChildren, newChildren)
 
       // diff 子节点树
       for (let i = 0, len = oldChildren.length; i < len; i++) {
@@ -14457,10 +14464,15 @@ function diffVt(oldVt, newVt) {
         const {removes} = diffs.moves
         const children = node.childNodes
 
-        inserts = inserts.map(({oldIndex, index}) => ({
-          newNode: children[oldIndex] || render.renderExparserNode(newChildren[index], null, node.ownerShadowRoot),
-          index,
-        }))
+        inserts = inserts.map(({oldIndex, index}) => {
+          const newNode = children[oldIndex] || render.renderExparserNode(newChildren[index], null, node.ownerShadowRoot)
+          newNode._vt = newChildren[index]
+
+          return {
+            newNode,
+            index,
+          }
+        })
 
         removes.forEach(index => node.removeChild(children[index]))
         inserts.forEach(({newNode, index}) => node.insertBefore(newNode, children[index]))
@@ -14468,6 +14480,7 @@ function diffVt(oldVt, newVt) {
       node._vt = newVt
     } else if (parent) {
       const newNode = render.renderExparserNode(newVt, null, parent.ownerShadowRoot)
+      newNode._vt = newVt
       parent.replaceChild(newNode, node)
     }
   }
@@ -15045,11 +15058,18 @@ class RootComponent extends Component {
     this._isTapCancel = false
     this._lastScrollTime = 0
 
-    if (properties && typeof properties === 'object') {
+    const attrs = Object.keys(properties || {}).map(key => ({name: key, value: properties[key]}))
+    if (attrs.length) {
       // 对齐 observer 逻辑，走 updateAttr 来更新 property
-      const propertyList = []
-      Object.keys(properties).forEach(key => propertyList.push({name: key, value: properties[key]}))
-      render.updateAttrs(this._exparserNode, propertyList)
+      render.updateAttrs(this._exparserNode, attrs)
+    }
+
+    this._exparserNode._vt = {
+      type: CONSTANT.TYPE_COMPONENT,
+      tagName: tagName || 'main',
+      attrs,
+      event: {},
+      children: []
     }
 
     this.parentNode = null

@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.2.4
+
+* 支持在 load 方法中覆盖组件的 usingComponents
+
 ## 1.2.3
 
 * 支持 relations
