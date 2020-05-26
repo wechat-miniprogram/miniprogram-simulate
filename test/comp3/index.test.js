@@ -13,7 +13,7 @@ async function runTest(id) {
 
     view.dispatchEvent('touchstart')
     view.dispatchEvent('touchend')
-    await simulate.sleep(100)
+    await simulate.sleep(500)
     expect(view.dom.innerHTML).toBe('<div>comp3.properties</div>')
 
     expect(comp.instance.print()).toBe(123)
