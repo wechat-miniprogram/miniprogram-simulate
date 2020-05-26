@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "csso": "^3.5.1",
-    "j-component": "^1.2.2",
+    "j-component": "^1.2.3",
     "less": "^3.10.3",
     "miniprogram-compiler": "^0.1.2",
     "postcss": "^7.0.23"
