@@ -1,6 +1,6 @@
 # 更新日志
 
-## next version
+## 1.2.4
 
 * 支持在 load 方法中覆盖组件的 usingComponents
 
