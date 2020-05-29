@@ -102,6 +102,7 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     }
 
     // 先加载 using components
+    const rootPath = cache.options.rootPath
     const usingComponents = component.json.usingComponents || {}
     const overrideUsingComponents = cache.options.usingComponents || {}
     const usingComponentKeys = Object.keys(usingComponents)
@@ -111,7 +112,7 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
         if (Object.prototype.hasOwnProperty.call(overrideUsingComponents, key)) continue // 被 override 的跳过
 
         const value = usingComponents[key]
-        const usingPath = _.isAbsolute(value) ? value : path.join(path.dirname(componentPath), value)
+        const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
         const id = register(usingPath, key, cache, hasRegisterCache)
 
         usingComponents[key] = id
