@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.2.6 & 依赖 j-component 更新 1.3.0
+
+* 支持 virtaul host 特性
+
 ## 1.2.5
 
 * 修复 usingComponents 只支持文件系统绝对路径的问题
