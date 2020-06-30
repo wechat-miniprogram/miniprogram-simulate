@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.2.7 & 依赖 j-component 更新 1.3.1
+
+* 随机 id 生成使用 Math.random
+
 ## 1.2.6 & 依赖 j-component 更新 1.3.0
 
 * 支持 virtaul host 特性

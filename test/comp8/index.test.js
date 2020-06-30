@@ -20,7 +20,7 @@ function runTest(id) {
     const ul = comp.querySelectorAll('.ul')[0].instance
 
     // init
-    expect(simulate.match(comp.dom, `<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-1</wx-text></custom-li><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li></wx-view></custom-ul>`)).toBe(true)
+    expect(simulate.match(comp.dom, '<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-1</wx-text></custom-li><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li></wx-view></custom-ul>')).toBe(true)
     expect(relationsData.ulLink).toBe(2)
     expect(relationsData.ulLinkTargetList.length).toBe(2)
     expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[0].instance)
@@ -46,7 +46,7 @@ function runTest(id) {
     relationsData.ulLinkTargetList.length = 0
     relationsData.liLinkTargetList.length = 0
     comp.setData({list: [2, 3, 4]})
-    expect(simulate.match(comp.dom, `<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li><custom-li class="main--li"><wx-text>li-3</wx-text></custom-li><custom-li class="main--li"><wx-text>li-4</wx-text></custom-li></wx-view></custom-ul>`)).toBe(true)
+    expect(simulate.match(comp.dom, '<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li><custom-li class="main--li"><wx-text>li-3</wx-text></custom-li><custom-li class="main--li"><wx-text>li-4</wx-text></custom-li></wx-view></custom-ul>')).toBe(true)
     expect(relationsData.ulLink).toBe(4)
     expect(relationsData.ulLinkTargetList.length).toBe(2)
     expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[1].instance)
@@ -104,6 +104,6 @@ function runTest(id) {
 }
 
 test('comp8', () => {
-    let id = simulate.load(path.resolve(__dirname, './index'))
+    const id = simulate.load(path.resolve(__dirname, './index'))
     runTest(id)
 })

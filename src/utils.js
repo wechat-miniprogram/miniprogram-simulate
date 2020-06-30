@@ -132,7 +132,7 @@ function isAbsolute(input) {
     if (typeof input !== 'string') return false
     if (!input.length) return false
 
-    return /^(\/|\\|([a-zA-Z]:[\/\\]))/.test(input)
+    return /^(\/|\\|([a-zA-Z]:[/\\]))/.test(input)
 }
 
 module.exports = {

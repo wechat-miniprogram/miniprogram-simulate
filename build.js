@@ -450,9 +450,9 @@ D(u.c,a,r,n,o,i)}}};d.prototype.createInstance=function(e){var t=Object.create(f
 /***/ (function(module, exports) {
 
 /**
- * 获取随机 id
+ * 获取随机 id，生成 15 位
  */
-let seed = +new Date()
+let seed = 1e14 + Math.floor(Math.random() * 9e14)
 const charString = 'abcdefghij'
 function getId(notNumber) {
   const id = ++seed
@@ -2344,7 +2344,7 @@ function isAbsolute(input) {
     if (typeof input !== 'string') return false
     if (!input.length) return false
 
-    return /^(\/|\\|([a-zA-Z]:[\/\\]))/.test(input)
+    return /^(\/|\\|([a-zA-Z]:[/\\]))/.test(input)
 }
 
 module.exports = {

@@ -1,6 +1,7 @@
 /**
  * 参考实现 https://github.com/facebook/jest/blob/3f107a3377/packages/pretty-format/src/plugins/ReactTestComponent.ts
  */
+// eslint-disable-next-line import/no-extraneous-dependencies
 const _markup = require('pretty-format/build/plugins/lib/markup')
 
 /**
