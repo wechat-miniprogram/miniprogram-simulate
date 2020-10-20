@@ -53,7 +53,7 @@ console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 | 属性名 | 类型 | 默认值 | 描述 |
 |---|---|---|---|
 | compiler | String | official | wxml 编译器类型，传入 official 表示使用官方编译器，传入 simulate 表示使用 js 实现的模拟编译器 |
-| rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板，不传则取当前组件所在目录作为其值 |
+| rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板，要求组件所有依赖在此目录下，不传则取当前组件所在目录作为其值 |
 | less | Boolean | false | 自定义组件的 wxss 是否需要经过 less 编译 |
 | usingComponents | Object | undefined | 使用到的自定义组件映射表，会将传入组件申明的 usingComponents 覆盖 |
 
