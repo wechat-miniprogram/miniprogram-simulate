@@ -1,5 +1,9 @@
 # 更新日志
 
+## 依赖 j-component 更新 1.3.2
+
+* 修复 properties 的 type 值转换问题
+
 ## 1.2.7 & 依赖 j-component 更新 1.3.1
 
 * 随机 id 生成使用 Math.random

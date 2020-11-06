@@ -617,10 +617,10 @@ function adjustExparserDefinition(definition) {
     if (value === null) {
       properties[key] = {type: null}
     } else if (value === Number || value === String || value === Boolean || value === Object || value === Array) {
-      properties[key] = {type: value.name}
+      properties[key] = {type: value}
     } else if (value.public === undefined || value.public) {
       properties[key] = {
-        type: value.type === null ? null : value.type.name,
+        type: value.type === null ? null : value.type,
         value: value.value,
         observer: value.observer,
       }
