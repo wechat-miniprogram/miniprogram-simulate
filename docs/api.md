@@ -59,6 +59,17 @@ console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 
 > PS：在使用 karma 测试时只支持官方编译器编译 wxml 文件，不支持使用 js 模拟的编译器，因此就算在 simulate.load 方法中配置了 `compiler: 'simulate'` 也不会生效。
 
+```js
+// 不传 tagName
+const id1 = simulate.load('/path/to/component', {
+    rootPath: 'path/to/component/dir'
+})
+// 传 tagName
+const id2 = simulate.load('/path/to/component', 'custom-comp', {
+    rootPath: 'path/to/component/dir'
+})
+```
+
 ### definition
 
 自定义组件的定义对象，除了小程序本身支持的字段外，额外支持字段如下：
