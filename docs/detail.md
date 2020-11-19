@@ -45,7 +45,7 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 
 ## 相对路径
 
-因为在此测试环境中没有小程序根路径的概念，所以原本支持绝对路径的地方必须改为相对路径方可进行测试，比如下述例子中的 usingComponents 字段：
+因为在此测试环境中没有小程序根路径的概念，所以取 load 方法中的 rootPath 参数作为根路径来进行计算，比如下述例子中的 usingComponents 字段：
 
 ```json
 {
@@ -56,7 +56,7 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 }
 ```
 
-在小程序中是支持这种写法的，它会从小程序根路径开始寻找对应组件，但是在应用此工具集时，需要改成相对路径写法：
+这种写法的，它会从我们提供的根路径开始寻找对应组件，但是使用相对路径写法，则无需做任何处理：
 
 ```json
 {
@@ -66,6 +66,8 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
     }
 }
 ```
+
+> PS：关于 rootPath 的设置，可查看[此文档](./api.md#options)
 
 这样才能正确找到使用的自定义组件。
 
