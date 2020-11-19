@@ -4,7 +4,7 @@
 
 * [class 前缀化](#class-前缀化)
 * [dom 接口模拟](#dom-接口模拟)
-* [相对路径](#相对路径)
+* [自定义组件路径](#自定义组件路径)
 * [wx 对象](#wx-对象)
 * [内置组件](#内置组件)
 
@@ -43,7 +43,7 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 
 > PS：推荐使用 jest 来搭配此工具集使用，jest 内部已集成 jsdom，通过配置 testEnvironment 字段的值为 jsdom 即可以类浏览器环境的方式来执行测试用例。
 
-## 相对路径
+## 自定义组件路径
 
 因为在此测试环境中没有小程序根路径的概念，所以取 load 方法中的 rootPath 参数作为根路径来进行计算，比如下述例子中的 usingComponents 字段：
 
