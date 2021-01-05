@@ -1,5 +1,9 @@
 # 更新日志
 
+## 依赖 j-component 更新 1.3.3
+
+* 修复 behavior 创建没有调用 callDefinitionFilter 的问题
+
 ## 依赖 j-component 更新 1.3.2
 
 * 修复 properties 的 type 值转换问题
