@@ -1,10 +1,15 @@
 # 更新日志
 
-## 依赖 j-component 更新 1.3.3
+## 1.3.0 & 依赖 j-component 更新 1.4.0
+
+* 更新基础库 exparser 到 2.15.0
+* 修复 observers 在组件 init 之前就会被调一次的问题
+
+## 1.2.9 & 依赖 j-component 更新 1.3.3
 
 * 修复 behavior 创建没有调用 callDefinitionFilter 的问题
 
-## 依赖 j-component 更新 1.3.2
+## 1.2.8 & 依赖 j-component 更新 1.3.2
 
 * 修复 properties 的 type 值转换问题
 
