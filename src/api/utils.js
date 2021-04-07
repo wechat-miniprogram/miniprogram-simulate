@@ -1,11 +1,15 @@
 /**
  * 异步方法通用部分
  */
-function runInAsync(options, res) {
+function runInAsync(options, res, extraRes) {
+    const resData = Object.assign({}, res, extraRes);
     setTimeout(() => {
-        if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function') options.success(res)
-        if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function') options.fail(res)
-        if (typeof options.complete === 'function') options.complete(res)
+        if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function') 
+          options.success(resData);
+        if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function') 
+          options.fail(resData);
+        if (typeof options.complete === 'function') 
+          options.complete(resData);
     }, 0)
 }
 
@@ -41,11 +45,11 @@ function mockSync(ret) {
  * 快速模拟异步接口
  */
 function mockAsync(name) {
-    return (options = {}) => {
+    return (options = {}, extraRes) => {
         const res = {
             errMsg: `${name}:ok`,
         }
-        runInAsync(options, res)
+        runInAsync(options, res, extraRes)
     }
 }
 
