@@ -1,5 +1,5 @@
 /**
- * 异步方法通用部分
+ * 异步方法通用部分 test
  */
 function runInAsync(options, res, extraRes) {
     const resData = Object.assign({}, res, extraRes);
