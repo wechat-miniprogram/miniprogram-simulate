@@ -5,4 +5,9 @@ Component({
             value: 'other.properties'
         },
     },
+    methods: {
+        getStr() {
+            return 'other'
+        }
+    }
 })

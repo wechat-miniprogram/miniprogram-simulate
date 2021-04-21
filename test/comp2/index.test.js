@@ -16,6 +16,8 @@ function runTest(id) {
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe('100px')
     expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('rgb(255, 255, 0)')
+    expect(comp.querySelector('.other').instance.getStr).toBeInstanceOf(Function)
+    expect(comp.querySelector('.other').instance.getStr()).toBe('other')
     expect(comp.dom.tagName).toBe('CUSTOM-COMP')
 }
 
