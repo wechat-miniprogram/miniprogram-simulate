@@ -215,15 +215,23 @@ comp.dispatchEvent('customevent', {
 })
 ```
 
-#### triggerLifeTime(lifeTime)
+#### triggerLifeTime(lifeTime, args)
 
 触发组件实例的生命周期钩子。
 
 ```js
-comp.triggerLifeTime('moved')
+comp.triggerLifeTime('moved', {test: 'xxx'})
 ```
 
-##### toJSON()
+#### triggerPageLifeTime(lifeTime, args)
+
+触发组件实例中配置的页面的生命周期钩子。
+
+```js
+comp.triggerPageLifeTime('show', {test: 'xxx'})
+```
+
+#### toJSON()
 
 将节点组件下的节点树生成一个 JSON 树
 

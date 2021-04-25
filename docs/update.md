@@ -1,5 +1,10 @@
 # 更新日志
 
+## 1.3.2 & 依赖 j-component 更新 1.4.1
+
+* triggerLifeTime 接口支持参数
+* 支持 triggerPageLifeTime 接口
+
 ## 1.3.0 & 依赖 j-component 更新 1.4.0
 
 * 更新基础库 exparser 到 2.15.0

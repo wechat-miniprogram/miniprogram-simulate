@@ -11,7 +11,9 @@ function runTest(id) {
     expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
     expect(comp.dom.tagName).toBe('MAIN')
 
-    expect(comp.instance.data.observerArr).toEqual(['index.test.properties', 'index.properties', 'index.test.properties', 'observers'])
+    comp.triggerPageLifeTime('show', {test: 'xxx'})
+
+    expect(comp.instance.data.observerArr).toEqual(['index.test.properties', 'index.properties', 'index.test.properties', 'observers', 'pageShow', {test: 'xxx'}])
 }
 
 test('comp1', () => {

@@ -30,5 +30,13 @@ Component({
         getStr() {
             return 'observers'
         }
-    }
+    },
+    pageLifetimes: {
+        show(args) {
+            this.setData({
+                'observerArr[4]': 'pageShow',
+                'observerArr[5]': args,
+            })
+        },
+    },
 })

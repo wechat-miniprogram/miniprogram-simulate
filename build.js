@@ -14919,8 +14919,15 @@ class Component {
   /**
    * 触发生命周期
    */
-  triggerLifeTime(lifeTime) {
-    this._exparserNode.triggerLifeTime(lifeTime)
+  triggerLifeTime(lifeTime, ...args) {
+    this._exparserNode.triggerLifeTime(lifeTime, args)
+  }
+
+  /**
+   * 触发页面生命周期
+   */
+  triggerPageLifeTime(lifeTime, ...args) {
+    this._exparserNode.triggerPageLifeTime(lifeTime, args)
   }
 
   /**
