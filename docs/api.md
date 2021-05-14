@@ -1,14 +1,5 @@
 # 接口
 
-* [behavior](#behaviordefinition)
-* [load](#loadcomponentpath-tagname-options--loaddefinition)
-* [render](#rendercomponentid-properties)
-* [match](#matchdom-html)
-* [sleep](#async-sleeptimeout)
-* [scroll](#scrollcomponent-destoffset-times-propname)
-* [Class: Component](#class-component)
-* [Class: RootComponent](#class-rootcomponent)
-
 ## behavior(definition)
 
 注册并返回 behavior 对象。
@@ -213,6 +204,28 @@ comp.dispatchEvent('customevent', {
   changedTouches: [{ x: 0, y: 0 }],
   /* 其他 CustomEvent 构造器支持的 option */
 })
+```
+
+#### addEventListener(eventName, handler, useCapture)
+
+用于外部监听组件触发的事件。
+
+```js
+comp.addEventListener('customevent', evt => {
+    console.log(evt)
+})
+```
+
+#### removeEventListener(eventName, handler, useCapture)
+
+用于外部取消监听组件触发的事件。
+
+```js
+const handler = evt => {
+    console.log(evt)
+    comp.removeEventListener('customevent', handler)
+}
+comp.addEventListener('customevent', handler)
 ```
 
 #### triggerLifeTime(lifeTime, args)

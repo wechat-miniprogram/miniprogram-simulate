@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.4.0 & 依赖 j-component 更新 1.4.2
+
+* 支持 addEventListener/removeEventListener 接口
+
 ## 1.3.2 & 依赖 j-component 更新 1.4.1
 
 * triggerLifeTime 接口支持参数

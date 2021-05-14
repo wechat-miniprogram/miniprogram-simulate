@@ -14882,6 +14882,22 @@ class Component {
   }
 
   /**
+   * 监听组件事件
+   */
+  addEventListener(eventName, handler, capture = false) {
+    if (typeof capture === 'object') capture = !!capture.capture
+    this._exparserNode.addListener(eventName, handler, {capture})
+  }
+
+  /**
+   * 取消监听组件事件
+   */
+  removeEventListener(eventName, handler, capture = false) {
+    if (typeof capture === 'object') capture = !!capture.capture
+    this._exparserNode.removeListener(eventName, handler, {capture})
+  }
+
+  /**
    * 选取第一个符合的子组件节点
    */
   querySelector(selector) {
