@@ -1,0 +1,2 @@
+<view class="index">{{prop}}</view>
+<view>123</view>
