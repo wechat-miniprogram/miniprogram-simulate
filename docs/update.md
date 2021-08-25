@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.4.2 & 依赖 j-component 更新 1.4.4
+
+* 支持内置 behavior：wx://form-field-group
+
 ## 1.4.1 & 依赖 j-component 更新 1.4.3
 
 * 支持根组件的 virtual host 模式

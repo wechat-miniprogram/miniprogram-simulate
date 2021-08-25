@@ -12742,6 +12742,10 @@ global.wxFormField = module.exports.behavior({
   }
 })
 
+global.wxFormFieldGroup = module.exports.behavior({
+  is: 'wx://form-field-group',
+})
+
 global.wxFormFieldButton = module.exports.behavior({
   is: 'wx://form-field-button',
   listeners: {
@@ -12819,11 +12823,11 @@ class ComponentManager {
       // 支持内置 behavior
       if (item === 'wx://component-export') {
         return global.wxComponentExport
-      }
-      if (item === 'wx://form-field') {
+      } else if (item === 'wx://form-field') {
         return global.wxFormField
-      }
-      if (item === 'wx://form-field-button') {
+      } else if (item === 'wx://form-field-group') {
+        return global.wxFormFieldGroup
+      } else if (item === 'wx://form-field-button') {
         return global.wxFormFieldButton
       }
 
