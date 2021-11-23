@@ -727,7 +727,7 @@ function getDom(exparserNode) {
     }
     dom.appendChild(fragment)
   }
-  
+
   return dom
 }
 
@@ -13588,7 +13588,7 @@ class VirtualNode {
     if (this.children && this.children.length) {
       if (this.type === CONSTANT.TYPE_FOR) {
         // 检查 for 语句
-        const list = expr.calcExpression(statement.for, data)
+        const list = expr.calcExpression(statement.for, data) || []
         options.extra = options.extra || {}
 
         for (let i = 0, len = list.length; i < len; i++) {
