@@ -28,7 +28,7 @@ module.exports = {
                 } else {
                     // 分析组件依赖到的wxml 和 wxs
                     const {wxmlList = [], wxsList = []} = _.getDependenceWxmlAndWxs(config.rootPath, componentPath)
-
+                    // 传入wxmlList 和 wxsList 避免全量编译根路径下的wxml和wxs
                     const compileString = compiler.wxmlToJs(config.rootPath, wxmlList, wxsList)
                     // eslint-disable-next-line no-new-func
                     const compileFunc = new Function(compileString)
