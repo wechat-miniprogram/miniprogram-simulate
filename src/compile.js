@@ -26,7 +26,10 @@ module.exports = {
                 if (compilerResCache[config.rootPath]) {
                     gwx = compilerResCache[config.rootPath]
                 } else {
-                    const compileString = compiler.wxmlToJs(config.rootPath)
+                    // 分析组件依赖到的wxml 和 wxs
+                    const {wxmlList = [], wxsList = []} = _.getDependenceWxmlAndWxs(config.rootPath, componentPath)
+
+                    const compileString = compiler.wxmlToJs(config.rootPath, wxmlList, wxsList)
                     // eslint-disable-next-line no-new-func
                     const compileFunc = new Function(compileString)
 
