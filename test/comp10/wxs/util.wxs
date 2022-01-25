@@ -1,0 +1,8 @@
+// eslint-disable-next-line no-var
+var config = require('./config.wxs')
+
+function getConfig() {
+    return config
+}
+
+module.exports.getConfig = getConfig

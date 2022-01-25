@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "custom-ul": "/comp/custom-ul",
+    "custom-li": "/comp/custom-li"
+  }
+}
