@@ -5,6 +5,8 @@ let env = 'nodejs'
 let fs = null
 let compiler = null
 let runJs = null // 执行 js
+const dependenceComponentMap = new Map()
+const dependenceWxsMap = new Map()
 
 /**
  * 获取当前环境
@@ -134,6 +136,120 @@ function isAbsolute(input) {
 
     return /^(\/|\\|([a-zA-Z]:[/\\]))/.test(input)
 }
+/** 适配Linux 和 window路径 */
+function adapterPath(filePath) {
+    return filePath.split(path.sep).join('/')
+}
+/**
+ * 数组B 加到数组A
+ */
+function addListB2A(listA, listB) {
+    if (!Array.isArray(listA) || !Array.isArray(listB)) {
+        return
+    }
+
+    listB.forEach((item) => {
+        if (!item || listA.indexOf(item) >= 0) {
+            return
+        }
+        listA.push(item)
+    })
+}
+/**
+ * 根据wxs文件找到依赖的wxs文件内容
+ * @param {*} wxsPath
+ * @returns
+ */
+function getDependenceWxsListByWxsPath(wxsPath) {
+    // 检查是否有缓存
+    if (dependenceWxsMap.has(wxsPath)) {
+        return dependenceWxsMap.get(wxsPath)
+    }
+    const wxsList = []
+    dependenceComponentMap.set(wxsPath, wxsList)
+    let wxsStr = ''
+    try {
+        // 读取wxs 文件内容
+        wxsStr = fs.readFileSync(wxsPath, {encoding: 'utf8'})
+        // 文件存在则加入
+        wxsList.push(wxsPath)
+    } catch (error) {
+        // 文件不存在的情况 则忽略，因为我没忽略注释内容
+        console.log('wxsPath not exist', wxsPath)
+    }
+    // 需要引用类型
+    wxsStr.replace(/require\(['"](.*?)['"]\)/g, (all, $1) => {
+        const denpendenceWxsPath = path.join(wxsPath, '../', $1)
+        const dependenceWxsList = getDependenceWxsListByWxsPath(denpendenceWxsPath)
+        addListB2A(wxsList, dependenceWxsList)
+    })
+    return wxsList
+}
+
+/**
+ * 获取依赖wxml和wxs文件
+ */
+function getDependenceWxmlAndWxs(rootPath, componentPath) {
+    // 先判断缓存，如果存在缓存， 则直接返回
+    if (dependenceComponentMap.has(componentPath)) {
+        return dependenceComponentMap.get(dependenceComponentMap)
+    }
+    const wxmlList = []
+    const wxsList = []
+    const res = {
+        wxmlList,
+        wxsList
+    }
+    dependenceComponentMap.set(compiler, res)
+    // json文件路径
+    const jsonPath = componentPath + '.json'
+    // wxml 文件路径
+    const wxmlPath = componentPath + '.wxml'
+    // 加入wxml列表
+    wxmlList.push(wxmlPath)
+    // 读取json字符串
+    let jsonStr = '{}'
+    try {
+        jsonStr = fs.readFileSync(jsonPath, {encoding: 'utf8'})
+    } catch (error) {
+        // ignore
+    }
+    // 转换为对象
+    const jsonObj = JSON.parse(jsonStr)
+    // 读取对象的usingComponent { compa: "./compa/compa"}
+    const usingComponents = jsonObj.usingComponents || {}
+    // 遍历依赖的组件
+    Object.keys(usingComponents).forEach(tag => {
+        let dependenceComponentPath = usingComponents[tag]
+        // 判断是不是相对文件路径 因为有两种写法： /page/compa 和 ./compa
+        // 找到依赖组件的绝对文件路径
+        if (isAbsolute(dependenceComponentPath)) {
+            dependenceComponentPath = path.join(rootPath, '.' + dependenceComponentPath)
+        } else {
+            dependenceComponentPath = path.join(componentPath, dependenceComponentPath)
+        }
+        // 递归寻找依赖的wxml 和 wxs
+        const {wxmlList: dependenceWxmlList = [], wxsList: dependenceWxsList = []} = getDependenceWxmlAndWxs(rootPath, dependenceComponentPath)
+        addListB2A(wxmlList, dependenceWxmlList)
+        addListB2A(wxsList, dependenceWxsList)
+    })
+    // 分析wxml 引用的wxs文件列表
+    let wxmlStr = ''
+    try {
+        wxmlStr = fs.readFileSync(wxmlPath, {encoding: 'utf8'})
+        // 最保险还是要语法分析，但是语法分析会比较耗时
+        wxmlStr.replace(/(?:<wxs\s+module="(?:.*?)"\s+src="(.*?)"((>(.*?)<\/wxs>)|\/>))|(?:<wxs\s+src="(.*?)"\s+module="(.*?)"((>(.*?)<\/wxs>)|\/>))/g, (all, $1) => {
+            const dependWxsPath = path.join(componentPath, '../', $1)
+            const denpendWxsList = getDependenceWxsListByWxsPath(dependWxsPath)
+            addListB2A(wxsList, denpendWxsList)
+        })
+    } catch (error) {
+        // 文件不存在的错误忽略
+    }
+
+
+    return res
+}
 
 module.exports = {
     getEnv,
@@ -146,4 +262,6 @@ module.exports = {
     getCompiler,
     getId,
     isAbsolute,
+    getDependenceWxmlAndWxs,
+    adapterPath
 }
