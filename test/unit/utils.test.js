@@ -58,3 +58,21 @@ test('browser', () => {
 
     expect(utils.getEnv()).toBe('nodejs')
 })
+
+test('getDependenceWxmlAndWxsList', () => {
+    // ------------ test -----------
+    const componentPath = path.join(__dirname, '../comp10/index')
+    const rootPath = path.join(componentPath, '../')
+    utils.setNodeJsEnv()
+    // 获得依赖的wxml 和 wxs 文件列表
+    const res = utils.getDependenceWxmlAndWxs(rootPath, componentPath)
+    // console.log('dependenceWxmlAndWxs', res)
+    const {wxmlList = [], wxsList = []} = res
+    // 检查wxml文件列表
+    expect(/test\/comp10\/index\.wxml$/.test(utils.adapterPath(wxmlList[0]))).toBe(true)
+    expect(/test\/comp10\/comp\/custom-ul\.wxml$/.test(utils.adapterPath(wxmlList[1]))).toBe(true)
+    expect(/test\/comp10\/comp\/custom-li\.wxml$/.test(utils.adapterPath(wxmlList[2]))).toBe(true)
+    // 检验wxs文件列表
+    expect(/test\/comp10\/wxs\/util\.wxs$/.test(utils.adapterPath(wxsList[0]))).toBe(true)
+    expect(/test\/comp10\/wxs\/config\.wxs$/.test(utils.adapterPath(wxsList[1]))).toBe(true)
+})
