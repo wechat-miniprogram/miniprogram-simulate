@@ -66,7 +66,7 @@ test('getDependenceWxmlAndWxsList', () => {
     utils.setNodeJsEnv()
     // 获得依赖的wxml 和 wxs 文件列表
     const res = utils.getDependenceWxmlAndWxs(rootPath, componentPath)
-    // console.log('dependenceWxmlAndWxs', res)
+    console.log('dependenceWxmlAndWxs', res)
     const {wxmlList = [], wxsList = []} = res
     // 检查wxml文件列表
     expect(/test\/comp10\/index\.wxml$/.test(utils.adapterPath(wxmlList[0]))).toBe(true)

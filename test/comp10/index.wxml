@@ -1,5 +1,6 @@
 <!-- <wxs module="util" src="./wxs/util2.wxs"></wxs> -->
 <wxs module="util" src="./wxs/util.wxs"></wxs>
+<import src="./template.wxml"></import>
 <custom-ul class="ul">
   <custom-li class="li" wx:for="{{list}}" wx:key="*this">{{item}}</custom-li>
 </custom-ul>

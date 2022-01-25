@@ -175,7 +175,7 @@ function getDependenceWxsListByWxsPath(wxsPath) {
         wxsList.push(wxsPath)
     } catch (error) {
         // 文件不存在的情况 则忽略，因为我没忽略注释内容
-        console.log('wxsPath not exist', wxsPath)
+        // console.log('wxsPath not exist', wxsPath)
     }
     // 需要引用类型
     wxsStr.replace(/require\(['"](.*?)['"]\)/g, (all, $1) => {
@@ -242,6 +242,14 @@ function getDependenceWxmlAndWxs(rootPath, componentPath) {
             const dependWxsPath = path.join(componentPath, '../', $1)
             const denpendWxsList = getDependenceWxsListByWxsPath(dependWxsPath)
             addListB2A(wxsList, denpendWxsList)
+        })
+        // 分析import 导入的wxml
+        wxmlStr.replace(/<import\s+src="(.*?)"\s*((><\/import>)|(\/>))/g, (all, $1) => {
+            const importWxmlPath = path.join(componentPath, '../', $1).replace(/\.wxml$/, '')
+            // 递归寻找依赖的wxml 和 wxs
+            const {wxmlList: dependenceWxmlList = [], wxsList: dependenceWxsList = []} = getDependenceWxmlAndWxs(rootPath, importWxmlPath)
+            addListB2A(wxmlList, dependenceWxmlList)
+            addListB2A(wxsList, dependenceWxsList)
         })
     } catch (error) {
         // 文件不存在的错误忽略
