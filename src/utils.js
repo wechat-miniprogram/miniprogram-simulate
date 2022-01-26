@@ -1,6 +1,6 @@
 const path = require('path')
 
-const compilerName = 'miniprogram-compiler' // 为了在 webpack 构建打包时不被分析出此依赖
+const compilerName = './miniprogram-compiler/src/index' // 为了在 webpack 构建打包时不被分析出此依赖
 let env = 'nodejs'
 let fs = null
 let compiler = null
@@ -144,6 +144,8 @@ function adapterPath(filePath) {
  * 数组B 加到数组A
  */
 function addListB2A(listA, listB) {
+    // console.log('listA', listA)
+    // console.log('listB', listB)
     if (!Array.isArray(listA) || !Array.isArray(listB)) {
         return
     }
@@ -160,7 +162,7 @@ function addListB2A(listA, listB) {
  * @param {*} wxsPath
  * @returns
  */
-function getDependenceWxsListByWxsPath(wxsPath) {
+function getDependenceWxsListByWxsPath(rootPath, wxsPath) {
     // 检查是否有缓存
     if (dependenceWxsMap.has(wxsPath)) {
         return dependenceWxsMap.get(wxsPath)
@@ -172,7 +174,8 @@ function getDependenceWxsListByWxsPath(wxsPath) {
         // 读取wxs 文件内容
         wxsStr = fs.readFileSync(wxsPath, {encoding: 'utf8'})
         // 文件存在则加入
-        wxsList.push(wxsPath)
+        const relativeWxsPath = adapterPath(wxsPath).replace(adapterPath(rootPath), '').replace(/^\//, '')
+        wxsList.push(relativeWxsPath)
     } catch (error) {
         // 文件不存在的情况 则忽略，因为我没忽略注释内容
         // console.log('wxsPath not exist', wxsPath)
@@ -180,7 +183,7 @@ function getDependenceWxsListByWxsPath(wxsPath) {
     // 需要引用类型
     wxsStr.replace(/require\(['"](.*?)['"]\)/g, (all, $1) => {
         const denpendenceWxsPath = path.join(wxsPath, '../', $1)
-        const dependenceWxsList = getDependenceWxsListByWxsPath(denpendenceWxsPath)
+        const dependenceWxsList = getDependenceWxsListByWxsPath(rootPath, denpendenceWxsPath)
         addListB2A(wxsList, dependenceWxsList)
     })
     return wxsList
@@ -206,7 +209,10 @@ function getDependenceWxmlAndWxs(rootPath, componentPath) {
     // wxml 文件路径
     const wxmlPath = componentPath + '.wxml'
     // 加入wxml列表
-    wxmlList.push(wxmlPath)
+    const relativeWxmlPath = adapterPath(wxmlPath).replace(adapterPath(rootPath), '').replace(/^\//, '')
+    // wxml 放进列表
+    wxmlList.push(relativeWxmlPath)
+    // console.log('relativeWxmlPath', relativeWxmlPath, rootPath, wxmlPath)
     // 读取json字符串
     let jsonStr = '{}'
     try {
@@ -238,13 +244,13 @@ function getDependenceWxmlAndWxs(rootPath, componentPath) {
     try {
         wxmlStr = fs.readFileSync(wxmlPath, {encoding: 'utf8'})
         // 最保险还是要语法分析，但是语法分析会比较耗时
-        wxmlStr.replace(/(?:<wxs\s+module="(?:.*?)"\s+src="(.*?)"((>(.*?)<\/wxs>)|\/>))|(?:<wxs\s+src="(.*?)"\s+module="(.*?)"((>(.*?)<\/wxs>)|\/>))/g, (all, $1) => {
-            const dependWxsPath = path.join(componentPath, '../', $1)
-            const denpendWxsList = getDependenceWxsListByWxsPath(dependWxsPath)
+        wxmlStr.replace(/(?:<wxs\s+module="(?:.*?)"\s+src="(.*?)"(?:(?:>(?:.*?)<\/wxs>)|\/>))|(?:<wxs\s+src="(.*?)"\s+module="(.*?)"((>(.*?)<\/wxs>)|\/>))/g, (all, $1, $2) => {
+            const dependWxsPath = path.join(componentPath, '../', $1 || $2)
+            const denpendWxsList = getDependenceWxsListByWxsPath(rootPath, dependWxsPath)
             addListB2A(wxsList, denpendWxsList)
         })
         // 分析import 导入的wxml
-        wxmlStr.replace(/<import\s+src="(.*?)"\s*((><\/import>)|(\/>))/g, (all, $1) => {
+        wxmlStr.replace(/<(?:include|import)\s+src="(.*?)"\s*((><\/(?:include|import)>)|(\/>))/g, (all, $1) => {
             const importWxmlPath = path.join(componentPath, '../', $1).replace(/\.wxml$/, '')
             // 递归寻找依赖的wxml 和 wxs
             const {wxmlList: dependenceWxmlList = [], wxsList: dependenceWxsList = []} = getDependenceWxmlAndWxs(rootPath, importWxmlPath)
