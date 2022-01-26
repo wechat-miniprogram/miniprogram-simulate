@@ -69,10 +69,10 @@ test('getDependenceWxmlAndWxsList', () => {
     // console.log('dependenceWxmlAndWxs', res)
     const {wxmlList = [], wxsList = []} = res
     // 检查wxml文件列表
-    expect(/test\/comp10\/index\.wxml$/.test(utils.adapterPath(wxmlList[0]))).toBe(true)
-    expect(/test\/comp10\/comp\/custom-ul\.wxml$/.test(utils.adapterPath(wxmlList[1]))).toBe(true)
-    expect(/test\/comp10\/comp\/custom-li\.wxml$/.test(utils.adapterPath(wxmlList[2]))).toBe(true)
+    expect(/index\.wxml$/.test(utils.adapterPath(wxmlList[0]))).toBe(true)
+    expect(/comp\/custom-ul\.wxml$/.test(utils.adapterPath(wxmlList[1]))).toBe(true)
+    expect(/comp\/custom-li\.wxml$/.test(utils.adapterPath(wxmlList[2]))).toBe(true)
     // 检验wxs文件列表
-    expect(/test\/comp10\/wxs\/util\.wxs$/.test(utils.adapterPath(wxsList[0]))).toBe(true)
-    expect(/test\/comp10\/wxs\/config\.wxs$/.test(utils.adapterPath(wxsList[1]))).toBe(true)
+    expect(/wxs\/util\.wxs$/.test(utils.adapterPath(wxsList[0]))).toBe(true)
+    expect(/wxs\/config\.wxs$/.test(utils.adapterPath(wxsList[1]))).toBe(true)
 })
