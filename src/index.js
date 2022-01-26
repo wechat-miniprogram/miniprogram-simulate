@@ -100,6 +100,8 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     if (!component.json) {
         throw new Error(`invalid componentPath: ${componentPath}`)
     }
+    // 读取自定义组件的静态内容， 预先获取，因为需要找到当前组件依赖的全部组件
+    component.wxml = compile.getWxml(componentPath, cache.options)
 
     // 先加载 using components
     const rootPath = cache.options.rootPath
@@ -119,8 +121,7 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     }
     Object.assign(usingComponents, overrideUsingComponents)
 
-    // 读取自定义组件的静态内容
-    component.wxml = compile.getWxml(componentPath, cache.options)
+
     component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
     // 存入需要执行的自定义组件 js
