@@ -96,5 +96,10 @@ module.exports = function(config) {
             __dirname: false,
         },
     },
+
+    fileMapPreprocessor: {
+        // compilerOptions
+        maxBuffer: 5 * 1024 * 1024,
+    },
   })
 }

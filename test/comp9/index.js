@@ -22,7 +22,7 @@ Component({
         observerArr: [],
     },
     observers: {
-        'prop': function(value) {
+        prop(value) {
             this.setData({
                 'observerArr[2]': value,
                 'observerArr[3]': this.getStr(),

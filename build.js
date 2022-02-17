@@ -14656,6 +14656,7 @@ class SelectorQuery {
           const itemResList = []
 
           for (const node of nodes) {
+            if (!node) continue
             const itemRes = {}
 
             if (fields.id) {
@@ -14705,7 +14706,7 @@ class SelectorQuery {
             itemResList.push(itemRes)
           }
 
-          res.push(isSelectSingle ? itemResList[0] : itemResList)
+          res.push(isSelectSingle ? (itemResList[0] || null) : itemResList)
         }
 
         if (typeof this._queueCallback[index] === 'function') this._queueCallback[index].call(this, res[index])
@@ -42224,7 +42225,7 @@ module.exports = {
                 if (compilerResCache[config.rootPath]) {
                     gwx = compilerResCache[config.rootPath]
                 } else {
-                    const compileString = compiler.wxmlToJs(config.rootPath)
+                    const compileString = compiler.wxmlToJs(config.rootPath, config.compilerOptions)
                     // eslint-disable-next-line no-new-func
                     const compileFunc = new Function(compileString)
 

@@ -1,10 +1,6 @@
 const path = require('path')
 const simulate = require('../../index')
 
-function getDest(aa) {
-    return `<wx-view>hello june</wx-view>`
-}
-
 function runTest(id) {
     const comp = simulate.render(id)
 
