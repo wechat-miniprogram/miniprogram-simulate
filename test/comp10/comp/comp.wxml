@@ -1,0 +1,4 @@
+<view>
+    <text>{{aa}} I am comp</text>
+    <slot></slot>
+</view>

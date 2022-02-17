@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.5.0
+
+* load 方法支持 compilerOptions 配置
+
 ## 1.4.2 & 依赖 j-component 更新 1.4.4
 
 * 支持内置 behavior：wx://form-field-group

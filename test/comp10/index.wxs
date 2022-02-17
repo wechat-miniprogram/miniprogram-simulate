@@ -1,0 +1,4 @@
+module.exports.getMessage = function(name) {
+  name = name || 'world';
+  return 'hello ' + name;
+};

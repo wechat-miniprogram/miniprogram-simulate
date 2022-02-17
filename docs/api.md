@@ -44,6 +44,7 @@ console.log(comp.dom.tagName) // 此处会输出 CUSTOM-COMP
 | 属性名 | 类型 | 默认值 | 描述 |
 |---|---|---|---|
 | compiler | String | official | wxml 编译器类型，传入 official 表示使用官方编译器，传入 simulate 表示使用 js 实现的模拟编译器 |
+| compilerOptions | Object | {} | 编译配置，当 compiler = official 时生效 |
 | rootPath | String | 组件所在目录 | 项目根路径，用于编译组件相关模板，要求组件所有依赖在此目录下，不传则取当前组件所在目录作为其值 |
 | less | Boolean | false | 自定义组件的 wxss 是否需要经过 less 编译 |
 | usingComponents | Object | undefined | 使用到的自定义组件映射表，会将传入组件申明的 usingComponents 覆盖 |
@@ -60,6 +61,16 @@ const id2 = simulate.load('/path/to/component', 'custom-comp', {
     rootPath: 'path/to/component/dir'
 })
 ```
+
+#### compilerOptions
+
+使用官方编译器时传入的编译配置
+
+| 属性名 | 类型 | 默认值 | 描述 |
+|---|---|---|---|
+| compilerOptions | Number | 1024 * 1024 | 执行编译时输出缓存区大小 |
+| wxmlList | Array/<String/> | | rootPath 下需要编译的 wxml 文件，默认取 rootPath 下所有 wxml 文件 |
+| wxsList | Array/<String/> | | rootPath 下需要编译的 wxs 文件，默认取 rootPath 下所有 wxs 文件 |
 
 ### definition
 

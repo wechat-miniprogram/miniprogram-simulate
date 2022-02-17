@@ -26,7 +26,7 @@ module.exports = {
                 if (compilerResCache[config.rootPath]) {
                     gwx = compilerResCache[config.rootPath]
                 } else {
-                    const compileString = compiler.wxmlToJs(config.rootPath)
+                    const compileString = compiler.wxmlToJs(config.rootPath, config.compilerOptions)
                     // eslint-disable-next-line no-new-func
                     const compileFunc = new Function(compileString)
 

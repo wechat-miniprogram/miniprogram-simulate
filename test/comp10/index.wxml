@@ -1,0 +1,10 @@
+<wxs src="./index.wxs" module="m1"></wxs>
+<view>{{m1.getMessage('june')}}</view>
+<import src="./tmpl1/extra.wxml"></import>
+<import src="./tmpl1/extra2.wxml"></import>
+<import src="./tmpl1/extra3.wxml"></import>
+<import src="./tmpl1/extra4.wxml"></import>
+<import src="./tmpl1/extra5.wxml"></import>
+<import src="./tmpl1/extra6.wxml"></import>
+<import src="./tmpl1/extra7.wxml"></import>
+<import src="./tmpl1/extra8.wxml"></import>
