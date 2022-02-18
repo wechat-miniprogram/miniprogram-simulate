@@ -68,7 +68,7 @@ const id2 = simulate.load('/path/to/component', 'custom-comp', {
 
 | 属性名 | 类型 | 默认值 | 描述 |
 |---|---|---|---|
-| compilerOptions | Number | 1024 * 1024 | 执行编译时输出缓存区大小 |
+| maxBuffer | Number | 1024 * 1024 | 执行编译时输出缓存区大小 |
 | wxmlList | Array\<String\> | | rootPath 下需要编译的 wxml 文件，默认取 rootPath 下所有 wxml 文件 |
 | wxsList | Array\<String\> | | rootPath 下需要编译的 wxs 文件，默认取 rootPath 下所有 wxs 文件 |
 

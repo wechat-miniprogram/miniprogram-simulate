@@ -9,8 +9,14 @@ export {
   create as render,
 } from "j-component";
 
+export interface CompilerOptions {
+  maxBuffer?: number;
+  wxmlList?: Array<string>;
+  wxsList?: Array<string>;
+}
 export interface LoadOptions {
   compiler?: "official" | "simulate";
+  compilerOptions?: CompilerOptions;
   rootPath?: string;
   less?: boolean;
   usingComponents?: Object;
