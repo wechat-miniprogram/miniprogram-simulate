@@ -81,7 +81,7 @@ const id2 = simulate.load('/path/to/component', 'custom-comp', {
 | id | String | 可选字段，如果传了此字段，则表明注册为全局组件，其他组件可直接在 template 中使用而无需在 usingComponents 里引入 |
 | tagName | String | 可选字段，指定组件对应的 dom 节点的 tagName，默认取 usingComponents 里的定义或组件自身的 id |
 | template | String | 组件模板，即组件对应的 wxml 内容 |
-| usingComponents | Object | 使用到的自定义组件映射表 |
+| usingComponents | Object | 使用到的自定义组件映射表，子孙组件在进行 usingComponents 处理时，会从此表寻找同名组件进行覆盖处理，支持传入覆盖路径或者组件 id |
 | behaviors | Array<Behavior> | behavior 的用法和小程序类似 |
 | options | Object | 配置对象，支持小程序自定义组件 options 定义段支持的所有字段 |
 | options.classPrefix | String | 组件样式的私有化前缀，默认是空串，即没有前缀 |

@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.5.3
+
+* 支持子孙组件的 usingComponents 覆盖
+
 ## 1.5.0
 
 * load 方法支持 compilerOptions 配置
