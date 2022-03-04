@@ -2,7 +2,7 @@ const _ = require('./utils')
 
 module.exports = {
     getAccountInfoSync: _.mockSync({
-        miniprogram: {appId: 'wx4f4bc4dec97d474b'},
+        miniProgram: {appId: 'wx4f4bc4dec97d474b'},
     }),
     chooseAddress(options = {}) {
         _.runInAsync(options, {
