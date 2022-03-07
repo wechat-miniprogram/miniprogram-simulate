@@ -24,5 +24,6 @@ module.exports = function() {
     })
 
     // 注入 api
-    global.wx = api
+    if (typeof global.wx === 'function') global.wx = Object.assign(api, global.wx)
+    else global.wx = api
 }

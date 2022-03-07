@@ -42317,7 +42317,8 @@ module.exports = function() {
     })
 
     // 注入 api
-    global.wx = api
+    if (typeof global.wx === 'function') global.wx = Object.assign(api, global.wx)
+    else global.wx = api
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
