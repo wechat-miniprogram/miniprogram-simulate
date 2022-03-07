@@ -42317,7 +42317,7 @@ module.exports = function() {
     })
 
     // 注入 api
-    if (typeof global.wx === 'function') global.wx = Object.assign(api, global.wx)
+    if (typeof global.wx === 'object') global.wx = Object.assign(api, global.wx)
     else global.wx = api
 }
 
