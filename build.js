@@ -42979,7 +42979,12 @@ module.exports = {
         _.runInAsync(options, res)
     },
     getStorageSync(key) {
-        return JSON.parse(localStorage.getItem(key))
+        const res = localStorage.getItem(key)
+        try {
+            return JSON.parse(res)
+        } catch (err) {
+            return res
+        }
     },
     getStorageInfo(options) {
         let res = {errMsg: 'getStorageInfo:ok'}
