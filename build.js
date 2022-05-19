@@ -42334,6 +42334,9 @@ const dataApi = __webpack_require__(234)
 const openApi = __webpack_require__(235)
 const _ = __webpack_require__(12)
 
+let nextTickQueue = []
+let nextTickTimer = null
+
 module.exports = {
     request: _.mockAsync('request'),
 
@@ -42650,6 +42653,20 @@ module.exports = {
     },
     createIntersectionObserver(compInst, options) {
         return compInst.createIntersectionObserver(options)
+    },
+    nextTick(func) {
+        nextTickQueue.push(func)
+
+        if (nextTickTimer) return
+        nextTickTimer = setTimeout(() => {
+            const funcQueue = nextTickQueue
+            nextTickQueue = []
+            nextTickTimer = null
+
+            for (const func of funcQueue) {
+                if (func) func()
+            }
+        }, 0)
     },
 }
 
