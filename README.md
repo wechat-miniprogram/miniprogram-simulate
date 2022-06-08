@@ -2,8 +2,8 @@
 
 [![](https://img.shields.io/npm/v/miniprogram-simulate.svg?style=flat)](https://www.npmjs.com/package/miniprogram-simulate)
 [![](https://img.shields.io/travis/wechat-miniprogram/miniprogram-simulate.svg)](https://github.com/wechat-miniprogram/miniprogram-simulate)
-[![](https://img.shields.io/github/license/wechat-miniprogram/miniprogram-simulate.svg)](https://github.com/wechat-miniprogram/miniprogram-simulate)
-[![](https://img.shields.io/codecov/c/github/wechat-miniprogram/miniprogram-simulate.svg)](https://github.com/wechat-miniprogram/miniprogram-simulate)
+[![](https://img.shields.io/github/license/wechat-miniprogram/miniprogram-simulate.svg)](https://github.com/wechat-miniprogram/miniprogram-simulate/blob/master/LICENSE)
+[![](https://img.shields.io/codecov/c/github/wechat-miniprogram/miniprogram-simulate.svg)](https://app.codecov.io/gh/wechat-miniprogram/miniprogram-simulate)
 
 ## 介绍
 
