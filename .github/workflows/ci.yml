@@ -32,4 +32,5 @@ jobs:
       with:
         node-version: 16
     - run: npm install
+    - run: npm i puppeteer@latest
     - run: npm run karma
