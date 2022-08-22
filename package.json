@@ -55,7 +55,6 @@
     "karma-mocha": "^2.0.1",
     "karma-webpack": "^4.0.2",
     "mocha": "^10.0.0",
-    "pretty-format": "^26.0.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
@@ -64,6 +63,7 @@
     "j-component": "^1.4.6",
     "less": "^3.10.3",
     "miniprogram-compiler": "latest",
-    "postcss": "^7.0.23"
+    "postcss": "^7.0.23",
+    "pretty-format": "^26.0.1"
   }
 }
