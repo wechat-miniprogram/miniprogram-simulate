@@ -5,7 +5,7 @@ const api = require('./api')
 const officialTagList = [
     'view', 'scroll-view', 'swiper', 'movable-view', 'cover-view', 'cover-view',
     'icon', 'text', 'rich-text', 'progress',
-    'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'radio', 'slider', 'switch', 'textarea',
+    'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'picker-view-column', 'radio', 'slider', 'switch', 'textarea',
     'navigator', 'function-page-navigator',
     'audio', 'image', 'video', 'camera', 'live-player', 'live-pusher',
     'map',
