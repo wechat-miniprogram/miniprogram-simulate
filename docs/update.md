@@ -1,5 +1,17 @@
 # 更新日志
 
+## 1.5.6
+
+* storage 系列接口支持存取字符串内容
+
+## 1.5.5
+
+* 修复 global.wx 赋值会覆盖用户模拟的 wx 对象问题
+
+## 1.5.3
+
+* 支持子孙组件的 usingComponents 覆盖
+
 ## 1.5.0
 
 * load 方法支持 compilerOptions 配置

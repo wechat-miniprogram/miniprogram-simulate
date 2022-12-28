@@ -1,0 +1,2 @@
+<view class="index">{{prop}}</view>
+<comp2 class="comp2" prop="from comp1"></comp2>

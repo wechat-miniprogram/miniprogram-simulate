@@ -105,19 +105,20 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     const rootPath = cache.options.rootPath
     const usingComponents = component.json.usingComponents || {}
     const overrideUsingComponents = cache.options.usingComponents || {}
+    Object.assign(usingComponents, overrideUsingComponents)
     const usingComponentKeys = Object.keys(usingComponents)
     for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
         const key = usingComponentKeys[i]
 
-        if (Object.prototype.hasOwnProperty.call(overrideUsingComponents, key)) continue // 被 override 的跳过
-
         const value = usingComponents[key]
         const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
-        const id = register(usingPath, key, cache, hasRegisterCache)
-
-        usingComponents[key] = id
+        
+        if (_.readFile(`${usingPath}.json`)) {
+            // 文件路径
+            const id = register(usingPath, key, cache, hasRegisterCache)
+            usingComponents[key] = id
+        }
     }
-    Object.assign(usingComponents, overrideUsingComponents)
 
     // 读取自定义组件的静态内容
     component.wxml = compile.getWxml(componentPath, cache.options)
