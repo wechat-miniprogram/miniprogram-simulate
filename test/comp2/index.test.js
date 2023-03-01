@@ -19,6 +19,7 @@ function runTest(id) {
     expect(comp.querySelector('.other').instance.getStr).toBeInstanceOf(Function)
     expect(comp.querySelector('.other').instance.getStr()).toBe('other')
     expect(comp.dom.tagName).toBe('CUSTOM-COMP')
+    expect(comp.querySelector('.other').instance.selectOwnerComponent().$$.tagName).toBe('CUSTOM-COMP')
 }
 
 test('comp2', () => {

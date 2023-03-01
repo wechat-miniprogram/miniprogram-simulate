@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.5.6 & 依赖 j-component 更新 1.4.9
+
+* 支持 selectOwnerComponent 方法
+
 ## 1.5.6
 
 * storage 系列接口支持存取字符串内容
