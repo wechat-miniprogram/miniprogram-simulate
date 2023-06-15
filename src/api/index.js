@@ -22,6 +22,8 @@ module.exports = {
     closeSocket: _.mockAsync('closeSocket'),
     onSocketClose: _.mockAsync('onSocketClose'),
 
+    onKeyboardHeightChange: _.mockAsync('onKeyboardHeightChange'),
+
     chooseImage: _.mockAsync('chooseImage'),
     previewImage: _.mockAsync('previewImage'),
     getImageInfo: _.mockAsync('getImageInfo'),
