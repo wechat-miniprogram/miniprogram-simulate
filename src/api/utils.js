@@ -40,12 +40,44 @@ function mockSync(ret) {
 /**
  * 快速模拟异步接口
  */
-function mockAsync(name) {
+function mockAsync(name, data = {}) {
     return (options = {}) => {
-        const res = {
+        runInAsync(options, {
             errMsg: `${name}:ok`,
+            errCode: 0,
+            errno: 0,
+            ...data,
+        })
+    }
+}
+
+/**
+ * 快速模拟支持 promise 的异步接口
+ */
+ function mockAsyncAndPromise(name, data = {}, promiseData) {
+    return (options = {}) => {
+        const { success, fail, complete } = options
+        if (!(success || fail || complete)) {
+            // 支持 promise
+            return new Promise((resolve, reject) => {
+                options.success = res => resolve(promiseData || res)
+                options.fail = err => reject(err)
+
+                runInAsync(options, {
+                    errMsg: `${name}:ok`,
+                    errCode: 0,
+                    errno: 0,
+                    ...data,
+                })
+            })
         }
-        runInAsync(options, res)
+
+        runInAsync(options, {
+            errMsg: `${name}:ok`,
+            errCode: 0,
+            errno: 0,
+            ...data,
+        })
     }
 }
 
@@ -54,4 +86,5 @@ module.exports = {
     getSize,
     mockSync,
     mockAsync,
+    mockAsyncAndPromise,
 }

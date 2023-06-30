@@ -6,17 +6,13 @@ class UpdateManager {
 
     applyUpdate() {
         setTimeout(() => {
-            if (this.updateCallback && typeof this.updateCallback === 'function') {
-                this.updateCallback()
-            }
+            if (this.updateCallback && typeof this.updateCallback === 'function') this.updateCallback()
         }, 0)
     }
 
     onCheckForUpdate(callback) {
         setTimeout(() => {
-            if (callback && typeof callback === 'function') {
-                callback({hasUpdate: true})
-            }
+            if (callback && typeof callback === 'function') callback({hasUpdate: true})
         }, 0)
     }
 
