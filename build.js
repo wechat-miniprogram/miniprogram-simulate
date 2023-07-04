@@ -2242,109 +2242,109 @@ let runJs = null // 执行 js
  * 获取当前环境
  */
 function getEnv() {
-    return env
+  return env
 }
 
 /**
  * 设置 nodejs 环境
  */
 function setNodeJsEnv() {
-    env = 'nodejs'
-    fs = __webpack_require__(72)
+  env = 'nodejs'
+  fs = __webpack_require__(72)
+  // eslint-disable-next-line import/no-dynamic-require
+  compiler = __webpack_require__(13)(compilerName)
+  runJs = filePath => {
     // eslint-disable-next-line import/no-dynamic-require
-    compiler = __webpack_require__(13)(compilerName)
-    runJs = filePath => {
-        // eslint-disable-next-line import/no-dynamic-require
-        __webpack_require__(13)(filePath)
-        delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(13).resolve(filePath))]
-    }
+    __webpack_require__(13)(filePath)
+    delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(13).resolve(filePath))]
+  }
 }
 
 /**
  * 设置浏览器环境
  */
 function setBrowserEnv() {
-    env = 'browser'
-    fs = {
-        readFileSync(filePath) {
-            const fileMap = window.__FILE_MAP__ || {}
-            if (fileMap[filePath]) {
-                return fileMap[filePath]
-            } else if (filePath[0] === '/') {
-                // path.resolve 可能会加上 /，在 windows 下会有问题
-                return fileMap[filePath.substr(1)] || null
-            }
+  env = 'browser'
+  fs = {
+    readFileSync(filePath) {
+      const fileMap = window.__FILE_MAP__ || {}
+      if (fileMap[filePath]) {
+        return fileMap[filePath]
+      } else if (filePath[0] === '/') {
+        // path.resolve 可能会加上 /，在 windows 下会有问题
+        return fileMap[filePath.substr(1)] || null
+      }
 
-            return null
-        }
+      return null
     }
-    window.require = runJs = filePath => {
-        const content = fs.readFileSync(filePath + '.js')
-        if (content) {
-            // eslint-disable-next-line no-new-func
-            const func = new Function('require', 'module', content)
-            const mod = {exports: {}} // modules
+  }
+  window.require = runJs = filePath => {
+    const content = fs.readFileSync(filePath + '.js')
+    if (content) {
+      // eslint-disable-next-line no-new-func
+      const func = new Function('require', 'module', content)
+      const mod = {exports: {}} // modules
 
-            func.call(null, relativePath => {
-                const realPath = path.join(path.dirname(filePath), relativePath)
-                return window.require(realPath)
-            }, mod)
+      func.call(null, relativePath => {
+        const realPath = path.join(path.dirname(filePath), relativePath)
+        return window.require(realPath)
+      }, mod)
 
-            return mod.exports
-        }
-
-        return null
+      return mod.exports
     }
+
+    return null
+  }
 }
 
 try {
-    if (typeof global === 'object' && typeof process === 'object') {
-        // nodejs
-        setNodeJsEnv()
-    } else {
-        // 浏览器
-        setBrowserEnv()
-    }
-} catch (err) {
+  if (typeof global === 'object' && typeof process === 'object') {
+    // nodejs
+    setNodeJsEnv()
+  } else {
     // 浏览器
     setBrowserEnv()
+  }
+} catch (err) {
+  // 浏览器
+  setBrowserEnv()
 }
 
 /**
  * 读取文件
  */
 function readFile(filePath) {
-    try {
-        return fs.readFileSync(filePath, 'utf8')
-    } catch (err) {
-        return null
-    }
+  try {
+    return fs.readFileSync(filePath, 'utf8')
+  } catch (err) {
+    return null
+  }
 }
 
 /**
  * 读取 json
  */
 function readJson(filePath) {
-    try {
-        const content = readFile(filePath)
-        return JSON.parse(content)
-    } catch (err) {
-        return null
-    }
+  try {
+    const content = readFile(filePath)
+    return JSON.parse(content)
+  } catch (err) {
+    return null
+  }
 }
 
 /**
  * 转换 rpx 单位为 px 单位
  */
 function transformRpx(style) {
-    return style.replace(/(\d+)rpx/ig, '$1px')
+  return style.replace(/(\d+)rpx/ig, '$1px')
 }
 
 /**
  * 获取 wxml、wxss 编译器
  */
 function getCompiler() {
-    return compiler
+  return compiler
 }
 
 /**
@@ -2353,31 +2353,31 @@ function getCompiler() {
 let seed = +new Date()
 const charString = 'abcdefghij'
 function getId() {
-    const id = ++seed
-    return id.toString().split('').map(item => charString[+item]).join('')
+  const id = ++seed
+  return id.toString().split('').map(item => charString[+item]).join('')
 }
 
 /**
  * 判断是否是绝对路径
  */
 function isAbsolute(input) {
-    if (typeof input !== 'string') return false
-    if (!input.length) return false
+  if (typeof input !== 'string') return false
+  if (!input.length) return false
 
-    return /^(\/|\\|([a-zA-Z]:[/\\]))/.test(input)
+  return /^(\/|\\|([a-zA-Z]:[/\\]))/.test(input)
 }
 
 module.exports = {
-    getEnv,
-    setNodeJsEnv,
-    setBrowserEnv,
-    runJs,
-    readFile,
-    readJson,
-    transformRpx,
-    getCompiler,
-    getId,
-    isAbsolute,
+  getEnv,
+  setNodeJsEnv,
+  setBrowserEnv,
+  runJs,
+  readFile,
+  readJson,
+  transformRpx,
+  getCompiler,
+  getId,
+  isAbsolute,
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
@@ -6171,10 +6171,8 @@ module.exports = {
  */
 function runInAsync(options, res) {
   setTimeout(() => {
-    if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function')
-      options.success(res)
-    if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function')
-      options.fail(res)
+    if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function') options.success(res)
+    if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function') options.fail(res)
     if (typeof options.complete === 'function') options.complete(res)
   }, 0)
 }
@@ -6226,7 +6224,7 @@ function mockAsync(name, data = {}) {
  */
 function mockAsyncAndPromise(name, data = {}, promiseData) {
   return (options = {}) => {
-    const { success, fail, complete } = options
+    const {success, fail, complete} = options
     if (!(success || fail || complete)) {
       // 支持 promise
       return new Promise((resolve, reject) => {
@@ -12466,11 +12464,17 @@ class CanvasContext {
   }
 
   arc() {}
+
   arcTo() {}
+
   beginPath() {}
+
   bezierCurveTo() {}
+
   clearRect() {}
+
   clip() {}
+
   closePath() {}
 
   createCircularGradient() {
@@ -12486,23 +12490,35 @@ class CanvasContext {
   }
 
   createPattern() {}
+
   draw() {}
+
   drawImage() {}
+
   fill() {}
+
   fillRect() {}
+
   fillText() {}
+
   lineTo() {}
 
   measureText() {
-    return { width: 100 }
+    return {width: 100}
   }
 
   moveTo() {}
+
   quadraticCurveTo() {}
+
   rect() {}
+
   restore() {}
+
   rotate() {}
+
   save() {}
+
   scale() {}
 
   setFillStyle(fillStyle) {
@@ -12510,6 +12526,7 @@ class CanvasContext {
   }
 
   setFontSize() {}
+
   setGlobalAlpha() {}
 
   setLineCap(lineCap) {
@@ -12537,12 +12554,19 @@ class CanvasContext {
   }
 
   setTextAlign() {}
+
   setTextBaseline() {}
+
   setTransform() {}
+
   stroke() {}
+
   strokeRect() {}
+
   strokeText() {}
+
   transform() {}
+
   translate() {}
 }
 
@@ -12581,35 +12605,35 @@ let nowLoad = null
  * 自定义组件构造器
  */
 global.Component = options => {
-    const component = nowLoad
-    const pathToIdMap = component.pathToIdMap
-    const definition = Object.assign({
-        id: component.id,
-        path: component.path,
-        template: component.wxml,
-        usingComponents: component.json.usingComponents,
-        tagName: component.tagName,
-    }, options)
-    definition.options = Object.assign({
-        classPrefix: component.tagName,
-    }, definition.options || {})
+  const component = nowLoad
+  const pathToIdMap = component.pathToIdMap
+  const definition = Object.assign({
+    id: component.id,
+    path: component.path,
+    template: component.wxml,
+    usingComponents: component.json.usingComponents,
+    tagName: component.tagName,
+  }, options)
+  definition.options = Object.assign({
+    classPrefix: component.tagName,
+  }, definition.options || {})
 
-    // 处理 relations
-    if (definition.relations) {
-        Object.keys(definition.relations).forEach(key => {
-            const value = definition.relations[key]
-            const componentPath = _.isAbsolute(key) ? key : path.join(path.dirname(component.path), key)
-            const id = pathToIdMap[componentPath]
-            if (id) {
-                // 将涉及到的自定义组件路径转成 id
-                value.target = id
-                definition.relations[id] = value
-                delete definition.relations[key]
-            }
-        })
-    }
+  // 处理 relations
+  if (definition.relations) {
+    Object.keys(definition.relations).forEach(key => {
+      const value = definition.relations[key]
+      const componentPath = _.isAbsolute(key) ? key : path.join(path.dirname(component.path), key)
+      const id = pathToIdMap[componentPath]
+      if (id) {
+        // 将涉及到的自定义组件路径转成 id
+        value.target = id
+        definition.relations[id] = value
+        delete definition.relations[key]
+      }
+    })
+  }
 
-    jComponent.register(definition)
+  jComponent.register(definition)
 }
 
 /**
@@ -12621,11 +12645,11 @@ global.Behavior = definition => jComponent.behavior(definition)
  * 加载 behavior
  */
 function behavior(definition) {
-    if (typeof definition !== 'object') {
-        throw new Error('definition must be a object')
-    }
+  if (typeof definition !== 'object') {
+    throw new Error('definition must be a object')
+  }
 
-    return jComponent.behavior(definition)
+  return jComponent.behavior(definition)
 }
 
 /* eslint-disable complexity */
@@ -12633,197 +12657,197 @@ function behavior(definition) {
  * 注册自定义组件
  */
 function register(componentPath, tagName, cache, hasRegisterCache) {
-    // 用于 wcc 编译器使用
-    window.__webview_engine_version__ = 0.02
+  // 用于 wcc 编译器使用
+  window.__webview_engine_version__ = 0.02
 
-    if (typeof componentPath === 'object') {
-        // 直接传入定义对象
-        const definition = componentPath
+  if (typeof componentPath === 'object') {
+    // 直接传入定义对象
+    const definition = componentPath
 
-        return jComponent.register(definition)
+    return jComponent.register(definition)
+  }
+
+  if (typeof componentPath !== 'string') {
+    throw new Error('componentPath must be a string')
+  }
+
+  if (!tagName || typeof tagName !== 'string') {
+    tagName = 'main' // 默认标签名
+  }
+
+  const id = _.getId()
+
+  if (hasRegisterCache[componentPath]) return hasRegisterCache[componentPath]
+  hasRegisterCache[componentPath] = id
+
+  const component = {
+    id,
+    path: componentPath,
+    tagName,
+    json: _.readJson(`${componentPath}.json`),
+  }
+
+  if (!component.json) {
+    throw new Error(`invalid componentPath: ${componentPath}`)
+  }
+
+  // 先加载 using components
+  const rootPath = cache.options.rootPath
+  const usingComponents = component.json.usingComponents || {}
+  const overrideUsingComponents = cache.options.usingComponents || {}
+  Object.assign(usingComponents, overrideUsingComponents)
+  const usingComponentKeys = Object.keys(usingComponents)
+  for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
+    const key = usingComponentKeys[i]
+
+    const value = usingComponents[key]
+    const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
+
+    if (_.readFile(`${usingPath}.json`)) {
+      // 文件路径
+      const id = register(usingPath, key, cache, hasRegisterCache)
+      usingComponents[key] = id
     }
+  }
 
-    if (typeof componentPath !== 'string') {
-        throw new Error('componentPath must be a string')
-    }
+  // 读取自定义组件的静态内容
+  component.wxml = compile.getWxml(componentPath, cache.options)
+  component.wxss = wxss.getContent(`${componentPath}.wxss`)
 
-    if (!tagName || typeof tagName !== 'string') {
-        tagName = 'main' // 默认标签名
-    }
+  // 存入需要执行的自定义组件 js
+  cache.needRunJsList.push([componentPath, component])
 
-    const id = _.getId()
+  // 保存追加了已编译的 wxss
+  cache.wxss.push(wxss.compile(component.wxss, {
+    prefix: tagName,
+    ...cache.options,
+  }))
 
-    if (hasRegisterCache[componentPath]) return hasRegisterCache[componentPath]
-    hasRegisterCache[componentPath] = id
-
-    const component = {
-        id,
-        path: componentPath,
-        tagName,
-        json: _.readJson(`${componentPath}.json`),
-    }
-
-    if (!component.json) {
-        throw new Error(`invalid componentPath: ${componentPath}`)
-    }
-
-    // 先加载 using components
-    const rootPath = cache.options.rootPath
-    const usingComponents = component.json.usingComponents || {}
-    const overrideUsingComponents = cache.options.usingComponents || {}
-    Object.assign(usingComponents, overrideUsingComponents)
-    const usingComponentKeys = Object.keys(usingComponents)
-    for (let i = 0, len = usingComponentKeys.length; i < len; i++) {
-        const key = usingComponentKeys[i]
-
-        const value = usingComponents[key]
-        const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
-        
-        if (_.readFile(`${usingPath}.json`)) {
-            // 文件路径
-            const id = register(usingPath, key, cache, hasRegisterCache)
-            usingComponents[key] = id
-        }
-    }
-
-    // 读取自定义组件的静态内容
-    component.wxml = compile.getWxml(componentPath, cache.options)
-    component.wxss = wxss.getContent(`${componentPath}.wxss`)
-
-    // 存入需要执行的自定义组件 js
-    cache.needRunJsList.push([componentPath, component])
-
-    // 保存追加了已编译的 wxss
-    cache.wxss.push(wxss.compile(component.wxss, {
-        prefix: tagName,
-        ...cache.options,
-    }))
-
-    return component.id
+  return component.id
 }
 
 /**
  * 加载自定义组件
  */
 function load(componentPath, tagName, options = {}) {
-    if (typeof tagName === 'object') {
-        options = tagName
-        tagName = ''
-    }
+  if (typeof tagName === 'object') {
+    options = tagName
+    tagName = ''
+  }
 
-    if (typeof componentPath === 'string') {
-        options = Object.assign({
-            compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
-            rootPath: path.dirname(componentPath), // 项目根路径
-        }, options)
-    } else {
-        options = Object.assign({
-            compiler: 'simulate',
-            rootPath: '',
-        }, options)
-    }
+  if (typeof componentPath === 'string') {
+    options = Object.assign({
+      compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
+      rootPath: path.dirname(componentPath), // 项目根路径
+    }, options)
+  } else {
+    options = Object.assign({
+      compiler: 'simulate',
+      rootPath: '',
+    }, options)
+  }
 
-    const cache = {
-        wxss: [],
-        options,
-        needRunJsList: [],
-    }
-    const hasRegisterCache = {}
-    const id = register(componentPath, tagName, cache, hasRegisterCache)
+  const cache = {
+    wxss: [],
+    options,
+    needRunJsList: [],
+  }
+  const hasRegisterCache = {}
+  const id = register(componentPath, tagName, cache, hasRegisterCache)
 
-    // 执行自定义组件 js
-    cache.needRunJsList.forEach(item => {
-        const oldLoad = nowLoad
+  // 执行自定义组件 js
+  cache.needRunJsList.forEach(item => {
+    const oldLoad = nowLoad
 
-        nowLoad = item[1] // nowLoad 用于执行用户代码调用 Component 构造器时注入额外的参数给 j-component
-        nowLoad.pathToIdMap = hasRegisterCache
-        _.runJs(item[0])
+    nowLoad = item[1] // nowLoad 用于执行用户代码调用 Component 构造器时注入额外的参数给 j-component
+    nowLoad.pathToIdMap = hasRegisterCache
+    _.runJs(item[0])
 
-        nowLoad = oldLoad
-    })
+    nowLoad = oldLoad
+  })
 
-    // 存入缓存
-    componentMap[id] = cache
+  // 存入缓存
+  componentMap[id] = cache
 
-    return id
+  return id
 }
 
 /**
  * 渲染自定义组件
  */
 function render(id, properties) {
-    if (!id) throw new Error('you need to pass the componentId')
+  if (!id) throw new Error('you need to pass the componentId')
 
-    const cache = componentMap[id]
+  const cache = componentMap[id]
 
-    if (cache) {
-        // 注入 wxss
-        wxss.insert(cache.wxss, id)
-    }
+  if (cache) {
+    // 注入 wxss
+    wxss.insert(cache.wxss, id)
+  }
 
-    return jComponent.create(id, properties)
+  return jComponent.create(id, properties)
 }
 
 /**
  * 比较 dom 节点是否符合某个 html 结构
  */
 function match(dom, html) {
-    if (!(dom instanceof window.Element) || !html || typeof html !== 'string') return false
+  if (!(dom instanceof window.Element) || !html || typeof html !== 'string') return false
 
-    // 干掉一些换行符，以免生成不必要的 TextNode
-    html = html.trim()
-        .replace(/(>)[\n\r\s\t]+(<)/g, '$1$2')
+  // 干掉一些换行符，以免生成不必要的 TextNode
+  html = html.trim()
+    .replace(/(>)[\n\r\s\t]+(<)/g, '$1$2')
 
-    const a = dom.cloneNode()
-    const b = dom.cloneNode()
+  const a = dom.cloneNode()
+  const b = dom.cloneNode()
 
-    a.innerHTML = dom.innerHTML
-    b.innerHTML = html
+  a.innerHTML = dom.innerHTML
+  b.innerHTML = html
 
-    return a.isEqualNode(b)
+  return a.isEqualNode(b)
 }
 
 /**
  * 让线程等待一段时间再执行
  */
 function sleep(time = 0) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, time)
-    })
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
 }
 
 /**
  * 模拟滚动
  */
 function scroll(comp, destOffset = 0, times = 20, propName = 'scrollTop') {
-    if (!comp || !comp.dom) throw new Error('invalid params')
-    if (typeof times !== 'number' || times <= 0) times = 1
+  if (!comp || !comp.dom) throw new Error('invalid params')
+  if (typeof times !== 'number' || times <= 0) times = 1
 
-    destOffset = destOffset < 0 ? 0 : destOffset
+  destOffset = destOffset < 0 ? 0 : destOffset
 
-    const dom = comp.dom
-    const delta = destOffset - dom[propName]
-    // eslint-disable-next-line no-bitwise
-    const unit = ~~(delta / times)
-    const env = _.getEnv()
+  const dom = comp.dom
+  const delta = destOffset - dom[propName]
+  // eslint-disable-next-line no-bitwise
+  const unit = ~~(delta / times)
+  const env = _.getEnv()
 
-    if (env === 'nodejs') {
-        for (let i = 0; i < times; i++) {
-            // nodejs 环境
-            setTimeout(() => {
-                if (i === times - 1) dom[propName] = destOffset
-                else dom[propName] += unit
+  if (env === 'nodejs') {
+    for (let i = 0; i < times; i++) {
+      // nodejs 环境
+      setTimeout(() => {
+        if (i === times - 1) dom[propName] = destOffset
+        else dom[propName] += unit
 
-                // 模拟异步触发
-                dom.dispatchEvent(new Event('scroll', {bubbles: true, cancelable: false}))
-            }, 0)
-        }
-    } else {
-        // 浏览器
-        dom[propName] = destOffset
+        // 模拟异步触发
+        dom.dispatchEvent(new Event('scroll', {bubbles: true, cancelable: false}))
+      }, 0)
     }
+  } else {
+    // 浏览器
+    dom[propName] = destOffset
+  }
 }
 
 
@@ -12831,12 +12855,12 @@ injectPolyfill()
 injectDefinition()
 
 module.exports = {
-    behavior,
-    load,
-    render,
-    match,
-    sleep,
-    scroll,
+  behavior,
+  load,
+  render,
+  match,
+  sleep,
+  scroll,
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
@@ -15333,113 +15357,113 @@ const wxssCache = {}
  * 追加 class 前缀插件
  */
 const addClassPrefixPlugin = function(prefix = '') {
-    return postcss.plugin('addClassPrefix', () => root => {
-        // eslint-disable-next-line consistent-return
-        root.walk(child => {
-            if (child.type === 'rule') {
-                const selectors = []
+  return postcss.plugin('addClassPrefix', () => root => {
+    // eslint-disable-next-line consistent-return
+    root.walk(child => {
+      if (child.type === 'rule') {
+        const selectors = []
 
-                child.selectors.forEach(selector => {
-                    // 处理 class 选择器
-                    selectors.push(selector.replace(/(.)?\.([-_a-zA-Z0-9]+)/igs, (all, $1, $2) => (/\d/.test($1) ? all : `${$1 || ''}.${prefix}--${$2}`)))
-                })
-
-                child.selectors = selectors
-            }
+        child.selectors.forEach(selector => {
+          // 处理 class 选择器
+          selectors.push(selector.replace(/(.)?\.([-_a-zA-Z0-9]+)/igs, (all, $1, $2) => (/\d/.test($1) ? all : `${$1 || ''}.${prefix}--${$2}`)))
         })
+
+        child.selectors = selectors
+      }
     })
+  })
 }
 
 /**
  * 获取 import 列表
  */
 function getImportList(wxss, filePath) {
-    const reg = /@import\s+(?:(?:"([^"]+)")|(?:'([^']+)'));/ig
-    const importList = []
-    let execRes = reg.exec(wxss)
+  const reg = /@import\s+(?:(?:"([^"]+)")|(?:'([^']+)'));/ig
+  const importList = []
+  let execRes = reg.exec(wxss)
 
-    while (execRes && (execRes[1] || execRes[2])) {
-        importList.push({
-            code: execRes[0],
-            path: path.join(path.dirname(filePath), execRes[1] || execRes[2]),
-        })
-        execRes = reg.exec(wxss)
-    }
+  while (execRes && (execRes[1] || execRes[2])) {
+    importList.push({
+      code: execRes[0],
+      path: path.join(path.dirname(filePath), execRes[1] || execRes[2]),
+    })
+    execRes = reg.exec(wxss)
+  }
 
-    return importList
+  return importList
 }
 
 /**
  * 获取 wxss 内容
  */
 function getContent(filePath) {
-    // 判断缓存
-    if (wxssCache[filePath]) {
-        return wxssCache[filePath]
-    }
-
-    let wxss = _.readFile(filePath)
-
-    if (wxss) {
-        const importList = getImportList(wxss, filePath)
-
-        importList.forEach(item => {
-            wxss = wxss.replace(item.code, getContent(item.path))
-        })
-    }
-
-    // 缓存 wxss
-    wxssCache[filePath] = wxss || ''
-
+  // 判断缓存
+  if (wxssCache[filePath]) {
     return wxssCache[filePath]
+  }
+
+  let wxss = _.readFile(filePath)
+
+  if (wxss) {
+    const importList = getImportList(wxss, filePath)
+
+    importList.forEach(item => {
+      wxss = wxss.replace(item.code, getContent(item.path))
+    })
+  }
+
+  // 缓存 wxss
+  wxssCache[filePath] = wxss || ''
+
+  return wxssCache[filePath]
 }
 
 /**
  * 编译 wxss
  */
 function compile(wxss, options = {}) {
-    if (options.less) {
-        less.render(wxss, (err, output) => {
-            if (!err) wxss = output.css
-        })
-    }
+  if (options.less) {
+    less.render(wxss, (err, output) => {
+      if (!err) wxss = output.css
+    })
+  }
 
-    wxss = postcss([addClassPrefixPlugin(options.prefix)]).process(wxss, {
-        from: undefined, // 主要是不想看到那个 warning
-        map: null,
-    }).css
+  wxss = postcss([addClassPrefixPlugin(options.prefix)]).process(wxss, {
+    from: undefined, // 主要是不想看到那个 warning
+    map: null,
+  }).css
 
-    // 压缩
-    return csso.minify(wxss, {restructure: false}).css
+  // 压缩
+  return csso.minify(wxss, {restructure: false}).css
 }
 
 /**
  * 插入 wxss
  */
 function insert(wxss, id) {
-    if (!Array.isArray(wxss)) {
-        wxss = [wxss]
-    }
+  if (!Array.isArray(wxss)) {
+    wxss = [wxss]
+  }
 
-    // 删除已插入的
-    document.querySelectorAll(`style#${id}`).forEach(style => {
-        style.parentNode.removeChild(style)
-    })
+  // 删除已插入的
+  document.querySelectorAll(`style#${id}`).forEach(style => {
+    style.parentNode.removeChild(style)
+  })
 
-    const style = document.createElement('style')
-    style.type = 'text/css'
-    style.id = id
-    style.innerHTML = _.transformRpx(wxss.join(''))
+  const style = document.createElement('style')
+  style.type = 'text/css'
+  style.id = id
+  style.innerHTML = _.transformRpx(wxss.join(''))
 
-    const head = document.getElementsByTagName('head')
-    if (head && head.length) head.item(0).appendChild(style)
+  const head = document.getElementsByTagName('head')
+  if (head && head.length) head.item(0).appendChild(style)
 }
 
 
 module.exports = {
-    getContent,
-    compile,
-    insert,
+  getContent,
+  compile,
+  insert,
 }
 
 
@@ -42370,50 +42394,50 @@ const wxmlCache = {}
 const compilerResCache = {}
 
 module.exports = {
-    /**
+  /**
      * 获取 wxml
      */
-    getWxml(componentPath, config) {
-        let wxml = wxmlCache[componentPath]
+  getWxml(componentPath, config) {
+    let wxml = wxmlCache[componentPath]
 
-        if (wxml) return wxml
-        if (config.compiler === 'official') {
-            // 使用官方编译器
-            if (!compiler) {
-                wxml = _.readFile(`${componentPath}.wxml`)
-                if (typeof wxml !== 'function') {
-                    // 可能是用官方编译器编译好的函数，所以需要加此判断（如在 karma 测试）
-                    throw new Error('not support official compiler, please use simulate compiler')
-                }
-            } else {
-                let gwx
-                if (compilerResCache[config.rootPath]) {
-                    gwx = compilerResCache[config.rootPath]
-                } else {
-                    const compileString = compiler.wxmlToJs(config.rootPath, config.compilerOptions)
-                    // eslint-disable-next-line no-new-func
-                    const compileFunc = new Function(compileString)
-
-                    gwx = compileFunc()
-                    compilerResCache[config.rootPath] = gwx
-                }
-
-                let relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
-                relativeWxmlPath = relativeWxmlPath.replace(/\\/g, '/')
-
-                // 构建编译结果为函数
-                wxml = gwx(relativeWxmlPath)
-            }
+    if (wxml) return wxml
+    if (config.compiler === 'official') {
+      // 使用官方编译器
+      if (!compiler) {
+        wxml = _.readFile(`${componentPath}.wxml`)
+        if (typeof wxml !== 'function') {
+          // 可能是用官方编译器编译好的函数，所以需要加此判断（如在 karma 测试）
+          throw new Error('not support official compiler, please use simulate compiler')
+        }
+      } else {
+        let gwx
+        if (compilerResCache[config.rootPath]) {
+          gwx = compilerResCache[config.rootPath]
         } else {
-            // 使用纯 js 实现的编译器
-            wxml = _.readFile(`${componentPath}.wxml`)
+          const compileString = compiler.wxmlToJs(config.rootPath, config.compilerOptions)
+          // eslint-disable-next-line no-new-func
+          const compileFunc = new Function(compileString)
+
+          gwx = compileFunc()
+          compilerResCache[config.rootPath] = gwx
         }
 
-        // 缓存 wxml 内容
-        wxmlCache[componentPath] = wxml
+        let relativeWxmlPath = `${path.relative(config.rootPath, componentPath)}.wxml`
+        relativeWxmlPath = relativeWxmlPath.replace(/\\/g, '/')
 
-        return wxml
+        // 构建编译结果为函数
+        wxml = gwx(relativeWxmlPath)
+      }
+    } else {
+      // 使用纯 js 实现的编译器
+      wxml = _.readFile(`${componentPath}.wxml`)
     }
+
+    // 缓存 wxml 内容
+    wxmlCache[componentPath] = wxml
+
+    return wxml
+  }
 }
 
 
@@ -42427,30 +42451,30 @@ module.exports = {
  * Touch polyfill
  */
 class Touch {
-    constructor(options = {}) {
-        this.clientX = 0
-        this.clientY = 0
-        this.identifier = 0
-        this.pageX = 0
-        this.pageY = 0
-        this.screenX = 0
-        this.screenY = 0
-        this.target = null
+  constructor(options = {}) {
+    this.clientX = 0
+    this.clientY = 0
+    this.identifier = 0
+    this.pageX = 0
+    this.pageY = 0
+    this.screenX = 0
+    this.screenY = 0
+    this.target = null
 
-        Object.keys(options).forEach(key => {
-            this[key] = options[key]
-        })
-    }
+    Object.keys(options).forEach(key => {
+      this[key] = options[key]
+    })
+  }
 }
 
 module.exports = function() {
-    if (_.getEnv() === 'nodejs') {
-        try {
-            global.Touch = window.Touch = Touch
-        } catch (err) {
-            // ignore
-        }
+  if (_.getEnv() === 'nodejs') {
+    try {
+      global.Touch = window.Touch = Touch
+    } catch (err) {
+      // ignore
     }
+  }
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
@@ -42464,31 +42488,31 @@ module.exports = function() {
 const api = __webpack_require__(231)
 
 const officialTagList = [
-    'cover-image', 'cover-view', 'grid-view', 'list-view', 'match-media', 'movable-area', 'movable-view', 'page-container', 'root-portal', 'scroll-view', 'share-element', 'sticky-header', 'sticky-section', 'swiper', 'swiper-item', 'view',
-    'icon', 'progress', 'rich-text', 'text',
-    'button', 'checkbox', 'checkbox-group', 'editor', 'form', 'input', 'keyboard-accessory', 'label', 'picker', 'picker-view', 'picker-view-column', 'radio', 'radio-group', 'slider', 'switch', 'textarea',
-    'functional-page-navigator', 'navigator',
-	'audio', 'camera', 'channel-live', 'channel-video', 'image', 'live-player', 'live-pusher', 'video', 'voip-room',
-    'map',
-    'canvas',
-    'web-view', 'ad', 'ad-custom', 'official-account', 'open-data',
-    'navigation-bar',
-    'page-meta',
+  'cover-image', 'cover-view', 'grid-view', 'list-view', 'match-media', 'movable-area', 'movable-view', 'page-container', 'root-portal', 'scroll-view', 'share-element', 'sticky-header', 'sticky-section', 'swiper', 'swiper-item', 'view',
+  'icon', 'progress', 'rich-text', 'text',
+  'button', 'checkbox', 'checkbox-group', 'editor', 'form', 'input', 'keyboard-accessory', 'label', 'picker', 'picker-view', 'picker-view-column', 'radio', 'radio-group', 'slider', 'switch', 'textarea',
+  'functional-page-navigator', 'navigator',
+  'audio', 'camera', 'channel-live', 'channel-video', 'image', 'live-player', 'live-pusher', 'video', 'voip-room',
+  'map',
+  'canvas',
+  'web-view', 'ad', 'ad-custom', 'official-account', 'open-data',
+  'navigation-bar',
+  'page-meta',
 ]
 
 module.exports = function() {
-    // 注册内置组件
-    officialTagList.forEach(name => {
-        jComponent.register({
-            id: name,
-            tagName: `wx-${name}`,
-            template: '<slot/>',
-        })
+  // 注册内置组件
+  officialTagList.forEach(name => {
+    jComponent.register({
+      id: name,
+      tagName: `wx-${name}`,
+      template: '<slot/>',
     })
+  })
 
-    // 注入 api
-    if (typeof global.wx === 'object') global.wx = Object.assign(api, global.wx)
-    else global.wx = api
+  // 注入 api
+  if (typeof global.wx === 'object') global.wx = Object.assign(api, global.wx)
+  else global.wx = api
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
@@ -42515,7 +42539,7 @@ const {
   ad,
   audioBuffer,
 } = __webpack_require__(234)
-const { LogManager, RealtimeLogManager } = __webpack_require__(235)
+const {LogManager, RealtimeLogManager} = __webpack_require__(235)
 const Performance = __webpack_require__(236)
 const {
   RequestTask,
@@ -42526,10 +42550,7 @@ const {
   UDPSocket,
 } = __webpack_require__(237)
 const SelectorQuery = __webpack_require__(238)
-const {
-  OffscreenCanvas,
-  CanvasContext,
-} = __webpack_require__(59)
+const {OffscreenCanvas, CanvasContext} = __webpack_require__(59)
 const {
   MapContext,
   VideoContext,
@@ -42550,7 +42571,7 @@ const MockBezier = () => t => t
 
 module.exports = {
   // 基础
-  env: { USER_DATA_PATH: '/usr/' },
+  env: {USER_DATA_PATH: '/usr/'},
   canIUse: _.mockSync(true),
   base64ToArrayBuffer: _.mockSync(Uint8Array.from([]).buffer),
   arrayBufferToBase64: _.mockSync(''),
@@ -42590,7 +42611,7 @@ module.exports = {
   getSkylineInfo: _.mockAsync('getSkylineInfo', skylineInfo),
   getRendererUserAgent: _.mockAsyncAndPromise(
     'getRendererUserAgent',
-    { userAgent },
+    {userAgent},
     userAgent
   ),
   getDeviceInfo: _.mockSync({
@@ -42607,7 +42628,7 @@ module.exports = {
   getAppBaseInfo: _.mockSync({
     SDKVersion: '2.32.3',
     enableDebug: false,
-    host: { env: 'WeChat' },
+    host: {env: 'WeChat'},
     language: 'zh_CN',
     version: '8.0.5',
     theme: 'light',
@@ -42674,7 +42695,7 @@ module.exports = {
   switchTab: _.mockAsyncAndPromise('switchTab'),
   reLaunch: _.mockAsyncAndPromise('reLaunch'),
   redirectTo: _.mockAsyncAndPromise('redirectTo'),
-  navigateTo: _.mockAsyncAndPromise('navigateTo', { eventChannel }),
+  navigateTo: _.mockAsyncAndPromise('navigateTo', {eventChannel}),
   navigateBack: _.mockAsyncAndPromise('navigateBack'),
 
   // 路由 - 自定义路由
@@ -42718,7 +42739,7 @@ module.exports = {
     cancel: false,
   }),
   showLoading: _.mockAsyncAndPromise('showLoading'),
-  showActionSheet: _.mockAsyncAndPromise('showActionSheet', { tapIndex: 0 }),
+  showActionSheet: _.mockAsyncAndPromise('showActionSheet', {tapIndex: 0}),
   hideToast: _.mockAsyncAndPromise('hideToast'),
   hideLoading: _.mockAsyncAndPromise('hideLoading'),
   enableAlertBeforeUnload: _.mockAsync('enableAlertBeforeUnload'),
@@ -42746,7 +42767,7 @@ module.exports = {
   hideTabBar: _.mockAsyncAndPromise('hideTabBar'),
 
   // 界面 - 字体
-  loadFontFace: _.mockAsyncAndPromise('loadFontFace', { status: 'loaded' }),
+  loadFontFace: _.mockAsyncAndPromise('loadFontFace', {status: 'loaded'}),
 
   // 界面 - 下拉刷新
   stopPullDownRefresh: _.mockAsyncAndPromise('stopPullDownRefresh'),
@@ -42801,10 +42822,10 @@ module.exports = {
 
     derived(updaterWorklet) {
       if (typeof updaterWorklet !== 'function') return
-      return { value: updaterWorklet() }
+      return {value: updaterWorklet()}
     },
 
-    shared: value => ({ value }),
+    shared: value => ({value}),
 
     decay(config) {
       if (config && config.clamp) return config.clamp[0] || 0
@@ -42827,21 +42848,19 @@ module.exports = {
       },
       ease: t => MockBezier(0.42, 0, 1, 1)(t),
       elastic:
-        (bounciness = 1) =>
-        t =>
-          1 -
-          Math.pow(Math.cos((t * Math.PI) / 2), 3) *
+        (bounciness = 1) => t => 1 -
+          (Math.cos((t * Math.PI) / 2) ** 3) *
             Math.cos(t * bounciness * Math.PI),
       linear: t => t,
       quad: t => t * t,
       cubic: t => t * t * t,
-      poly: n => t => Math.pow(t, n),
+      poly: n => t => t ** n,
       bezier: (x1, y1, x2, y2) => ({
         factory: () => MockBezier(x1, y1, x2, y2),
       }),
       circle: t => 1 - Math.sqrt(1 - t * t),
       sin: t => 1 - Math.cos((t * Math.PI) / 2),
-      exp: t => Math.pow(2, 10 * (t - 1)),
+      exp: t => 2 ** (10 * (t - 1)),
       in: easing => easing,
       out: easing => t => 1 - easing(1 - t),
       inOut: easing => t => {
@@ -42860,7 +42879,7 @@ module.exports = {
       return value
     },
 
-    delay: (delayTime, delayedAnimation) => (delayedAnimation || 0),
+    delay: (delayTime, delayedAnimation) => delayedAnimation || 0,
 
     repeat(animation, numberOfReps, reverse, callback) {
       if (typeof callback === 'function') setTimeout(() => callback(false), 100)
@@ -42869,9 +42888,9 @@ module.exports = {
 
     sequence: animation => animation || 0,
 
-    runOnJS: func => typeof func === 'function' ? func : () => {},
+    runOnJS: func => (typeof func === 'function' ? func : () => {}),
 
-    runOnUI: func => typeof func === 'function' ? func : () => {},
+    runOnUI: func => (typeof func === 'function' ? func : () => {}),
   },
 
   // 网络 - 发起请求
@@ -42933,14 +42952,14 @@ module.exports = {
     keys: [],
     limitSize: 10240,
   }),
-  getStorage: _.mockAsync('getStorage', { data: '' }),
+  getStorage: _.mockAsync('getStorage', {data: ''}),
   createBufferURL: _.mockSync(''),
   clearStorageSync() {},
   clearStorage: _.mockAsync('clearStorage'),
   batchSetStorageSync() {},
   batchSetStorage: _.mockAsync('batchSetStorage'),
   batchGetStorageSync: _.mockSync([]),
-  batchGetStorage: _.mockAsync('batchGetStorage', { dataList: [] }),
+  batchGetStorage: _.mockAsync('batchGetStorage', {dataList: []}),
 
   // 数据缓存 - 周期性更新
   setBackgroundFetchToken: _.mockAsyncAndPromise('setBackgroundFetchToken'),
@@ -42971,7 +42990,9 @@ module.exports = {
   // 画布
   createOffscreenCanvas: () => new OffscreenCanvas(),
   createCanvasContext: () => new CanvasContext(),
-  canvasToTempFilePath: _.mockAsyncAndPromise('canvasToTempFilePath', { tempFilePath: '' }),
+  canvasToTempFilePath: _.mockAsyncAndPromise('canvasToTempFilePath', {
+    tempFilePath: '',
+  }),
   canvasPutImageData: _.mockAsyncAndPromise('canvasPutImageData'),
   canvasGetImageData: _.mockAsyncAndPromise('canvasGetImageData', {
     width: 100,
@@ -42993,12 +43014,14 @@ module.exports = {
     orientation: 'up',
     type: 'jpeg',
   }),
-  editImage: _.mockAsync('editImage', { tempFilePath: '/' }),
-  cropImage: _.mockAsync('cropImage', { tempFilePath: '/' }),
-  compressImage: _.mockAsyncAndPromise('compressImage', { tempFilePath: '/' }),
-  chooseMessageFile: _.mockAsyncAndPromise('chooseMessageFile', { tempFiles: [] }),
+  editImage: _.mockAsync('editImage', {tempFilePath: '/'}),
+  cropImage: _.mockAsync('cropImage', {tempFilePath: '/'}),
+  compressImage: _.mockAsyncAndPromise('compressImage', {tempFilePath: '/'}),
+  chooseMessageFile: _.mockAsyncAndPromise('chooseMessageFile', {
+    tempFiles: [],
+  }),
   chooseImage: _.mockAsyncAndPromise('chooseImage', {
-    tempFilePaths: [], 
+    tempFilePaths: [],
     tempFiles: [],
   }),
 
@@ -43042,7 +43065,9 @@ module.exports = {
   setInnerAudioOption: _.mockAsyncAndPromise('setInnerAudioOption'),
   playVoice: _.mockAsyncAndPromise('playVoice'),
   pauseVoice: _.mockAsyncAndPromise('pauseVoice'),
-  getAvailableAudioSources: _.mockAsyncAndPromise('getAvailableAudioSources', { audioSources: ['auto'] }),
+  getAvailableAudioSources: _.mockAsyncAndPromise('getAvailableAudioSources', {
+    audioSources: ['auto'],
+  }),
   createWebAudioContext: _.mockSync({
     state: '',
     onstatechange() {},
@@ -43145,13 +43170,16 @@ module.exports = {
   onBackgroundAudioStop() {},
   onBackgroundAudioPlay() {},
   onBackgroundAudioPause() {},
-  getBackgroundAudioPlayerState: _.mockAsyncAndPromise('getBackgroundAudioPlayerState', {
-    duration: 0,
-    currentPosition: 0,
-    status: 0,
-    downloadPercent: 0,
-    dataUrl: '',
-  }),
+  getBackgroundAudioPlayerState: _.mockAsyncAndPromise(
+    'getBackgroundAudioPlayerState',
+    {
+      duration: 0,
+      currentPosition: 0,
+      status: 0,
+      downloadPercent: 0,
+      dataUrl: '',
+    }
+  ),
   getBackgroundAudioManager: _.mockSync({
     src: '',
     startTime: 0,
@@ -43191,7 +43219,7 @@ module.exports = {
 
   // 媒体 - 录音
   stopRecord: _.mockAsyncAndPromise('stopRecord'),
-  startRecord: _.mockAsyncAndPromise('startRecord', { tempFilePath: '/' }),
+  startRecord: _.mockAsyncAndPromise('startRecord', {tempFilePath: '/'}),
   getRecorderManager: _.mockSync({
     onError() {},
     onFrameRecorded() {},
@@ -43233,7 +43261,7 @@ module.exports = {
   offVoIPChatSpeakersChanged() {},
   offVoIPChatMembersChanged() {},
   offVoIPChatInterrupted() {},
-  joinVoIPChat: _.mockAsyncAndPromise('joinVoIPChat', { openIdList: [] }),
+  joinVoIPChat: _.mockAsyncAndPromise('joinVoIPChat', {openIdList: []}),
   join1v1Chat: _.mockAsyncAndPromise('join1v1Chat'),
   exitVoIPChat: _.mockAsyncAndPromise('exitVoIPChat'),
 
@@ -43321,11 +43349,11 @@ module.exports = {
     fstatSync: _.mockSync(stats),
     ftruncate: _.mockAsync('ftruncate'),
     ftruncateSync() {},
-    getFileInfo: _.mockAsync('getFileInfo', { size: 1024 }),
-    getSavedFileList: _.mockAsync('getSavedFileList', { fileList: [] }),
+    getFileInfo: _.mockAsync('getFileInfo', {size: 1024}),
+    getSavedFileList: _.mockAsync('getSavedFileList', {fileList: []}),
     mkdir: _.mockAsync('mkdir'),
     mkdirSync() {},
-    open: _.mockAsync('open', { fd: '' }),
+    open: _.mockAsync('open', {fd: ''}),
     openSync: _.mockSync(''),
     read: _.mockAsync('read', {
       bytesRead: 0,
@@ -43335,38 +43363,38 @@ module.exports = {
       data: Uint8Array.from([]).buffer,
     }),
     readCompressedFileSync: _.mockSync(Uint8Array.from([]).buffer),
-    readdir: _.mockAsync('readdir', { files: [] }),
+    readdir: _.mockAsync('readdir', {files: []}),
     readdirSync: _.mockSync([]),
-    readFile: _.mockAsync('readFile', { data: '' }),
+    readFile: _.mockAsync('readFile', {data: ''}),
     readFileSync: _.mockSync(''),
     readSync: _.mockSync({
       bytesRead: 0,
       arrayBuffer: Uint8Array.from([]).buffer,
     }),
-    readZipEntry: _.mockAsync('readZipEntry', { entries: {} }),
+    readZipEntry: _.mockAsync('readZipEntry', {entries: {}}),
     removeSavedFile: _.mockAsync('removeSavedFile'),
     rename: _.mockAsync('rename'),
     renameSync() {},
     rmdir: _.mockAsync('rmdir'),
     rmdirSync() {},
-    saveFile: _.mockAsync('saveFile', { savedFilePath: '' }),
+    saveFile: _.mockAsync('saveFile', {savedFilePath: ''}),
     saveFileSync: _.mockSync(''),
-    stat: _.mockAsync('stat', { stats }),
+    stat: _.mockAsync('stat', {stats}),
     statSync: _.mockSync(stats),
     truncate: _.mockAsync('truncate'),
     truncateSync() {},
     unlink: _.mockAsync('unlink'),
     unlinkSync() {},
     unzip: _.mockAsync('unzip'),
-    write: _.mockAsync('write', { bytesWritten: 0 }),
+    write: _.mockAsync('write', {bytesWritten: 0}),
     writeFile: _.mockAsync('writeFile'),
     writeFileSync() {},
-    writeSync: _.mockSync({ bytesWritten: 0 }),
+    writeSync: _.mockSync({bytesWritten: 0}),
   }),
 
   // 开放接口 - 登录
-  pluginLogin: _.mockAsync('pluginLogin', { code: '123456789' }),
-  login: _.mockAsync('login', { code: '123456789' }),
+  pluginLogin: _.mockAsync('pluginLogin', {code: '123456789'}),
+  login: _.mockAsync('login', {code: '123456789'}),
   checkSession: _.mockAsyncAndPromise('checkSession'),
 
   // 开放接口 - 帐号信息
@@ -43406,7 +43434,7 @@ module.exports = {
 
   // 开放接口 - 卡券
   openCard: _.mockAsyncAndPromise('openCard'),
-  addCard: _.mockAsyncAndPromise('addCard', { cardList: [] }),
+  addCard: _.mockAsyncAndPromise('addCard', {cardList: []}),
 
   // 开放接口 - 发票
   chooseInvoiceTitle: _.mockAsyncAndPromise('chooseInvoiceTitle', {
@@ -43418,7 +43446,7 @@ module.exports = {
     bankName: '招商银行股份有限公司广州市体育东路支行',
     bankAccount: '1209 0928 2210 301',
   }),
-  chooseInvoice: _.mockAsyncAndPromise('chooseInvoice', { invoiceInfo: '{}' }),
+  chooseInvoice: _.mockAsyncAndPromise('chooseInvoice', {invoiceInfo: '{}'}),
 
   // 开放接口 - 生物认证
   startSoterAuthentication: _.mockAsyncAndPromise('startSoterAuthentication', {
@@ -43429,11 +43457,11 @@ module.exports = {
   }),
   checkIsSupportSoterAuthentication: _.mockAsyncAndPromise(
     'checkIsSupportSoterAuthentication',
-    { supportMode: ['fingerPrint'] }
+    {supportMode: ['fingerPrint']}
   ),
   checkIsSoterEnrolledInDevice: _.mockAsyncAndPromise(
     'checkIsSoterEnrolledInDevice',
-    { isEnrolled: true }
+    {isEnrolled: true}
   ),
 
   // 开放接口 - 微信运动
@@ -43503,7 +43531,7 @@ module.exports = {
 
   // 开放接口 - 音视频通话
   requestDeviceVoIP: _.mockAsync('requestDeviceVoIP'),
-  getDeviceVoIPList: _.mockAsync('getDeviceVoIPList', { list: [] }),
+  getDeviceVoIPList: _.mockAsync('getDeviceVoIPList', {list: []}),
 
   // 开放接口 - 微信群
   getGroupEnterInfo: _.mockAsync('getGroupEnterInfo', {
@@ -43516,8 +43544,12 @@ module.exports = {
   openCustomerServiceChat: _.mockAsync('openCustomerServiceChat'),
 
   // 设备 - 蓝牙 - 通用
-  stopBluetoothDevicesDiscovery: _.mockAsyncAndPromise('stopBluetoothDevicesDiscovery'),
-  startBluetoothDevicesDiscovery: _.mockAsyncAndPromise('startBluetoothDevicesDiscovery'),
+  stopBluetoothDevicesDiscovery: _.mockAsyncAndPromise(
+    'stopBluetoothDevicesDiscovery'
+  ),
+  startBluetoothDevicesDiscovery: _.mockAsyncAndPromise(
+    'startBluetoothDevicesDiscovery'
+  ),
   openBluetoothAdapter: _.mockAsyncAndPromise('openBluetoothAdapter'),
   onBluetoothDeviceFound() {},
   onBluetoothAdapterStateChange() {},
@@ -43525,8 +43557,13 @@ module.exports = {
   offBluetoothAdapterStateChange() {},
   makeBluetoothPair: _.mockAsyncAndPromise('makeBluetoothPair'),
   isBluetoothDevicePaired: _.mockAsyncAndPromise('isBluetoothDevicePaired'),
-  getConnectedBluetoothDevices: _.mockAsyncAndPromise('getConnectedBluetoothDevices', { devices: [] }),
-  getBluetoothDevices: _.mockAsyncAndPromise('getBluetoothDevices', { devices: [] }),
+  getConnectedBluetoothDevices: _.mockAsyncAndPromise(
+    'getConnectedBluetoothDevices',
+    {devices: []}
+  ),
+  getBluetoothDevices: _.mockAsyncAndPromise('getBluetoothDevices', {
+    devices: [],
+  }),
   getBluetoothAdapterState: _.mockAsyncAndPromise('getBluetoothAdapterState', {
     discovering: true,
     available: true,
@@ -43534,44 +43571,58 @@ module.exports = {
   closeBluetoothAdapter: _.mockAsyncAndPromise('closeBluetoothAdapter'),
 
   // 设备 - 蓝牙 - 低功耗中心设备
-  writeBLECharacteristicValue: _.mockAsyncAndPromise('writeBLECharacteristicValue'),
-  setBLEMTU: _.mockAsyncAndPromise('setBLEMTU', { mtu: 0 }),
-  readBLECharacteristicValue: _.mockAsyncAndPromise('readBLECharacteristicValue'),
+  writeBLECharacteristicValue: _.mockAsyncAndPromise(
+    'writeBLECharacteristicValue'
+  ),
+  setBLEMTU: _.mockAsyncAndPromise('setBLEMTU', {mtu: 0}),
+  readBLECharacteristicValue: _.mockAsyncAndPromise(
+    'readBLECharacteristicValue'
+  ),
   onBLEMTUChange() {},
   onBLEConnectionStateChange() {},
   onBLECharacteristicValueChange() {},
   offBLEMTUChange() {},
   offBLEConnectionStateChange() {},
   offBLECharacteristicValueChange() {},
-  notifyBLECharacteristicValueChange: _.mockAsyncAndPromise('notifyBLECharacteristicValueChange'),
-  getBLEMTU: _.mockAsyncAndPromise('getBLEMTU', { mtu: 0 }),
-  getBLEDeviceServices: _.mockAsyncAndPromise('getBLEDeviceServices', { services: [] }),
-  getBLEDeviceRSSI: _.mockAsyncAndPromise('getBLEDeviceRSSI', { RSSI: 0 }),
-  getBLEDeviceCharacteristics: _.mockAsyncAndPromise('getBLEDeviceCharacteristics', { characteristics: [] }),
+  notifyBLECharacteristicValueChange: _.mockAsyncAndPromise(
+    'notifyBLECharacteristicValueChange'
+  ),
+  getBLEMTU: _.mockAsyncAndPromise('getBLEMTU', {mtu: 0}),
+  getBLEDeviceServices: _.mockAsyncAndPromise('getBLEDeviceServices', {
+    services: [],
+  }),
+  getBLEDeviceRSSI: _.mockAsyncAndPromise('getBLEDeviceRSSI', {RSSI: 0}),
+  getBLEDeviceCharacteristics: _.mockAsyncAndPromise(
+    'getBLEDeviceCharacteristics',
+    {characteristics: []}
+  ),
   createBLEConnection: _.mockAsyncAndPromise('createBLEConnection'),
   closeBLEConnection: _.mockAsyncAndPromise('closeBLEConnection'),
 
   // 设备 - 蓝牙 - 低功耗外围设备
   onBLEPeripheralConnectionStateChanged() {},
   offBLEPeripheralConnectionStateChanged() {},
-  createBLEPeripheralServer: _.mockAsyncAndPromise('createBLEPeripheralServer', {
-    server: {
-      addService: _.mockAsync('addService'),
-      close: _.mockAsync('close'),
-      removeService: _.mockAsync('removeService'),
-      startAdvertising: _.mockAsync('startAdvertising'),
-      stopAdvertising: _.mockAsync('stopAdvertising'),
-      writeCharacteristicValue: _.mockAsync('writeCharacteristicValue'),
-      onCharacteristicWriteRequest() {},
-      offCharacteristicWriteRequest() {},
-      onCharacteristicReadRequest() {},
-      offCharacteristicReadRequest() {},
-      onCharacteristicSubscribed() {},
-      offCharacteristicSubscribed() {},
-      onCharacteristicUnsubscribed() {},
-      offCharacteristicUnsubscribed() {},
-    },
-  }),
+  createBLEPeripheralServer: _.mockAsyncAndPromise(
+    'createBLEPeripheralServer',
+    {
+      server: {
+        addService: _.mockAsync('addService'),
+        close: _.mockAsync('close'),
+        removeService: _.mockAsync('removeService'),
+        startAdvertising: _.mockAsync('startAdvertising'),
+        stopAdvertising: _.mockAsync('stopAdvertising'),
+        writeCharacteristicValue: _.mockAsync('writeCharacteristicValue'),
+        onCharacteristicWriteRequest() {},
+        offCharacteristicWriteRequest() {},
+        onCharacteristicReadRequest() {},
+        offCharacteristicReadRequest() {},
+        onCharacteristicSubscribed() {},
+        offCharacteristicSubscribed() {},
+        onCharacteristicUnsubscribed() {},
+        offCharacteristicUnsubscribed() {},
+      },
+    }
+  ),
 
   // 设备 - 蓝牙 - 信标(Beacon)
   stopBeaconDiscovery: _.mockAsyncAndPromise('stopBeaconDiscovery'),
@@ -43580,7 +43631,7 @@ module.exports = {
   onBeaconServiceChange() {},
   offBeaconUpdate() {},
   offBeaconServiceChange() {},
-  getBeacons: _.mockAsyncAndPromise('getBeacons', { beacons: [] }),
+  getBeacons: _.mockAsyncAndPromise('getBeacons', {beacons: []}),
 
   // 设备 - NFC 读写
   getNFCAdapter: _.mockSync({
@@ -43632,8 +43683,10 @@ module.exports = {
   addPhoneContact: _.mockAsyncAndPromise('addPhoneContact'),
 
   // 设备 - 无障碍
-  checkIsOpenAccessibility: _.mockAsyncAndPromise('checkIsOpenAccessibility', { open: true }),
-  
+  checkIsOpenAccessibility: _.mockAsyncAndPromise('checkIsOpenAccessibility', {
+    open: true,
+  }),
+
   // 设备 - 电量
   getBatteryInfoSync: _.mockSync({
     level: 100,
@@ -43643,11 +43696,11 @@ module.exports = {
     level: 100,
     isCharging: false,
   }),
-  
+
   // 设备 - 剪贴板
   setClipboardData: _.mockAsyncAndPromise('setClipboardData'),
-  getClipboardData: _.mockAsyncAndPromise('getClipboardData', { data: '' }),
-  
+  getClipboardData: _.mockAsyncAndPromise('getClipboardData', {data: ''}),
+
   // 设备 - NFC
   stopHCE: _.mockAsyncAndPromise('stopHCE'),
   startHCE: _.mockAsyncAndPromise('startHCE'),
@@ -43655,7 +43708,7 @@ module.exports = {
   onHCEMessage() {},
   offHCEMessage() {},
   getHCEState: _.mockAsyncAndPromise('getHCEState'),
-  
+
   // 设备 - 网络
   onNetworkWeakChange() {},
   onNetworkStatusChange() {},
@@ -43670,10 +43723,10 @@ module.exports = {
     localip: '192.168.0.1',
     netmask: '255.255.255.0',
   }),
-  
+
   // 设备 - 加密
   getRandomValues: userCryptoManager.getRandomValues,
-  
+
   // 设备 - 屏幕
   setVisualEffectOnCapture: _.mockAsync('setVisualEffectOnCapture'),
   setScreenBrightness: _.mockAsyncAndPromise('setScreenBrightness'),
@@ -43682,9 +43735,13 @@ module.exports = {
   onScreenRecordingStateChanged() {},
   offUserCaptureScreen() {},
   offScreenRecordingStateChanged() {},
-  getScreenRecordingState: _.mockAsync('getScreenRecordingState', { state: 'off' }),
-  getScreenBrightness: _.mockAsyncAndPromise('getScreenBrightness', { value: 0 }),
-  
+  getScreenRecordingState: _.mockAsync('getScreenRecordingState', {
+    state: 'off',
+  }),
+  getScreenBrightness: _.mockAsyncAndPromise('getScreenBrightness', {
+    value: 0,
+  }),
+
   // 设备 - 键盘
   onKeyboardHeightChange() {},
   offKeyboardHeightChange() {},
@@ -43693,38 +43750,40 @@ module.exports = {
     start: 0,
     end: 0,
   }),
-  
+
   // 设备 - 电话
   makePhoneCall: _.mockAsyncAndPromise('makePhoneCall'),
-  
+
   // 设备 - 加速计
   stopAccelerometer: _.mockAsyncAndPromise('stopAccelerometer'),
   startAccelerometer: _.mockAsyncAndPromise('startAccelerometer'),
   onAccelerometerChange() {},
   offAccelerometerChange() {},
-  
+
   // 设备 - 罗盘
   stopCompass: _.mockAsyncAndPromise('stopCompass'),
   startCompass: _.mockAsyncAndPromise('startCompass'),
   onCompassChange() {},
   offCompassChange() {},
-  
+
   // 设备 - 设备方向
   stopDeviceMotionListening: _.mockAsyncAndPromise('stopDeviceMotionListening'),
-  startDeviceMotionListening: _.mockAsyncAndPromise('startDeviceMotionListening'),
+  startDeviceMotionListening: _.mockAsyncAndPromise(
+    'startDeviceMotionListening'
+  ),
   onDeviceMotionChange() {},
   offDeviceMotionChange() {},
-  
+
   // 设备 - 陀螺仪
   stopGyroscope: _.mockAsyncAndPromise('stopGyroscope'),
   startGyroscope: _.mockAsyncAndPromise('startGyroscope'),
   onGyroscopeChange() {},
   offGyroscopeChange() {},
-  
+
   // 设备 - 内存
   onMemoryWarning() {},
   offMemoryWarning() {},
-  
+
   // 设备 - 扫码
   scanCode: _.mockAsyncAndPromise('scanCode', {
     result: '',
@@ -43733,16 +43792,16 @@ module.exports = {
     path: '/',
     rawData: '',
   }),
-  
+
   // 设备 - 短信
   sendSms: _.mockAsync('sendSms'),
-  
+
   // 设备 - 振动
   vibrateShort: _.mockAsyncAndPromise('vibrateShort'),
   vibrateLong: _.mockAsyncAndPromise('vibrateLong'),
 
   // AI - AI 推理
-  getInferenceEnvInfo: _.mockAsync('getInferenceEnvInfo', { ver: '' }),
+  getInferenceEnvInfo: _.mockAsync('getInferenceEnvInfo', {ver: ''}),
   createInferenceSession: _.mockSync({
     onLoad() {},
     offLoad() {},
@@ -43759,13 +43818,13 @@ module.exports = {
     config: {
       version: 'v2',
       track: {
-        plane: { mode: 3 },
+        plane: {mode: 3},
         marker: false,
         OSD: false,
-        face: { mode: 1 },
-        OCR: { mode: 1 },
-        body: { mode: 1 },
-        hand: { mode: 1 },
+        face: {mode: 1},
+        OCR: {mode: 1},
+        body: {mode: 1},
+        hand: {mode: 1},
         threeDof: false,
       },
       gl: undefined,
@@ -43815,12 +43874,16 @@ module.exports = {
   stopFaceDetect: _.mockAsync('stopFaceDetect'),
   initFaceDetect: _.mockAsync('initFaceDetect'),
   faceDetect: _.mockAsync('faceDetect', {
-    detectRect: { height: 0, width: 0, originX: 0, originY: 0 },
+    detectRect: {
+      height: 0, width: 0, originX: 0, originY: 0
+    },
     x: -1,
     y: -1,
     pointArray: [],
-    confArray: { global: 1, leftEye: 1, rightEye: 1, mouth: 1, nose: 1 },
-    angleArray: { pitch: 0, yaw: 0, roll: 0 },
+    confArray: {
+      global: 1, leftEye: 1, rightEye: 1, mouth: 1, nose: 1
+    },
+    angleArray: {pitch: 0, yaw: 0, roll: 0},
     faceInfo: [],
   }),
 
@@ -43835,12 +43898,11 @@ module.exports = {
 
   // WXML
   createSelectorQuery: () => new SelectorQuery(),
-  createIntersectionObserver: (compInst, options) =>
-    compInst.createIntersectionObserver(options),
+  createIntersectionObserver: (compInst, options) => compInst.createIntersectionObserver(options),
 
   // 第三方平台
   getExtConfigSync: () => ({}),
-  getExtConfig: _.mockAsyncAndPromise('getExtConfig', { extConfig: {} }),
+  getExtConfig: _.mockAsyncAndPromise('getExtConfig', {extConfig: {}}),
 
   // 广告
   createRewardedVideoAd: () => ad,
@@ -43853,196 +43915,196 @@ module.exports = {
 /***/ (function(module, exports) {
 
 class Animation {
-    constructor(option = {}) {
-        this.actions = []
-        this.currentTransform = []
-        this.currentStepAnimates = []
+  constructor(option = {}) {
+    this.actions = []
+    this.currentTransform = []
+    this.currentStepAnimates = []
 
-        this.option = {
-            transition: {
-                duration: option.duration !== undefined ? option.duration : 400,
-                timingFunction: option.timingFunction !== undefined ? option.timingFunction : 'linear',
-                delay: option.delay !== undefined ? option.delay : 0,
-            },
-            transformOrigin: option.transformOrigin || '50% 50% 0',
-        }
+    this.option = {
+      transition: {
+        duration: option.duration !== undefined ? option.duration : 400,
+        timingFunction: option.timingFunction !== undefined ? option.timingFunction : 'linear',
+        delay: option.delay !== undefined ? option.delay : 0,
+      },
+      transformOrigin: option.transformOrigin || '50% 50% 0',
     }
+  }
 
-    export() {
-        const actions = this.actions
-        this.actions = []
-        return {actions}
-    }
+  export() {
+    const actions = this.actions
+    this.actions = []
+    return {actions}
+  }
 
-    step(option = {}) {
-        this.currentStepAnimates.forEach((animate) => {
-            if (animate.type !== 'style') {
-                this.currentTransform[animate.type] = animate
-            } else {
-                this.currentTransform[`${animate.type}.${animate.args[0]}`] = animate
-            }
-        })
+  step(option = {}) {
+    this.currentStepAnimates.forEach((animate) => {
+      if (animate.type !== 'style') {
+        this.currentTransform[animate.type] = animate
+      } else {
+        this.currentTransform[`${animate.type}.${animate.args[0]}`] = animate
+      }
+    })
 
-        this.actions.push({
-            animates: Object.keys(this.currentTransform).reduce((prev, key) => [...prev, this.currentTransform[key]], []),
-            option: {
-                transformOrigin: option.transformOrigin !== undefined ? option.transformOrigin : this.option.transformOrigin,
-                transition: {
-                    duration: option.duration !== undefined ? option.duration : this.option.transition.duration,
-                    timingFunction: option.timingFunction !== undefined ? option.timingFunction : this.option.transition.timingFunction,
-                    delay: option.delay !== undefined ? option.delay : this.option.transition.delay,
-                },
-            },
-        })
+    this.actions.push({
+      animates: Object.keys(this.currentTransform).reduce((prev, key) => [...prev, this.currentTransform[key]], []),
+      option: {
+        transformOrigin: option.transformOrigin !== undefined ? option.transformOrigin : this.option.transformOrigin,
+        transition: {
+          duration: option.duration !== undefined ? option.duration : this.option.transition.duration,
+          timingFunction: option.timingFunction !== undefined ? option.timingFunction : this.option.transition.timingFunction,
+          delay: option.delay !== undefined ? option.delay : this.option.transition.delay,
+        },
+      },
+    })
 
-        this.currentStepAnimates = []
-        return this
-    }
+    this.currentStepAnimates = []
+    return this
+  }
 
-    matrix(a = 1, b = 0, c = 0, d = 1, tx = 1, ty = 1) {
-        this.currentStepAnimates.push({type: 'matrix', args: [a, b, c, d, tx, ty]})
-        return this
-    }
+  matrix(a = 1, b = 0, c = 0, d = 1, tx = 1, ty = 1) {
+    this.currentStepAnimates.push({type: 'matrix', args: [a, b, c, d, tx, ty]})
+    return this
+  }
 
-    matrix3d(a1 = 1, b1 = 0, c1 = 0, d1 = 0, a2 = 0, b2 = 1, c2 = 0, d2 = 0, a3 = 0, b3 = 0, c3 = 1, d3 = 0, a4 = 0, b4 = 0, c4 = 0, d4 = 1) {
-        this.currentStepAnimates.push({type: 'matrix3d', args: [a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4]})
-        this.stepping = false
-        return this
-    }
+  matrix3d(a1 = 1, b1 = 0, c1 = 0, d1 = 0, a2 = 0, b2 = 1, c2 = 0, d2 = 0, a3 = 0, b3 = 0, c3 = 1, d3 = 0, a4 = 0, b4 = 0, c4 = 0, d4 = 1) {
+    this.currentStepAnimates.push({type: 'matrix3d', args: [a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4]})
+    this.stepping = false
+    return this
+  }
 
-    rotate(angle = 0) {
-        this.currentStepAnimates.push({type: 'rotate', args: [angle]})
-        return this
-    }
+  rotate(angle = 0) {
+    this.currentStepAnimates.push({type: 'rotate', args: [angle]})
+    return this
+  }
 
-    rotate3d(x = 0, y = 0, z = 0, a = 0) {
-        this.currentStepAnimates.push({type: 'rotate3d', args: [x, y, z, a]})
-        this.stepping = false
-        return this
-    }
+  rotate3d(x = 0, y = 0, z = 0, a = 0) {
+    this.currentStepAnimates.push({type: 'rotate3d', args: [x, y, z, a]})
+    this.stepping = false
+    return this
+  }
 
-    rotateX(a = 0) {
-        this.currentStepAnimates.push({type: 'rotateX', args: [a]})
-        this.stepping = false
-        return this
-    }
+  rotateX(a = 0) {
+    this.currentStepAnimates.push({type: 'rotateX', args: [a]})
+    this.stepping = false
+    return this
+  }
 
-    rotateY(a = 0) {
-        this.currentStepAnimates.push({type: 'rotateY', args: [a]})
-        this.stepping = false
-        return this
-    }
+  rotateY(a = 0) {
+    this.currentStepAnimates.push({type: 'rotateY', args: [a]})
+    this.stepping = false
+    return this
+  }
 
-    rotateZ(a = 0) {
-        this.currentStepAnimates.push({type: 'rotateZ', args: [a]})
-        this.stepping = false
-        return this
-    }
+  rotateZ(a = 0) {
+    this.currentStepAnimates.push({type: 'rotateZ', args: [a]})
+    this.stepping = false
+    return this
+  }
 
-    scale(sx = 1, sy) {
-        this.currentStepAnimates.push({type: 'scale', args: [sx, sy !== undefined ? sy : sx]})
-        return this
-    }
+  scale(sx = 1, sy) {
+    this.currentStepAnimates.push({type: 'scale', args: [sx, sy !== undefined ? sy : sx]})
+    return this
+  }
 
-    scale3d(sx = 1, sy = 1, sz = 1) {
-        this.currentStepAnimates.push({type: 'scale3d', args: [sx, sy, sz]})
-        return this
-    }
+  scale3d(sx = 1, sy = 1, sz = 1) {
+    this.currentStepAnimates.push({type: 'scale3d', args: [sx, sy, sz]})
+    return this
+  }
 
-    scaleX(s = 1) {
-        this.currentStepAnimates.push({type: 'scaleX', args: [s]})
-        return this
-    }
+  scaleX(s = 1) {
+    this.currentStepAnimates.push({type: 'scaleX', args: [s]})
+    return this
+  }
 
-    scaleY(s = 1) {
-        this.currentStepAnimates.push({type: 'scaleY', args: [s]})
-        return this
-    }
+  scaleY(s = 1) {
+    this.currentStepAnimates.push({type: 'scaleY', args: [s]})
+    return this
+  }
 
-    scaleZ(s = 1) {
-        this.currentStepAnimates.push({type: 'scaleZ', args: [s]})
-        return this
-    }
+  scaleZ(s = 1) {
+    this.currentStepAnimates.push({type: 'scaleZ', args: [s]})
+    return this
+  }
 
-    skew(ax = 0, ay = 0) {
-        this.currentStepAnimates.push({type: 'skew', args: [ax, ay]})
-        return this
-    }
+  skew(ax = 0, ay = 0) {
+    this.currentStepAnimates.push({type: 'skew', args: [ax, ay]})
+    return this
+  }
 
-    skewX(a = 0) {
-        this.currentStepAnimates.push({type: 'skewX', args: [a]})
-        return this
-    }
+  skewX(a = 0) {
+    this.currentStepAnimates.push({type: 'skewX', args: [a]})
+    return this
+  }
 
-    skewY(a = 0) {
-        this.currentStepAnimates.push({type: 'skewY', args: [a]})
-        return this
-    }
+  skewY(a = 0) {
+    this.currentStepAnimates.push({type: 'skewY', args: [a]})
+    return this
+  }
 
-    translate(tx = 0, ty = 0) {
-        this.currentStepAnimates.push({type: 'translate', args: [tx, ty]})
-        return this
-    }
+  translate(tx = 0, ty = 0) {
+    this.currentStepAnimates.push({type: 'translate', args: [tx, ty]})
+    return this
+  }
 
-    translate3d(tx = 0, ty = 0, tz = 0) {
-        this.currentStepAnimates.push({type: 'translate3d', args: [tx, ty, tz]})
-        return this
-    }
+  translate3d(tx = 0, ty = 0, tz = 0) {
+    this.currentStepAnimates.push({type: 'translate3d', args: [tx, ty, tz]})
+    return this
+  }
 
-    translateX(t = 0) {
-        this.currentStepAnimates.push({type: 'translateX', args: [t]})
-        return this
-    }
+  translateX(t = 0) {
+    this.currentStepAnimates.push({type: 'translateX', args: [t]})
+    return this
+  }
 
-    translateY(t = 0) {
-        this.currentStepAnimates.push({type: 'translateY', args: [t]})
-        return this
-    }
+  translateY(t = 0) {
+    this.currentStepAnimates.push({type: 'translateY', args: [t]})
+    return this
+  }
 
-    translateZ(t = 0) {
-        this.currentStepAnimates.push({type: 'translateZ', args: [t]})
-        return this
-    }
+  translateZ(t = 0) {
+    this.currentStepAnimates.push({type: 'translateZ', args: [t]})
+    return this
+  }
 
-    opacity(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['opacity', value]})
-        return this
-    }
+  opacity(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['opacity', value]})
+    return this
+  }
 
-    backgroundColor(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['background-color', value]})
-        return this
-    }
+  backgroundColor(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['background-color', value]})
+    return this
+  }
 
-    width(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['width', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  width(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['width', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 
-    height(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['height', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  height(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['height', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 
-    left(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['left', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  left(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['left', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 
-    right(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['right', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  right(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['right', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 
-    top(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['top', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  top(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['top', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 
-    bottom(value) {
-        this.currentStepAnimates.push({type: 'style', args: ['bottom', typeof value === 'number' ? value + 'px' : value]})
-        return this
-    }
+  bottom(value) {
+    this.currentStepAnimates.push({type: 'style', args: ['bottom', typeof value === 'number' ? value + 'px' : value]})
+    return this
+  }
 }
 
 module.exports = Animation
@@ -44054,27 +44116,27 @@ module.exports = Animation
 
 /* eslint-disable class-methods-use-this */
 class UpdateManager {
-    constructor() {
-        this.updateCallback = null
-    }
+  constructor() {
+    this.updateCallback = null
+  }
 
-    applyUpdate() {
-        setTimeout(() => {
-            if (this.updateCallback && typeof this.updateCallback === 'function') this.updateCallback()
-        }, 0)
-    }
+  applyUpdate() {
+    setTimeout(() => {
+      if (this.updateCallback && typeof this.updateCallback === 'function') this.updateCallback()
+    }, 0)
+  }
 
-    onCheckForUpdate(callback) {
-        setTimeout(() => {
-            if (callback && typeof callback === 'function') callback({hasUpdate: true})
-        }, 0)
-    }
+  onCheckForUpdate(callback) {
+    setTimeout(() => {
+      if (callback && typeof callback === 'function') callback({hasUpdate: true})
+    }, 0)
+  }
 
-    onUpdateFailed() {}
+  onUpdateFailed() {}
 
-    onUpdateReady(callback) {
-        this.updateCallback = callback
-    }
+  onUpdateReady(callback) {
+    this.updateCallback = callback
+  }
 }
 
 module.exports = UpdateManager
@@ -44124,7 +44186,7 @@ const systemInfo = {
   },
   locationReducedAccuracy: true,
   theme: 'light',
-  host: { env: 'WeChat' },
+  host: {env: 'WeChat'},
   enableDebug: false,
   deviceOrientation: 'portrait',
 }
@@ -44152,12 +44214,13 @@ const launchOptions = {
 const preDownloadSubpackageTask = {
   onProgressUpdate(listener) {
     setTimeout(() => {
-      if (typeof listener === 'function')
+      if (typeof listener === 'function') {
         listener({
           progress: 100,
           totalBytesWritten: 1024,
           totalBytesExpectedToWrite: 1024,
         })
+      }
     }, 100)
   },
 }
@@ -44174,7 +44237,7 @@ const userCryptoManager = {
     let randomValues
     if (options.length) randomValues = new Uint8Array(options.length).buffer
 
-    const { success, fail, complete } = options
+    const {success, fail, complete} = options
     if (!(success || fail || complete)) {
       // 支持 promise
       return new Promise(resolve => {
@@ -44315,13 +44378,29 @@ module.exports = {
 
 class LogManager {
   debug() {}
+
   info() {}
+
   log() {}
+
+  warn() {}
+}
+
+class RealtimeTagLogManager {
+  addFilterMsg() {}
+
+  error() {}
+
+  info() {}
+
+  setFilterMsg() {}
+
   warn() {}
 }
 
 class RealtimeLogManager {
   addFilterMsg() {}
+
   error() {}
 
   getCurrentState() {
@@ -44334,21 +44413,15 @@ class RealtimeLogManager {
   }
 
   in() {}
+
   info() {}
+
   setFilterMsg() {}
 
   tag() {
     return new RealtimeTagLogManager()
   }
 
-  warn() {}
-}
-
-class RealtimeTagLogManager {
-  addFilterMsg() {}
-  error() {}
-  info() {}
-  setFilterMsg() {}
   warn() {}
 }
 
@@ -44418,6 +44491,7 @@ const entryList = [{
 
 class PerformanceObserver {
   disconnect() {}
+
   observe() {}
 }
 
@@ -44454,8 +44528,11 @@ class NetworkTask {
   }
 
   offChunkReceived() {}
+
   offHeadersReceived() {}
+
   onChunkReceived() {}
+
   onHeadersReceived() {}
 }
 
@@ -44521,30 +44598,47 @@ class SocketTask {
   }
 
   send() {}
+
   close() {}
+
   onOpen() {}
+
   onClose() {}
+
   onError() {}
+
   onMessage() {}
 }
 
 class Socket {
   connect() {}
+
   write() {}
+
   close() {}
+
   onClose() {}
+
   offClose() {}
+
   onError() {}
+
   offError() {}
+
   onMessage() {}
+
   offMessage() {}
 }
 
 class TCPSocket extends Socket {
   bindWifi() {}
+
   onConnect() {}
+
   offConnect() {}
+
   onBindWifi() {}
+
   offBindWifi() {}
 }
 
@@ -44554,8 +44648,11 @@ class UDPSocket extends Socket {
   }
 
   setTTL() {}
+
   send() {}
+
   onListening() {}
+
   offListening() {}
 }
 
@@ -44617,12 +44714,10 @@ module.exports = SelectorQuery
 /***/ (function(module, exports, __webpack_require__) {
 
 const _ = __webpack_require__(30)
-const {
-  OffscreenCanvas,
-} = __webpack_require__(59)
+const {OffscreenCanvas} = __webpack_require__(59)
 
 class MapContext {
-	addArc(options) {
+  addArc(options) {
     _.mockAsync('addArc')(options)
   }
 
@@ -44769,7 +44864,9 @@ class MapContext {
 
 class VideoContext {
   exitBackgroundPlayback() {}
+
   exitCasting() {}
+
   exitFullScreen() {}
 
   exitPictureInPicture(options) {
@@ -44777,22 +44874,34 @@ class VideoContext {
   }
 
   hideStatusBar() {}
+
   pause() {}
+
   play() {}
+
   playbackRate() {}
+
   reconnectCasting() {}
+
   requestBackgroundPlayback() {}
+
   requestFullScreen() {}
+
   seek() {}
+
   sendDanmu() {}
+
   showStatusBar() {}
+
   startCasting() {}
+
   stop() {}
+
   switchCasting() {}
 }
 
 class LivePlayerContext {
-	exitCasting(options) {
+  exitCasting(options) {
     _.mockAsync('exitCasting')(options)
   }
 
@@ -44854,7 +44963,7 @@ class LivePlayerContext {
 }
 
 class LivePusherContext {
-	applyBlusherStickMakeup(options) {
+  applyBlusherStickMakeup(options) {
     _.mockAsync('applyBlusherStickMakeup')(options)
   }
 
@@ -44987,12 +45096,12 @@ class CameraContext {
   onCameraFrame() {
     return {
       start: _.mockAsync('start'),
-      stop: _.mockAsync('stop')
+      stop: _.mockAsync('stop'),
     }
   }
 
   setZoom(options) {
-    _.mockAsync('setZoom', { zoom: 1 })(options)
+    _.mockAsync('setZoom', {zoom: 1})(options)
   }
 
   startRecord(options) {

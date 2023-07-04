@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.6.0
+
+* 更新 mock api 到基础库 v2.32.0 版本
+
 ## 1.5.6 & 依赖 j-component 更新 1.4.9
 
 * 支持 selectOwnerComponent 方法
