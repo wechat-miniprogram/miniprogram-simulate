@@ -3,14 +3,14 @@ const path = require('path')
 const expect = require('chai').expect
 
 describe('comp5', () => {
-    it('should run successfully', async() => {
-        const id = simulate.load(path.join(__dirname, '../comp5/index'))
-        const comp = simulate.render(id)
+  it('should run successfully', async() => {
+    const id = simulate.load(path.join(__dirname, '../comp5/index'))
+    const comp = simulate.render(id)
 
-        const parent = document.createElement('parent-wrapper')
-        comp.attach(parent)
+    const parent = document.createElement('parent-wrapper')
+    comp.attach(parent)
 
-        expect(simulate.match(comp.dom, `
+    expect(simulate.match(comp.dom, `
             <wx-view>head</wx-view>
             <wx-text>tmpl</wx-text>
             <wx-view>
@@ -40,5 +40,5 @@ describe('comp5', () => {
             </wx-view>
             <wx-view>foot</wx-view>
         `)).to.equal(true)
-    })
+  })
 })

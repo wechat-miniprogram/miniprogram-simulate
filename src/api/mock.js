@@ -38,7 +38,7 @@ const systemInfo = {
   },
   locationReducedAccuracy: true,
   theme: 'light',
-  host: { env: 'WeChat' },
+  host: {env: 'WeChat'},
   enableDebug: false,
   deviceOrientation: 'portrait',
 }
@@ -66,12 +66,13 @@ const launchOptions = {
 const preDownloadSubpackageTask = {
   onProgressUpdate(listener) {
     setTimeout(() => {
-      if (typeof listener === 'function')
+      if (typeof listener === 'function') {
         listener({
           progress: 100,
           totalBytesWritten: 1024,
           totalBytesExpectedToWrite: 1024,
         })
+      }
     }, 100)
   },
 }
@@ -87,6 +88,19 @@ const userCryptoManager = {
   getRandomValues(options = {}) {
     let randomValues
     if (options.length) randomValues = new Uint8Array(options.length).buffer
+
+    const {success, fail, complete} = options
+    if (!(success || fail || complete)) {
+      // 支持 promise
+      return new Promise(resolve => {
+        options.success = res => resolve(res)
+
+        _.runInAsync(options, {
+          errMsg: 'getRandomValues:ok',
+          randomValues,
+        })
+      })
+    }
 
     _.runInAsync(options, {
       errMsg: 'getRandomValues:ok',
@@ -171,6 +185,28 @@ const stats = {
   isFile: () => true,
 }
 
+const ad = {
+  load: Promise.resolve({}),
+  show: Promise.resolve({}),
+  destroy() {},
+  onLoad() {},
+  offLoad() {},
+  onError() {},
+  offError() {},
+  onClose() {},
+  offClose() {},
+}
+
+const audioBuffer = {
+  sampleRate: 0,
+  length: 0,
+  duration: 0,
+  numberOfChannels: 0,
+  copyFromChannel() {},
+  copyToChannel() {},
+  getChannelData: _.mockSync(Float32Array.from([])),
+}
+
 module.exports = {
   systemInfo,
   skylineInfo,
@@ -183,4 +219,6 @@ module.exports = {
   userInfo,
   setting,
   stats,
+  ad,
+  audioBuffer,
 }

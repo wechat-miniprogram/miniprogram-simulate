@@ -1,3 +1,6 @@
+/**
+ * 暂不考虑 context 和 node 实现
+ */
 class SelectorQuery {
   constructor() {
     this._commands = []

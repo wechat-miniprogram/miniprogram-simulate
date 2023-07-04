@@ -26,7 +26,7 @@ module.exports = {
       'error',
       'only-multiline'
     ],
-    'complexity': ['error', 10],
+    'complexity': ['error', 20],
     'func-names': 'off',
     'global-require': 'off',
     'handle-callback-err': [
@@ -82,10 +82,12 @@ module.exports = {
       'error',
       'never'
     ],
-    'indent': ['error', 4],
+    'indent': ['error', 2],
     'space-before-function-paren': ['error', 'never'],
     'max-len': 'off',
     'no-restricted-syntax': 'off',
+    'class-methods-use-this': 'off',
+    'consistent-return': 'off',
   },
   'globals': {
     'window': true,

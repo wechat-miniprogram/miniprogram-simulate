@@ -1,5 +1,5 @@
 Component({
-    data: {
-        list: [1, 2],
-    },
+  data: {
+    list: [1, 2],
+  },
 })

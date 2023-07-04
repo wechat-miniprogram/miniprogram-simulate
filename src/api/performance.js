@@ -54,6 +54,7 @@ const entryList = [{
 
 class PerformanceObserver {
   disconnect() {}
+
   observe() {}
 }
 

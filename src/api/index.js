@@ -1,7 +1,5 @@
 const Animation = require('./animation')
-const MapContext = require('./map')
 const UpdateManager = require('./update-manager')
-const openApi = require('./open')
 const _ = require('./utils')
 const {
   systemInfo,
@@ -15,8 +13,10 @@ const {
   userInfo,
   setting,
   stats,
+  ad,
+  audioBuffer,
 } = require('./mock')
-const { LogManager, RealtimeLogManager } = require('./log')
+const {LogManager, RealtimeLogManager} = require('./log')
 const Performance = require('./performance')
 const {
   RequestTask,
@@ -27,6 +27,14 @@ const {
   UDPSocket,
 } = require('./network')
 const SelectorQuery = require('./selector-query')
+const {OffscreenCanvas, CanvasContext} = require('./canvas')
+const {
+  MapContext,
+  VideoContext,
+  LivePlayerContext,
+  LivePusherContext,
+  CameraContext,
+} = require('./context')
 
 let nextTickQueue = []
 let nextTickTimer = null
@@ -40,7 +48,7 @@ const MockBezier = () => t => t
 
 module.exports = {
   // 基础
-  env: { USER_DATA_PATH: '/usr/' },
+  env: {USER_DATA_PATH: '/usr/'},
   canIUse: _.mockSync(true),
   base64ToArrayBuffer: _.mockSync(Uint8Array.from([]).buffer),
   arrayBufferToBase64: _.mockSync(''),
@@ -80,7 +88,7 @@ module.exports = {
   getSkylineInfo: _.mockAsync('getSkylineInfo', skylineInfo),
   getRendererUserAgent: _.mockAsyncAndPromise(
     'getRendererUserAgent',
-    { userAgent },
+    {userAgent},
     userAgent
   ),
   getDeviceInfo: _.mockSync({
@@ -97,7 +105,7 @@ module.exports = {
   getAppBaseInfo: _.mockSync({
     SDKVersion: '2.32.3',
     enableDebug: false,
-    host: { env: 'WeChat' },
+    host: {env: 'WeChat'},
     language: 'zh_CN',
     version: '8.0.5',
     theme: 'light',
@@ -164,7 +172,7 @@ module.exports = {
   switchTab: _.mockAsyncAndPromise('switchTab'),
   reLaunch: _.mockAsyncAndPromise('reLaunch'),
   redirectTo: _.mockAsyncAndPromise('redirectTo'),
-  navigateTo: _.mockAsyncAndPromise('navigateTo', { eventChannel }),
+  navigateTo: _.mockAsyncAndPromise('navigateTo', {eventChannel}),
   navigateBack: _.mockAsyncAndPromise('navigateBack'),
 
   // 路由 - 自定义路由
@@ -208,7 +216,7 @@ module.exports = {
     cancel: false,
   }),
   showLoading: _.mockAsyncAndPromise('showLoading'),
-  showActionSheet: _.mockAsyncAndPromise('showActionSheet', { tapIndex: 0 }),
+  showActionSheet: _.mockAsyncAndPromise('showActionSheet', {tapIndex: 0}),
   hideToast: _.mockAsyncAndPromise('hideToast'),
   hideLoading: _.mockAsyncAndPromise('hideLoading'),
   enableAlertBeforeUnload: _.mockAsync('enableAlertBeforeUnload'),
@@ -236,7 +244,7 @@ module.exports = {
   hideTabBar: _.mockAsyncAndPromise('hideTabBar'),
 
   // 界面 - 字体
-  loadFontFace: _.mockAsyncAndPromise('loadFontFace', { status: 'loaded' }),
+  loadFontFace: _.mockAsyncAndPromise('loadFontFace', {status: 'loaded'}),
 
   // 界面 - 下拉刷新
   stopPullDownRefresh: _.mockAsyncAndPromise('stopPullDownRefresh'),
@@ -291,10 +299,10 @@ module.exports = {
 
     derived(updaterWorklet) {
       if (typeof updaterWorklet !== 'function') return
-      return { value: updaterWorklet() }
+      return {value: updaterWorklet()}
     },
 
-    shared: value => ({ value }),
+    shared: value => ({value}),
 
     decay(config) {
       if (config && config.clamp) return config.clamp[0] || 0
@@ -317,21 +325,19 @@ module.exports = {
       },
       ease: t => MockBezier(0.42, 0, 1, 1)(t),
       elastic:
-        (bounciness = 1) =>
-        t =>
-          1 -
-          Math.pow(Math.cos((t * Math.PI) / 2), 3) *
+        (bounciness = 1) => t => 1 -
+          (Math.cos((t * Math.PI) / 2) ** 3) *
             Math.cos(t * bounciness * Math.PI),
       linear: t => t,
       quad: t => t * t,
       cubic: t => t * t * t,
-      poly: n => t => Math.pow(t, n),
+      poly: n => t => t ** n,
       bezier: (x1, y1, x2, y2) => ({
         factory: () => MockBezier(x1, y1, x2, y2),
       }),
       circle: t => 1 - Math.sqrt(1 - t * t),
       sin: t => 1 - Math.cos((t * Math.PI) / 2),
-      exp: t => Math.pow(2, 10 * (t - 1)),
+      exp: t => 2 ** (10 * (t - 1)),
       in: easing => easing,
       out: easing => t => 1 - easing(1 - t),
       inOut: easing => t => {
@@ -339,6 +345,29 @@ module.exports = {
         return 1 - easing((1 - t) * 2) / 2
       },
     },
+
+    spring(value, options, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return value
+    },
+
+    timing(value, options, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return value
+    },
+
+    delay: (delayTime, delayedAnimation) => delayedAnimation || 0,
+
+    repeat(animation, numberOfReps, reverse, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return animation || 0
+    },
+
+    sequence: animation => animation || 0,
+
+    runOnJS: func => (typeof func === 'function' ? func : () => {}),
+
+    runOnUI: func => (typeof func === 'function' ? func : () => {}),
   },
 
   // 网络 - 发起请求
@@ -400,14 +429,14 @@ module.exports = {
     keys: [],
     limitSize: 10240,
   }),
-  getStorage: _.mockAsync('getStorage', { data: '' }),
+  getStorage: _.mockAsync('getStorage', {data: ''}),
   createBufferURL: _.mockSync(''),
   clearStorageSync() {},
   clearStorage: _.mockAsync('clearStorage'),
   batchSetStorageSync() {},
   batchSetStorage: _.mockAsync('batchSetStorage'),
   batchGetStorageSync: _.mockSync([]),
-  batchGetStorage: _.mockAsync('batchGetStorage', { dataList: [] }),
+  batchGetStorage: _.mockAsync('batchGetStorage', {dataList: []}),
 
   // 数据缓存 - 周期性更新
   setBackgroundFetchToken: _.mockAsyncAndPromise('setBackgroundFetchToken'),
@@ -433,13 +462,314 @@ module.exports = {
   getExptInfoSync: _.mockSync({}),
 
   // XR-FRAME
-  // 暂不考虑支持
+  // 暂不支持
 
   // 画布
-  // TODO
+  createOffscreenCanvas: () => new OffscreenCanvas(),
+  createCanvasContext: () => new CanvasContext(),
+  canvasToTempFilePath: _.mockAsyncAndPromise('canvasToTempFilePath', {
+    tempFilePath: '',
+  }),
+  canvasPutImageData: _.mockAsyncAndPromise('canvasPutImageData'),
+  canvasGetImageData: _.mockAsyncAndPromise('canvasGetImageData', {
+    width: 100,
+    height: 100,
+    data: Uint8Array.from(0),
+  }),
 
-  // 媒体
-  // TODO
+  // 媒体 - 地图
+  createMapContext: () => new MapContext(),
+
+  // 媒体 - 图片
+  saveImageToPhotosAlbum: _.mockAsyncAndPromise('saveImageToPhotosAlbum'),
+  previewMedia: _.mockAsyncAndPromise('previewMedia'),
+  previewImage: _.mockAsyncAndPromise('previewImage'),
+  getImageInfo: _.mockAsyncAndPromise('getImageInfo', {
+    width: 100,
+    height: 100,
+    path: '/',
+    orientation: 'up',
+    type: 'jpeg',
+  }),
+  editImage: _.mockAsync('editImage', {tempFilePath: '/'}),
+  cropImage: _.mockAsync('cropImage', {tempFilePath: '/'}),
+  compressImage: _.mockAsyncAndPromise('compressImage', {tempFilePath: '/'}),
+  chooseMessageFile: _.mockAsyncAndPromise('chooseMessageFile', {
+    tempFiles: [],
+  }),
+  chooseImage: _.mockAsyncAndPromise('chooseImage', {
+    tempFilePaths: [],
+    tempFiles: [],
+  }),
+
+  // 媒体 - 视频
+  saveVideoToPhotosAlbum: _.mockAsyncAndPromise('saveVideoToPhotosAlbum'),
+  openVideoEditor: _.mockAsync('openVideoEditor', {
+    duration: 0,
+    size: 1024,
+    tempFilePath: '',
+    tempThumbPath: '',
+  }),
+  getVideoInfo: _.mockAsyncAndPromise('getVideoInfo', {
+    orientation: 'up',
+    type: 'mp4',
+    duration: 0,
+    size: 0,
+    height: 0,
+    width: 0,
+    fps: 0,
+    bitrate: 0,
+  }),
+  createVideoContext: () => new VideoContext(),
+  compressVideo: _.mockAsyncAndPromise('compressVideo', {
+    tempFilePath: '',
+    size: 1024,
+  }),
+  chooseVideo: _.mockAsyncAndPromise('chooseVideo', {
+    tempFilePath: '',
+    duration: 0,
+    size: 1024,
+    height: 0,
+    width: 0,
+  }),
+  chooseMedia: _.mockAsyncAndPromise('chooseMedia', {
+    tempFiles: [],
+    type: 'mix',
+  }),
+
+  // 媒体 - 音频
+  stopVoice: _.mockAsyncAndPromise('stopVoice'),
+  setInnerAudioOption: _.mockAsyncAndPromise('setInnerAudioOption'),
+  playVoice: _.mockAsyncAndPromise('playVoice'),
+  pauseVoice: _.mockAsyncAndPromise('pauseVoice'),
+  getAvailableAudioSources: _.mockAsyncAndPromise('getAvailableAudioSources', {
+    audioSources: ['auto'],
+  }),
+  createWebAudioContext: _.mockSync({
+    state: '',
+    onstatechange() {},
+    currentTime: 0,
+    WebAudioContextNode: {
+      positionX: 0,
+      positionY: 0,
+      positionZ: 0,
+      forwardX: 0,
+      forwardY: 0,
+      forwardZ: 0,
+      upX: 0,
+      upY: 0,
+      upZ: 0,
+      setOrientation() {},
+      setPosition() {},
+    },
+    listener() {},
+    sampleRate: 0,
+    close: _.mockSync(Promise.resolve({})),
+    createAnalyser: _.mockSync(null),
+    createBiquadFilter: _.mockSync(null),
+    createBuffer: _.mockSync(audioBuffer),
+    createBufferSource: _.mockSync(null),
+    createChannelMerger: _.mockSync(null),
+    createChannelSplitter: _.mockSync(null),
+    createConstantSource: _.mockSync(null),
+    createDelay: _.mockSync(null),
+    createDynamicsCompressor: _.mockSync(null),
+    createGain: _.mockSync(null),
+    createIIRFilter: _.mockSync(null),
+    createOscillator: _.mockSync(null),
+    createPanner: _.mockSync(null),
+    createPeriodicWave: _.mockSync(null),
+    createScriptProcessor: _.mockSync(null),
+    createWaveShaper: _.mockSync(null),
+    decodeAudioData: _.mockSync(audioBuffer),
+    resume: _.mockSync(Promise.resolve({})),
+    suspend: _.mockSync(Promise.resolve({})),
+  }),
+  createMediaAudioPlayer: _.mockSync({
+    volume: 0,
+    addAudioSource: _.mockSync(Promise.resolve({})),
+    destroy: _.mockSync(Promise.resolve({})),
+    removeAudioSource: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
+  createInnerAudioContext: _.mockSync({
+    src: '',
+    startTime: 0,
+    autoplay: true,
+    loop: true,
+    obeyMuteSwitch: true,
+    volume: 0,
+    playbackRate: 0,
+    duration: 0,
+    currentTime: 0,
+    paused: true,
+    buffered: 0,
+    referrerPolicy: '',
+    destroy() {},
+    offCanplay() {},
+    offEnded() {},
+    offError() {},
+    offPause() {},
+    offPlay() {},
+    offSeeked() {},
+    offSeeking() {},
+    offStop() {},
+    offTimeUpdate() {},
+    offWaiting() {},
+    onCanplay() {},
+    onEnded() {},
+    onError() {},
+    onPause() {},
+    onPlay() {},
+    onSeeked() {},
+    onSeeking() {},
+    onStop() {},
+    onTimeUpdate() {},
+    onWaiting() {},
+    pause() {},
+    play() {},
+    seek() {},
+    stop() {},
+  }),
+  createAudioContext: _.mockSync({
+    pause() {},
+    play() {},
+    seek() {},
+    setSrc() {},
+  }),
+
+  // 媒体 - 背景音频
+  stopBackgroundAudio: _.mockAsyncAndPromise('stopBackgroundAudio'),
+  seekBackgroundAudio: _.mockAsyncAndPromise('seekBackgroundAudio'),
+  playBackgroundAudio: _.mockAsyncAndPromise('playBackgroundAudio'),
+  pauseBackgroundAudio: _.mockAsyncAndPromise('pauseBackgroundAudio'),
+  onBackgroundAudioStop() {},
+  onBackgroundAudioPlay() {},
+  onBackgroundAudioPause() {},
+  getBackgroundAudioPlayerState: _.mockAsyncAndPromise(
+    'getBackgroundAudioPlayerState',
+    {
+      duration: 0,
+      currentPosition: 0,
+      status: 0,
+      downloadPercent: 0,
+      dataUrl: '',
+    }
+  ),
+  getBackgroundAudioManager: _.mockSync({
+    src: '',
+    startTime: 0,
+    title: '',
+    epname: '',
+    singer: '',
+    coverImgUrl: '',
+    webUrl: '',
+    protocol: '',
+    playbackRate: 0,
+    duration: 0,
+    currentTime: 0,
+    paused: true,
+    buffered: 0,
+    referrerPolicy: '',
+    onCanplay() {},
+    onEnded() {},
+    onError() {},
+    onNext() {},
+    onPause() {},
+    onPlay() {},
+    onPrev() {},
+    onSeeked() {},
+    onSeeking() {},
+    onStop() {},
+    onTimeUpdate() {},
+    onWaiting() {},
+    pause() {},
+    play() {},
+    seek() {},
+    stop() {},
+  }),
+
+  // 媒体 - 实时音视频
+  createLivePusherContext: () => new LivePusherContext(),
+  createLivePlayerContext: () => new LivePlayerContext(),
+
+  // 媒体 - 录音
+  stopRecord: _.mockAsyncAndPromise('stopRecord'),
+  startRecord: _.mockAsyncAndPromise('startRecord', {tempFilePath: '/'}),
+  getRecorderManager: _.mockSync({
+    onError() {},
+    onFrameRecorded() {},
+    onInterruptionBegin() {},
+    onInterruptionEnd() {},
+    onPause() {},
+    onResume() {},
+    onStart() {},
+    onStop() {},
+    pause() {},
+    resume() {},
+    start() {},
+    stop() {},
+  }),
+
+  // 媒体 - 相机
+  createCameraContext: () => new CameraContext(),
+
+  // 媒体 - 音视频合成
+  createMediaContainer: _.mockSync({
+    addTrack() {},
+    destroy() {},
+    export() {},
+    extractDataSource() {},
+    removeTrack() {},
+  }),
+
+  // 媒体 - 实时语音
+  updateVoIPChatMuteConfig: _.mockAsyncAndPromise('updateVoIPChatMuteConfig'),
+  subscribeVoIPVideoMembers: _.mockAsyncAndPromise('subscribeVoIPVideoMembers'),
+  setEnable1v1Chat: _.mockAsyncAndPromise('setEnable1v1Chat'),
+  onVoIPVideoMembersChanged() {},
+  onVoIPChatStateChanged() {},
+  onVoIPChatSpeakersChanged() {},
+  onVoIPChatMembersChanged() {},
+  onVoIPChatInterrupted() {},
+  offVoIPVideoMembersChanged() {},
+  offVoIPChatStateChanged() {},
+  offVoIPChatSpeakersChanged() {},
+  offVoIPChatMembersChanged() {},
+  offVoIPChatInterrupted() {},
+  joinVoIPChat: _.mockAsyncAndPromise('joinVoIPChat', {openIdList: []}),
+  join1v1Chat: _.mockAsyncAndPromise('join1v1Chat'),
+  exitVoIPChat: _.mockAsyncAndPromise('exitVoIPChat'),
+
+  // 媒体 - 画面录制器
+  createMediaRecorder: _.mockSync({
+    destroy: _.mockSync(Promise.resolve({})),
+    off() {},
+    on() {},
+    pause: _.mockSync(Promise.resolve({})),
+    requestFrame: _.mockSync(Promise.resolve({})),
+    resume: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
+
+  // 媒体 - 视频解码器
+  createVideoDecoder: _.mockSync({
+    getFrameData: _.mockSync({
+      width: 0,
+      height: 0,
+      data: Uint8Array.from(0).buffer,
+      pkPts: 0,
+      pkDts: 0,
+    }),
+    off() {},
+    on() {},
+    remove: _.mockSync(Promise.resolve({})),
+    seek: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
 
   // 位置
   stopLocationUpdate: _.mockAsyncAndPromise('stopLocationUpdate'),
@@ -496,11 +826,11 @@ module.exports = {
     fstatSync: _.mockSync(stats),
     ftruncate: _.mockAsync('ftruncate'),
     ftruncateSync() {},
-    getFileInfo: _.mockAsync('getFileInfo', { size: 1024 }),
-    getSavedFileList: _.mockAsync('getSavedFileList', { fileList: [] }),
+    getFileInfo: _.mockAsync('getFileInfo', {size: 1024}),
+    getSavedFileList: _.mockAsync('getSavedFileList', {fileList: []}),
     mkdir: _.mockAsync('mkdir'),
     mkdirSync() {},
-    open: _.mockAsync('open', { fd: '' }),
+    open: _.mockAsync('open', {fd: ''}),
     openSync: _.mockSync(''),
     read: _.mockAsync('read', {
       bytesRead: 0,
@@ -510,38 +840,38 @@ module.exports = {
       data: Uint8Array.from([]).buffer,
     }),
     readCompressedFileSync: _.mockSync(Uint8Array.from([]).buffer),
-    readdir: _.mockAsync('readdir', { files: [] }),
+    readdir: _.mockAsync('readdir', {files: []}),
     readdirSync: _.mockSync([]),
-    readFile: _.mockAsync('readFile', { data: '' }),
+    readFile: _.mockAsync('readFile', {data: ''}),
     readFileSync: _.mockSync(''),
     readSync: _.mockSync({
       bytesRead: 0,
       arrayBuffer: Uint8Array.from([]).buffer,
     }),
-    readZipEntry: _.mockAsync('readZipEntry', { entries: {} }),
+    readZipEntry: _.mockAsync('readZipEntry', {entries: {}}),
     removeSavedFile: _.mockAsync('removeSavedFile'),
     rename: _.mockAsync('rename'),
     renameSync() {},
     rmdir: _.mockAsync('rmdir'),
     rmdirSync() {},
-    saveFile: _.mockAsync('saveFile', { savedFilePath: '' }),
+    saveFile: _.mockAsync('saveFile', {savedFilePath: ''}),
     saveFileSync: _.mockSync(''),
-    stat: _.mockAsync('stat', { stats }),
+    stat: _.mockAsync('stat', {stats}),
     statSync: _.mockSync(stats),
     truncate: _.mockAsync('truncate'),
     truncateSync() {},
     unlink: _.mockAsync('unlink'),
     unlinkSync() {},
     unzip: _.mockAsync('unzip'),
-    write: _.mockAsync('write', { bytesWritten: 0 }),
+    write: _.mockAsync('write', {bytesWritten: 0}),
     writeFile: _.mockAsync('writeFile'),
     writeFileSync() {},
-    writeSync: _.mockSync({ bytesWritten: 0 }),
+    writeSync: _.mockSync({bytesWritten: 0}),
   }),
 
   // 开放接口 - 登录
-  pluginLogin: _.mockAsync('pluginLogin', { code: '123456789' }),
-  login: _.mockAsync('login', { code: '123456789' }),
+  pluginLogin: _.mockAsync('pluginLogin', {code: '123456789'}),
+  login: _.mockAsync('login', {code: '123456789'}),
   checkSession: _.mockAsyncAndPromise('checkSession'),
 
   // 开放接口 - 帐号信息
@@ -581,7 +911,7 @@ module.exports = {
 
   // 开放接口 - 卡券
   openCard: _.mockAsyncAndPromise('openCard'),
-  addCard: _.mockAsyncAndPromise('addCard', { cardList: [] }),
+  addCard: _.mockAsyncAndPromise('addCard', {cardList: []}),
 
   // 开放接口 - 发票
   chooseInvoiceTitle: _.mockAsyncAndPromise('chooseInvoiceTitle', {
@@ -593,7 +923,7 @@ module.exports = {
     bankName: '招商银行股份有限公司广州市体育东路支行',
     bankAccount: '1209 0928 2210 301',
   }),
-  chooseInvoice: _.mockAsyncAndPromise('chooseInvoice', { invoiceInfo: '{}' }),
+  chooseInvoice: _.mockAsyncAndPromise('chooseInvoice', {invoiceInfo: '{}'}),
 
   // 开放接口 - 生物认证
   startSoterAuthentication: _.mockAsyncAndPromise('startSoterAuthentication', {
@@ -604,11 +934,11 @@ module.exports = {
   }),
   checkIsSupportSoterAuthentication: _.mockAsyncAndPromise(
     'checkIsSupportSoterAuthentication',
-    { supportMode: ['fingerPrint'] }
+    {supportMode: ['fingerPrint']}
   ),
   checkIsSoterEnrolledInDevice: _.mockAsyncAndPromise(
     'checkIsSoterEnrolledInDevice',
-    { isEnrolled: true }
+    {isEnrolled: true}
   ),
 
   // 开放接口 - 微信运动
@@ -678,7 +1008,7 @@ module.exports = {
 
   // 开放接口 - 音视频通话
   requestDeviceVoIP: _.mockAsync('requestDeviceVoIP'),
-  getDeviceVoIPList: _.mockAsync('getDeviceVoIPList', { list: [] }),
+  getDeviceVoIPList: _.mockAsync('getDeviceVoIPList', {list: []}),
 
   // 开放接口 - 微信群
   getGroupEnterInfo: _.mockAsync('getGroupEnterInfo', {
@@ -690,11 +1020,265 @@ module.exports = {
   // 开放接口 - 微信客服
   openCustomerServiceChat: _.mockAsync('openCustomerServiceChat'),
 
-  // 设备
-  // TODO
+  // 设备 - 蓝牙 - 通用
+  stopBluetoothDevicesDiscovery: _.mockAsyncAndPromise(
+    'stopBluetoothDevicesDiscovery'
+  ),
+  startBluetoothDevicesDiscovery: _.mockAsyncAndPromise(
+    'startBluetoothDevicesDiscovery'
+  ),
+  openBluetoothAdapter: _.mockAsyncAndPromise('openBluetoothAdapter'),
+  onBluetoothDeviceFound() {},
+  onBluetoothAdapterStateChange() {},
+  offBluetoothDeviceFound() {},
+  offBluetoothAdapterStateChange() {},
+  makeBluetoothPair: _.mockAsyncAndPromise('makeBluetoothPair'),
+  isBluetoothDevicePaired: _.mockAsyncAndPromise('isBluetoothDevicePaired'),
+  getConnectedBluetoothDevices: _.mockAsyncAndPromise(
+    'getConnectedBluetoothDevices',
+    {devices: []}
+  ),
+  getBluetoothDevices: _.mockAsyncAndPromise('getBluetoothDevices', {
+    devices: [],
+  }),
+  getBluetoothAdapterState: _.mockAsyncAndPromise('getBluetoothAdapterState', {
+    discovering: true,
+    available: true,
+  }),
+  closeBluetoothAdapter: _.mockAsyncAndPromise('closeBluetoothAdapter'),
+
+  // 设备 - 蓝牙 - 低功耗中心设备
+  writeBLECharacteristicValue: _.mockAsyncAndPromise(
+    'writeBLECharacteristicValue'
+  ),
+  setBLEMTU: _.mockAsyncAndPromise('setBLEMTU', {mtu: 0}),
+  readBLECharacteristicValue: _.mockAsyncAndPromise(
+    'readBLECharacteristicValue'
+  ),
+  onBLEMTUChange() {},
+  onBLEConnectionStateChange() {},
+  onBLECharacteristicValueChange() {},
+  offBLEMTUChange() {},
+  offBLEConnectionStateChange() {},
+  offBLECharacteristicValueChange() {},
+  notifyBLECharacteristicValueChange: _.mockAsyncAndPromise(
+    'notifyBLECharacteristicValueChange'
+  ),
+  getBLEMTU: _.mockAsyncAndPromise('getBLEMTU', {mtu: 0}),
+  getBLEDeviceServices: _.mockAsyncAndPromise('getBLEDeviceServices', {
+    services: [],
+  }),
+  getBLEDeviceRSSI: _.mockAsyncAndPromise('getBLEDeviceRSSI', {RSSI: 0}),
+  getBLEDeviceCharacteristics: _.mockAsyncAndPromise(
+    'getBLEDeviceCharacteristics',
+    {characteristics: []}
+  ),
+  createBLEConnection: _.mockAsyncAndPromise('createBLEConnection'),
+  closeBLEConnection: _.mockAsyncAndPromise('closeBLEConnection'),
+
+  // 设备 - 蓝牙 - 低功耗外围设备
+  onBLEPeripheralConnectionStateChanged() {},
+  offBLEPeripheralConnectionStateChanged() {},
+  createBLEPeripheralServer: _.mockAsyncAndPromise(
+    'createBLEPeripheralServer',
+    {
+      server: {
+        addService: _.mockAsync('addService'),
+        close: _.mockAsync('close'),
+        removeService: _.mockAsync('removeService'),
+        startAdvertising: _.mockAsync('startAdvertising'),
+        stopAdvertising: _.mockAsync('stopAdvertising'),
+        writeCharacteristicValue: _.mockAsync('writeCharacteristicValue'),
+        onCharacteristicWriteRequest() {},
+        offCharacteristicWriteRequest() {},
+        onCharacteristicReadRequest() {},
+        offCharacteristicReadRequest() {},
+        onCharacteristicSubscribed() {},
+        offCharacteristicSubscribed() {},
+        onCharacteristicUnsubscribed() {},
+        offCharacteristicUnsubscribed() {},
+      },
+    }
+  ),
+
+  // 设备 - 蓝牙 - 信标(Beacon)
+  stopBeaconDiscovery: _.mockAsyncAndPromise('stopBeaconDiscovery'),
+  startBeaconDiscovery: _.mockAsyncAndPromise('startBeaconDiscovery'),
+  onBeaconUpdate() {},
+  onBeaconServiceChange() {},
+  offBeaconUpdate() {},
+  offBeaconServiceChange() {},
+  getBeacons: _.mockAsyncAndPromise('getBeacons', {beacons: []}),
+
+  // 设备 - NFC 读写
+  getNFCAdapter: _.mockSync({
+    startDiscovery: _.mockAsync('startDiscovery'),
+    stopDiscovery: _.mockAsync('stopDiscovery'),
+    getNdef: _.mockSync(undefined),
+    getNfcA: _.mockSync(undefined),
+    getNfcB: _.mockSync(undefined),
+    getIsoDep: _.mockSync(undefined),
+    getNfcF: _.mockSync(undefined),
+    getNfcV: _.mockSync(undefined),
+    getMifareClassic: _.mockSync(undefined),
+    getMifareUltralight: _.mockSync(undefined),
+    onDiscovered() {},
+    offDiscovered() {},
+  }),
+
+  // 设备 - Wi-Fi
+  stopWifi: _.mockAsyncAndPromise('stopWifi'),
+  startWifi: _.mockAsyncAndPromise('startWifi'),
+  setWifiList: _.mockAsyncAndPromise('setWifiList'),
+  onWifiConnectedWithPartialInfo() {},
+  onWifiConnected() {},
+  onGetWifiList() {},
+  offWifiConnectedWithPartialInfo() {},
+  offWifiConnected() {},
+  offGetWifiList() {},
+  getWifiList: _.mockAsyncAndPromise('getWifiList'),
+  getConnectedWifi: _.mockAsyncAndPromise('getConnectedWifi', {
+    wifi: {
+      SSID: '',
+      BSSID: '',
+      secure: false,
+      signalStrength: 0,
+      frequency: 0,
+    },
+  }),
+  connectWifi: _.mockAsyncAndPromise('connectWifi'),
+
+  // 设备 - 日历
+  addPhoneRepeatCalendar: _.mockAsyncAndPromise('addPhoneRepeatCalendar'),
+  addPhoneCalendar: _.mockAsyncAndPromise('addPhoneCalendar'),
+
+  // 设备 - 联系人
+  chooseContact: _.mockAsync('chooseContact', {
+    phoneNumber: '123456789',
+    displayName: 'june',
+  }),
+  addPhoneContact: _.mockAsyncAndPromise('addPhoneContact'),
+
+  // 设备 - 无障碍
+  checkIsOpenAccessibility: _.mockAsyncAndPromise('checkIsOpenAccessibility', {
+    open: true,
+  }),
+
+  // 设备 - 电量
+  getBatteryInfoSync: _.mockSync({
+    level: 100,
+    isCharging: false,
+  }),
+  getBatteryInfo: _.mockAsyncAndPromise('getBatteryInfo', {
+    level: 100,
+    isCharging: false,
+  }),
+
+  // 设备 - 剪贴板
+  setClipboardData: _.mockAsyncAndPromise('setClipboardData'),
+  getClipboardData: _.mockAsyncAndPromise('getClipboardData', {data: ''}),
+
+  // 设备 - NFC
+  stopHCE: _.mockAsyncAndPromise('stopHCE'),
+  startHCE: _.mockAsyncAndPromise('startHCE'),
+  sendHCEMessage: _.mockAsyncAndPromise('sendHCEMessage'),
+  onHCEMessage() {},
+  offHCEMessage() {},
+  getHCEState: _.mockAsyncAndPromise('getHCEState'),
+
+  // 设备 - 网络
+  onNetworkWeakChange() {},
+  onNetworkStatusChange() {},
+  offNetworkWeakChange() {},
+  offNetworkStatusChange() {},
+  getNetworkType: _.mockAsyncAndPromise('getNetworkType', {
+    networkType: 'wifi',
+    signalStrength: 0,
+    hasSystemProxy: false,
+  }),
+  getLocalIPAddress: _.mockAsync('getLocalIPAddress', {
+    localip: '192.168.0.1',
+    netmask: '255.255.255.0',
+  }),
+
+  // 设备 - 加密
+  getRandomValues: userCryptoManager.getRandomValues,
+
+  // 设备 - 屏幕
+  setVisualEffectOnCapture: _.mockAsync('setVisualEffectOnCapture'),
+  setScreenBrightness: _.mockAsyncAndPromise('setScreenBrightness'),
+  setKeepScreenOn: _.mockAsyncAndPromise('setKeepScreenOn'),
+  onUserCaptureScreen() {},
+  onScreenRecordingStateChanged() {},
+  offUserCaptureScreen() {},
+  offScreenRecordingStateChanged() {},
+  getScreenRecordingState: _.mockAsync('getScreenRecordingState', {
+    state: 'off',
+  }),
+  getScreenBrightness: _.mockAsyncAndPromise('getScreenBrightness', {
+    value: 0,
+  }),
+
+  // 设备 - 键盘
+  onKeyboardHeightChange() {},
+  offKeyboardHeightChange() {},
+  hideKeyboard: _.mockAsyncAndPromise('hideKeyboard'),
+  getSelectedTextRange: _.mockAsyncAndPromise('getSelectedTextRange', {
+    start: 0,
+    end: 0,
+  }),
+
+  // 设备 - 电话
+  makePhoneCall: _.mockAsyncAndPromise('makePhoneCall'),
+
+  // 设备 - 加速计
+  stopAccelerometer: _.mockAsyncAndPromise('stopAccelerometer'),
+  startAccelerometer: _.mockAsyncAndPromise('startAccelerometer'),
+  onAccelerometerChange() {},
+  offAccelerometerChange() {},
+
+  // 设备 - 罗盘
+  stopCompass: _.mockAsyncAndPromise('stopCompass'),
+  startCompass: _.mockAsyncAndPromise('startCompass'),
+  onCompassChange() {},
+  offCompassChange() {},
+
+  // 设备 - 设备方向
+  stopDeviceMotionListening: _.mockAsyncAndPromise('stopDeviceMotionListening'),
+  startDeviceMotionListening: _.mockAsyncAndPromise(
+    'startDeviceMotionListening'
+  ),
+  onDeviceMotionChange() {},
+  offDeviceMotionChange() {},
+
+  // 设备 - 陀螺仪
+  stopGyroscope: _.mockAsyncAndPromise('stopGyroscope'),
+  startGyroscope: _.mockAsyncAndPromise('startGyroscope'),
+  onGyroscopeChange() {},
+  offGyroscopeChange() {},
+
+  // 设备 - 内存
+  onMemoryWarning() {},
+  offMemoryWarning() {},
+
+  // 设备 - 扫码
+  scanCode: _.mockAsyncAndPromise('scanCode', {
+    result: '',
+    scanType: 'QR_CODE',
+    charSet: 'utf8',
+    path: '/',
+    rawData: '',
+  }),
+
+  // 设备 - 短信
+  sendSms: _.mockAsync('sendSms'),
+
+  // 设备 - 振动
+  vibrateShort: _.mockAsyncAndPromise('vibrateShort'),
+  vibrateLong: _.mockAsyncAndPromise('vibrateLong'),
 
   // AI - AI 推理
-  getInferenceEnvInfo: _.mockAsync('getInferenceEnvInfo', { ver: '' }),
+  getInferenceEnvInfo: _.mockAsync('getInferenceEnvInfo', {ver: ''}),
   createInferenceSession: _.mockSync({
     onLoad() {},
     offLoad() {},
@@ -711,13 +1295,13 @@ module.exports = {
     config: {
       version: 'v2',
       track: {
-        plane: { mode: 3 },
+        plane: {mode: 3},
         marker: false,
         OSD: false,
-        face: { mode: 1 },
-        OCR: { mode: 1 },
-        body: { mode: 1 },
-        hand: { mode: 1 },
+        face: {mode: 1},
+        OCR: {mode: 1},
+        body: {mode: 1},
+        hand: {mode: 1},
         threeDof: false,
       },
       gl: undefined,
@@ -767,12 +1351,16 @@ module.exports = {
   stopFaceDetect: _.mockAsync('stopFaceDetect'),
   initFaceDetect: _.mockAsync('initFaceDetect'),
   faceDetect: _.mockAsync('faceDetect', {
-    detectRect: { height: 0, width: 0, originX: 0, originY: 0 },
+    detectRect: {
+      height: 0, width: 0, originX: 0, originY: 0
+    },
     x: -1,
     y: -1,
     pointArray: [],
-    confArray: { global: 1, leftEye: 1, rightEye: 1, mouth: 1, nose: 1 },
-    angleArray: { pitch: 0, yaw: 0, roll: 0 },
+    confArray: {
+      global: 1, leftEye: 1, rightEye: 1, mouth: 1, nose: 1
+    },
+    angleArray: {pitch: 0, yaw: 0, roll: 0},
     faceInfo: [],
   }),
 
@@ -787,21 +1375,13 @@ module.exports = {
 
   // WXML
   createSelectorQuery: () => new SelectorQuery(),
-  createIntersectionObserver: (compInst, options) =>
-    compInst.createIntersectionObserver(options),
+  createIntersectionObserver: (compInst, options) => compInst.createIntersectionObserver(options),
 
   // 第三方平台
   getExtConfigSync: () => ({}),
-  getExtConfig: _.mockAsyncAndPromise('getExtConfig', { extConfig: {} }),
+  getExtConfig: _.mockAsyncAndPromise('getExtConfig', {extConfig: {}}),
 
   // 广告
-  // TODO
-
-  // // open
-  // ...openApi,
-
-  // // map
-  // createMapContext(...args) {
-  //   return new MapContext(...args)
-  // },
+  createRewardedVideoAd: () => ad,
+  createInterstitialAd: () => ad,
 }

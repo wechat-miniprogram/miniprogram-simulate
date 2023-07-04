@@ -4,13 +4,17 @@ class NetworkTask {
   }
 
   offChunkReceived() {}
+
   offHeadersReceived() {}
+
   onChunkReceived() {}
+
   onHeadersReceived() {}
 }
 
 class RequestTask extends NetworkTask {
   constructor(options = {}) {
+    super()
     const res = {
       errMsg: 'request:ok',
       data: {},
@@ -28,6 +32,7 @@ class RequestTask extends NetworkTask {
 
 class DownloadTask extends NetworkTask {
   constructor(options = {}) {
+    super()
     const res = {
       errMsg: 'downloadFile:ok',
       tempFilePath: '/',
@@ -44,6 +49,7 @@ class DownloadTask extends NetworkTask {
 
 class UploadTask extends NetworkTask {
   constructor(options = {}) {
+    super()
     const res = {
       errMsg: 'uploadFile:ok',
       data: {},
@@ -68,30 +74,47 @@ class SocketTask {
   }
 
   send() {}
+
   close() {}
+
   onOpen() {}
+
   onClose() {}
+
   onError() {}
+
   onMessage() {}
 }
 
 class Socket {
   connect() {}
+
   write() {}
+
   close() {}
+
   onClose() {}
+
   offClose() {}
+
   onError() {}
+
   offError() {}
+
   onMessage() {}
+
   offMessage() {}
 }
 
 class TCPSocket extends Socket {
   bindWifi() {}
+
   onConnect() {}
+
   offConnect() {}
+
   onBindWifi() {}
+
   offBindWifi() {}
 }
 
@@ -101,8 +124,11 @@ class UDPSocket extends Socket {
   }
 
   setTTL() {}
+
   send() {}
+
   onListening() {}
+
   offListening() {}
 }
 

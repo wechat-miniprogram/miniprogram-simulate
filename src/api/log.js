@@ -1,12 +1,28 @@
 class LogManager {
   debug() {}
+
   info() {}
+
   log() {}
+
+  warn() {}
+}
+
+class RealtimeTagLogManager {
+  addFilterMsg() {}
+
+  error() {}
+
+  info() {}
+
+  setFilterMsg() {}
+
   warn() {}
 }
 
 class RealtimeLogManager {
   addFilterMsg() {}
+
   error() {}
 
   getCurrentState() {
@@ -19,21 +35,15 @@ class RealtimeLogManager {
   }
 
   in() {}
+
   info() {}
+
   setFilterMsg() {}
 
   tag() {
     return new RealtimeTagLogManager()
   }
 
-  warn() {}
-}
-
-class RealtimeTagLogManager {
-  addFilterMsg() {}
-  error() {}
-  info() {}
-  setFilterMsg() {}
   warn() {}
 }
 

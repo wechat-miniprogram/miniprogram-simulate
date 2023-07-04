@@ -1,13 +1,13 @@
 Component({
-    properties: {
-        prop: {
-            type: String,
-            value: 'comp2.properties'
-        },
+  properties: {
+    prop: {
+      type: String,
+      value: 'comp2.properties'
     },
-    methods: {
-        getStr() {
-            return 'comp2'
-        }
+  },
+  methods: {
+    getStr() {
+      return 'comp2'
     }
+  }
 })

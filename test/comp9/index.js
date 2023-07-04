@@ -1,45 +1,45 @@
 Component({
-    options: {
-        virtualHost: true,
+  options: {
+    virtualHost: true,
+  },
+  properties: {
+    hasChild: {
+      type: Boolean,
+      value: false,
     },
-    properties: {
-        hasChild: {
-            type: Boolean,
-            value: false,
-        },
-        prop: {
-            type: String,
-            value: 'index.properties',
-            observer(newVal, oldVal) {
-                this.setData({
-                    'observerArr[0]': newVal,
-                    'observerArr[1]': oldVal,
-                })
-            }
-        },
+    prop: {
+      type: String,
+      value: 'index.properties',
+      observer(newVal, oldVal) {
+        this.setData({
+          'observerArr[0]': newVal,
+          'observerArr[1]': oldVal,
+        })
+      }
     },
-    data: {
-        observerArr: [],
+  },
+  data: {
+    observerArr: [],
+  },
+  observers: {
+    prop(value) {
+      this.setData({
+        'observerArr[2]': value,
+        'observerArr[3]': this.getStr(),
+      })
     },
-    observers: {
-        prop(value) {
-            this.setData({
-                'observerArr[2]': value,
-                'observerArr[3]': this.getStr(),
-            })
-        },
+  },
+  methods: {
+    getStr() {
+      return 'observers'
+    }
+  },
+  pageLifetimes: {
+    show(args) {
+      this.setData({
+        'observerArr[4]': 'pageShow',
+        'observerArr[5]': args,
+      })
     },
-    methods: {
-        getStr() {
-            return 'observers'
-        }
-    },
-    pageLifetimes: {
-        show(args) {
-            this.setData({
-                'observerArr[4]': 'pageShow',
-                'observerArr[5]': args,
-            })
-        },
-    },
+  },
 })

@@ -82,14 +82,14 @@ window["simulate"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 59);
+/******/ 	return __webpack_require__(__webpack_require__.s = 60);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(99);
+module.exports = __webpack_require__(100);
 
 
 /***/ }),
@@ -99,7 +99,7 @@ module.exports = __webpack_require__(99);
 "use strict";
 
 
-module.exports = __webpack_require__(97);
+module.exports = __webpack_require__(98);
 
 
 /***/ }),
@@ -2250,13 +2250,13 @@ function getEnv() {
  */
 function setNodeJsEnv() {
     env = 'nodejs'
-    fs = __webpack_require__(71)
+    fs = __webpack_require__(72)
     // eslint-disable-next-line import/no-dynamic-require
-    compiler = __webpack_require__(14)(compilerName)
+    compiler = __webpack_require__(13)(compilerName)
     runJs = filePath => {
         // eslint-disable-next-line import/no-dynamic-require
-        __webpack_require__(14)(filePath)
-        delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(14).resolve(filePath))]
+        __webpack_require__(13)(filePath)
+        delete __webpack_require__.c[/*require.resolve*/(__webpack_require__(13).resolve(filePath))]
     }
 }
 
@@ -2429,69 +2429,6 @@ module.exports.pack = packNumber;
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports) {
-
-/**
- * 异步方法通用部分
- */
-function runInAsync(options, res) {
-    setTimeout(() => {
-        if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function') options.success(res)
-        if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function') options.fail(res)
-        if (typeof options.complete === 'function') options.complete(res)
-    }, 0)
-}
-
-/**
- * 计算字符串字节数
- */
-function getSize(string) {
-    let total = 0
-    for (let i = 0, len = string.length; i < len; i++) {
-        const charCode = string.charCodeAt(i)
-        if (charCode <= 0x007f) {
-            total += 1
-        } else if (charCode <= 0x07ff) {
-            total += 2
-        } else if (charCode <= 0xffff) {
-            total += 3
-        } else {
-            total += 4
-        }
-    }
-
-    return total
-}
-
-/**
- * 快速模拟同步接口
- */
-function mockSync(ret) {
-    return () => ret
-}
-
-/**
- * 快速模拟异步接口
- */
-function mockAsync(name) {
-    return (options = {}) => {
-        const res = {
-            errMsg: `${name}:ok`,
-        }
-        runInAsync(options, res)
-    }
-}
-
-module.exports = {
-    runInAsync,
-    getSize,
-    mockSync,
-    mockAsync,
-}
-
-
-/***/ }),
-/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const exparser = __webpack_require__(4)
@@ -2681,7 +2618,7 @@ module.exports = {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports) {
 
 function webpackEmptyContext(req) {
@@ -2692,10 +2629,10 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 14;
+webpackEmptyContext.id = 13;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2704,7 +2641,7 @@ webpackEmptyContext.id = 14;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _node = _interopRequireDefault(__webpack_require__(16));
+var _node = _interopRequireDefault(__webpack_require__(15));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2798,7 +2735,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2811,7 +2748,7 @@ var _cssSyntaxError = _interopRequireDefault(__webpack_require__(34));
 
 var _stringifier = _interopRequireDefault(__webpack_require__(35));
 
-var _stringify = _interopRequireDefault(__webpack_require__(17));
+var _stringify = _interopRequireDefault(__webpack_require__(16));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3407,7 +3344,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3432,7 +3369,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3441,9 +3378,9 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _parser = _interopRequireDefault(__webpack_require__(89));
+var _parser = _interopRequireDefault(__webpack_require__(90));
 
-var _input = _interopRequireDefault(__webpack_require__(91));
+var _input = _interopRequireDefault(__webpack_require__(92));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3469,7 +3406,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3478,7 +3415,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _node = _interopRequireDefault(__webpack_require__(16));
+var _node = _interopRequireDefault(__webpack_require__(15));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3531,7 +3468,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3540,7 +3477,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(20));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3665,7 +3602,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3674,11 +3611,11 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(15));
+var _declaration = _interopRequireDefault(__webpack_require__(14));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(18));
 
-var _node = _interopRequireDefault(__webpack_require__(16));
+var _node = _interopRequireDefault(__webpack_require__(15));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4331,7 +4268,7 @@ var Container = /*#__PURE__*/function (_Node) {
     var _this = this;
 
     if (typeof nodes === 'string') {
-      var parse = __webpack_require__(18);
+      var parse = __webpack_require__(17);
 
       nodes = cleanSource(parse(nodes).nodes);
     } else if (Array.isArray(nodes)) {
@@ -4359,11 +4296,11 @@ var Container = /*#__PURE__*/function (_Node) {
 
       nodes = [new _declaration.default(nodes)];
     } else if (nodes.selector) {
-      var Rule = __webpack_require__(22);
+      var Rule = __webpack_require__(21);
 
       nodes = [new Rule(nodes)];
     } else if (nodes.name) {
-      var AtRule = __webpack_require__(20);
+      var AtRule = __webpack_require__(19);
 
       nodes = [new AtRule(nodes)];
     } else if (nodes.text) {
@@ -4446,7 +4383,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4455,7 +4392,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(20));
 
 var _list = _interopRequireDefault(__webpack_require__(43));
 
@@ -4569,7 +4506,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = function createCustomError(name, message) {
@@ -4592,7 +4529,7 @@ module.exports = function createCustomError(name, message) {
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4770,7 +4707,7 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports) {
 
 function noop(value) {
@@ -4886,7 +4823,7 @@ module.exports = function(node, options) {
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4998,10 +4935,10 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Tokenizer = __webpack_require__(103);
+var Tokenizer = __webpack_require__(104);
 var TAB = 9;
 var N = 10;
 var F = 12;
@@ -5505,55 +5442,55 @@ module.exports = parse;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    AnPlusB: __webpack_require__(127),
-    Atrule: __webpack_require__(128),
-    AtrulePrelude: __webpack_require__(129),
-    AttributeSelector: __webpack_require__(130),
-    Block: __webpack_require__(131),
-    Brackets: __webpack_require__(132),
-    CDC: __webpack_require__(133),
-    CDO: __webpack_require__(134),
-    ClassSelector: __webpack_require__(135),
-    Combinator: __webpack_require__(136),
-    Comment: __webpack_require__(137),
-    Declaration: __webpack_require__(138),
-    DeclarationList: __webpack_require__(139),
-    Dimension: __webpack_require__(140),
-    Function: __webpack_require__(141),
-    HexColor: __webpack_require__(142),
-    Identifier: __webpack_require__(143),
-    IdSelector: __webpack_require__(144),
-    MediaFeature: __webpack_require__(145),
-    MediaQuery: __webpack_require__(146),
-    MediaQueryList: __webpack_require__(147),
-    Nth: __webpack_require__(148),
-    Number: __webpack_require__(149),
-    Operator: __webpack_require__(150),
-    Parentheses: __webpack_require__(151),
-    Percentage: __webpack_require__(152),
-    PseudoClassSelector: __webpack_require__(153),
-    PseudoElementSelector: __webpack_require__(154),
-    Ratio: __webpack_require__(155),
-    Raw: __webpack_require__(156),
-    Rule: __webpack_require__(157),
-    Selector: __webpack_require__(158),
-    SelectorList: __webpack_require__(159),
-    String: __webpack_require__(160),
-    StyleSheet: __webpack_require__(161),
-    TypeSelector: __webpack_require__(162),
-    UnicodeRange: __webpack_require__(163),
-    Url: __webpack_require__(164),
-    Value: __webpack_require__(165),
-    WhiteSpace: __webpack_require__(166)
+    AnPlusB: __webpack_require__(128),
+    Atrule: __webpack_require__(129),
+    AtrulePrelude: __webpack_require__(130),
+    AttributeSelector: __webpack_require__(131),
+    Block: __webpack_require__(132),
+    Brackets: __webpack_require__(133),
+    CDC: __webpack_require__(134),
+    CDO: __webpack_require__(135),
+    ClassSelector: __webpack_require__(136),
+    Combinator: __webpack_require__(137),
+    Comment: __webpack_require__(138),
+    Declaration: __webpack_require__(139),
+    DeclarationList: __webpack_require__(140),
+    Dimension: __webpack_require__(141),
+    Function: __webpack_require__(142),
+    HexColor: __webpack_require__(143),
+    Identifier: __webpack_require__(144),
+    IdSelector: __webpack_require__(145),
+    MediaFeature: __webpack_require__(146),
+    MediaQuery: __webpack_require__(147),
+    MediaQueryList: __webpack_require__(148),
+    Nth: __webpack_require__(149),
+    Number: __webpack_require__(150),
+    Operator: __webpack_require__(151),
+    Parentheses: __webpack_require__(152),
+    Percentage: __webpack_require__(153),
+    PseudoClassSelector: __webpack_require__(154),
+    PseudoElementSelector: __webpack_require__(155),
+    Ratio: __webpack_require__(156),
+    Raw: __webpack_require__(157),
+    Rule: __webpack_require__(158),
+    Selector: __webpack_require__(159),
+    SelectorList: __webpack_require__(160),
+    String: __webpack_require__(161),
+    StyleSheet: __webpack_require__(162),
+    TypeSelector: __webpack_require__(163),
+    UnicodeRange: __webpack_require__(164),
+    Url: __webpack_require__(165),
+    Value: __webpack_require__(166),
+    WhiteSpace: __webpack_require__(167)
 };
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var lexer = __webpack_require__(1).lexer;
@@ -6069,7 +6006,7 @@ module.exports = {
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports) {
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -6226,17 +6163,115 @@ module.exports = {
 
 
 /***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+/**
+ * 异步方法通用部分
+ */
+function runInAsync(options, res) {
+  setTimeout(() => {
+    if (res.errMsg.indexOf(':ok') >= 0 && typeof options.success === 'function')
+      options.success(res)
+    if (res.errMsg.indexOf(':fail') >= 0 && typeof options.fail === 'function')
+      options.fail(res)
+    if (typeof options.complete === 'function') options.complete(res)
+  }, 0)
+}
+
+/**
+ * 计算字符串字节数
+ */
+function getSize(string) {
+  let total = 0
+  for (let i = 0, len = string.length; i < len; i++) {
+    const charCode = string.charCodeAt(i)
+    if (charCode <= 0x007f) {
+      total += 1
+    } else if (charCode <= 0x07ff) {
+      total += 2
+    } else if (charCode <= 0xffff) {
+      total += 3
+    } else {
+      total += 4
+    }
+  }
+
+  return total
+}
+
+/**
+ * 快速模拟同步接口
+ */
+function mockSync(ret) {
+  return () => ret
+}
+
+/**
+ * 快速模拟异步接口
+ */
+function mockAsync(name, data = {}) {
+  return (options = {}) => {
+    runInAsync(options, {
+      errMsg: `${name}:ok`,
+      errCode: 0,
+      errno: 0,
+      ...data,
+    })
+  }
+}
+
+/**
+ * 快速模拟支持 promise 的异步接口
+ */
+function mockAsyncAndPromise(name, data = {}, promiseData) {
+  return (options = {}) => {
+    const { success, fail, complete } = options
+    if (!(success || fail || complete)) {
+      // 支持 promise
+      return new Promise((resolve, reject) => {
+        options.success = res => resolve(promiseData || res)
+        options.fail = err => reject(err)
+
+        runInAsync(options, {
+          errMsg: `${name}:ok`,
+          errCode: 0,
+          errno: 0,
+          ...data,
+        })
+      })
+    }
+
+    runInAsync(options, {
+      errMsg: `${name}:ok`,
+      errCode: 0,
+      errno: 0,
+      ...data,
+    })
+  }
+}
+
+module.exports = {
+  runInAsync,
+  getSize,
+  mockSync,
+  mockAsync,
+  mockAsyncAndPromise,
+}
+
+
+/***/ }),
 /* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(61);
+module.exports = __webpack_require__(62);
 
 
 /***/ }),
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Expression = __webpack_require__(66)
+const Expression = __webpack_require__(67)
 
 module.exports = {
   /**
@@ -6503,9 +6538,9 @@ module.exports = IntersectionObserver
 exports.__esModule = true;
 exports.default = void 0;
 
-var _picocolors = _interopRequireDefault(__webpack_require__(74));
+var _picocolors = _interopRequireDefault(__webpack_require__(75));
 
-var _terminalHighlight = _interopRequireDefault(__webpack_require__(75));
+var _terminalHighlight = _interopRequireDefault(__webpack_require__(76));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7440,15 +7475,15 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _mapGenerator = _interopRequireDefault(__webpack_require__(76));
+var _mapGenerator = _interopRequireDefault(__webpack_require__(77));
 
-var _stringify2 = _interopRequireDefault(__webpack_require__(17));
+var _stringify2 = _interopRequireDefault(__webpack_require__(16));
 
-var _warnOnce = _interopRequireDefault(__webpack_require__(86));
+var _warnOnce = _interopRequireDefault(__webpack_require__(87));
 
-var _result = _interopRequireDefault(__webpack_require__(87));
+var _result = _interopRequireDefault(__webpack_require__(88));
 
-var _parse = _interopRequireDefault(__webpack_require__(18));
+var _parse = _interopRequireDefault(__webpack_require__(17));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7875,9 +7910,9 @@ module.exports = exports.default;
 
 
 
-var base64 = __webpack_require__(77)
-var ieee754 = __webpack_require__(78)
-var isArray = __webpack_require__(79)
+var base64 = __webpack_require__(78)
+var ieee754 = __webpack_require__(79)
+var isArray = __webpack_require__(80)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -9667,8 +9702,8 @@ function isnan (val) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 exports.SourceMapGenerator = __webpack_require__(40).SourceMapGenerator;
-exports.SourceMapConsumer = __webpack_require__(82).SourceMapConsumer;
-exports.SourceNode = __webpack_require__(85).SourceNode;
+exports.SourceMapConsumer = __webpack_require__(83).SourceMapConsumer;
+exports.SourceNode = __webpack_require__(86).SourceNode;
 
 
 /***/ }),
@@ -9685,7 +9720,7 @@ exports.SourceNode = __webpack_require__(85).SourceNode;
 var base64VLQ = __webpack_require__(41);
 var util = __webpack_require__(8);
 var ArraySet = __webpack_require__(42).ArraySet;
-var MappingList = __webpack_require__(81).MappingList;
+var MappingList = __webpack_require__(82).MappingList;
 
 /**
  * An instance of the SourceMapGenerator represents a source map which is
@@ -10143,7 +10178,7 @@ exports.SourceMapGenerator = SourceMapGenerator;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var base64 = __webpack_require__(80);
+var base64 = __webpack_require__(81);
 
 // A single base 64 digit can contain 6 bits of data. For the base 64 variable
 // length quantities we use in the source map spec, the first bit is the sign,
@@ -10485,7 +10520,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _container = _interopRequireDefault(__webpack_require__(21));
+var _container = _interopRequireDefault(__webpack_require__(20));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10611,7 +10646,7 @@ module.exports = exports.default;
 "use strict";
 
 
-var constants = __webpack_require__(24);
+var constants = __webpack_require__(23);
 var PUNCTUATION = constants.PUNCTUATION;
 var STOP_URL_RAW = constants.STOP_URL_RAW;
 var TYPE = constants.TYPE;
@@ -10870,8 +10905,8 @@ module.exports = {
 "use strict";
 
 
-var createCustomError = __webpack_require__(23);
-var generateGrammar = __webpack_require__(25);
+var createCustomError = __webpack_require__(22);
+var generateGrammar = __webpack_require__(24);
 
 function fromMatchResult(matchResult) {
     var tokens = matchResult.tokens;
@@ -10973,7 +11008,7 @@ module.exports = {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var createCustomError = __webpack_require__(23);
+var createCustomError = __webpack_require__(22);
 
 var SyntaxParseError = function(message, input, offset) {
     var error = createCustomError('SyntaxParseError', message);
@@ -11058,7 +11093,7 @@ module.exports = function(node, options, context) {
 /* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var parse = __webpack_require__(27);
+var parse = __webpack_require__(26);
 
 var MATCH = { type: 'Match' };
 var MISMATCH = { type: 'Mismatch' };
@@ -11529,7 +11564,7 @@ module.exports = {
 var base64VLQ = __webpack_require__(51);
 var util = __webpack_require__(9);
 var ArraySet = __webpack_require__(52).ArraySet;
-var MappingList = __webpack_require__(116).MappingList;
+var MappingList = __webpack_require__(117).MappingList;
 
 /**
  * An instance of the SourceMapGenerator represents a source map which is
@@ -11978,7 +12013,7 @@ exports.SourceMapGenerator = SourceMapGenerator;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var base64 = __webpack_require__(115);
+var base64 = __webpack_require__(116);
 
 // A single base 64 digit can contain 6 bits of data. For the base 64 variable
 // length quantities we use in the source map spec, the first bit is the sign,
@@ -12395,13 +12430,138 @@ module.exports = function compressBorder(node) {
 
 /***/ }),
 /* 59 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__(60)
+class OffscreenCanvas {
+  constructor() {
+    this.width = 100
+    this.height = 100
+  }
+
+  getContext() {
+    // 暂不支持返回标准 context
+    return {}
+  }
+
+  createImage() {
+    return new window.Image()
+  }
+}
+
+class CanvasContext {
+  constructor() {
+    this.fillStyle = 'black'
+    this.strokeStyle = 'red'
+    this.shadowOffsetX = 0
+    this.shadowOffsetY = 0
+    this.shadowColor = 0
+    this.shadowBlur = 0
+    this.lineWidth = 0
+    this.lineCap = 'butt'
+    this.lineJoin = 'bevel'
+    this.lineDashOffset = 0
+    this.font = '10px sans-serif'
+    this.globalAlpha = 1
+    this.globalCompositeOperation = 'xor'
+  }
+
+  arc() {}
+  arcTo() {}
+  beginPath() {}
+  bezierCurveTo() {}
+  clearRect() {}
+  clip() {}
+  closePath() {}
+
+  createCircularGradient() {
+    return {
+      addColorStop() {},
+    }
+  }
+
+  createLinearGradient() {
+    return {
+      addColorStop() {},
+    }
+  }
+
+  createPattern() {}
+  draw() {}
+  drawImage() {}
+  fill() {}
+  fillRect() {}
+  fillText() {}
+  lineTo() {}
+
+  measureText() {
+    return { width: 100 }
+  }
+
+  moveTo() {}
+  quadraticCurveTo() {}
+  rect() {}
+  restore() {}
+  rotate() {}
+  save() {}
+  scale() {}
+
+  setFillStyle(fillStyle) {
+    this.fillStyle = fillStyle
+  }
+
+  setFontSize() {}
+  setGlobalAlpha() {}
+
+  setLineCap(lineCap) {
+    this.lineCap = lineCap
+  }
+
+  setLineDash() {}
+
+  setLineJoin(lineJoin) {
+    this.lineJoin = lineJoin
+  }
+
+  setLineWidth(lineWidth) {
+    this.lineWidth = lineWidth
+  }
+
+  setMiterLimit(miterLimit) {
+    this.miterLimit = miterLimit
+  }
+
+  setShadow() {}
+
+  setStrokeStyle(strokeStyle) {
+    this.strokeStyle = strokeStyle
+  }
+
+  setTextAlign() {}
+  setTextBaseline() {}
+  setTransform() {}
+  stroke() {}
+  strokeRect() {}
+  strokeText() {}
+  transform() {}
+  translate() {}
+}
+
+
+module.exports = {
+  CanvasContext,
+  OffscreenCanvas,
+}
 
 
 /***/ }),
 /* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(61)
+
+
+/***/ }),
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/* global Event */
@@ -12409,10 +12569,10 @@ const path = __webpack_require__(3)
 const jComponent = __webpack_require__(31)
 
 const _ = __webpack_require__(10)
-const wxss = __webpack_require__(72)
-const compile = __webpack_require__(227)
-const injectPolyfill = __webpack_require__(228)
-const injectDefinition = __webpack_require__(229)
+const wxss = __webpack_require__(73)
+const compile = __webpack_require__(228)
+const injectPolyfill = __webpack_require__(229)
+const injectDefinition = __webpack_require__(230)
 
 const componentMap = {}
 let nowLoad = null
@@ -12682,12 +12842,12 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {const exparser = __webpack_require__(4)
-const ComponentManager = __webpack_require__(62)
-const RootComponent = __webpack_require__(70)
+const ComponentManager = __webpack_require__(63)
+const RootComponent = __webpack_require__(71)
 const _ = __webpack_require__(5)
 
 module.exports = {
@@ -12775,16 +12935,16 @@ global.wxComponentExport = module.exports.behavior({
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {const exparser = __webpack_require__(4)
-const compile = __webpack_require__(63)
-const transform = __webpack_require__(67)
-const diff = __webpack_require__(68)
-const render = __webpack_require__(13)
+const compile = __webpack_require__(64)
+const transform = __webpack_require__(68)
+const diff = __webpack_require__(69)
+const render = __webpack_require__(12)
 const _ = __webpack_require__(5)
-const SelectorQuery = __webpack_require__(69)
+const SelectorQuery = __webpack_require__(70)
 const IntersectionObserver = __webpack_require__(33)
 
 const PATH_TO_ID_MAP = []
@@ -13057,11 +13217,11 @@ module.exports = ComponentManager
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const parse = __webpack_require__(64)
-const VirtualNode = __webpack_require__(65)
+const parse = __webpack_require__(65)
+const VirtualNode = __webpack_require__(66)
 const expr = __webpack_require__(32)
 const _ = __webpack_require__(5)
 const CONSTANT = __webpack_require__(6)
@@ -13261,7 +13421,7 @@ module.exports = function (template, data, usingComponents) {
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 /**
@@ -13387,7 +13547,7 @@ module.exports = function (content, handler = {}) {
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const expr = __webpack_require__(32)
@@ -13681,7 +13841,7 @@ module.exports = VirtualNode
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 const ESCAPE = {
@@ -14192,7 +14352,7 @@ module.exports = Expression;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const CONSTANT = __webpack_require__(6)
@@ -14307,11 +14467,11 @@ module.exports = function (generateFunc, usingComponents) {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const exparser = __webpack_require__(4)
-const render = __webpack_require__(13)
+const render = __webpack_require__(12)
 const CONSTANT = __webpack_require__(6)
 
 /**
@@ -14542,7 +14702,7 @@ module.exports = {
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const exparser = __webpack_require__(4)
@@ -14733,14 +14893,14 @@ module.exports = SelectorQuery
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const exparser = __webpack_require__(4)
 const _ = __webpack_require__(5)
 const IntersectionObserver = __webpack_require__(33)
 const CONSTANT = __webpack_require__(6)
-const render = __webpack_require__(13)
+const render = __webpack_require__(12)
 
 const MOVE_DELTA = 10
 const LONGPRESS_TIME = 350
@@ -15151,19 +15311,19 @@ module.exports = RootComponent
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const postcss = __webpack_require__(73)
+const postcss = __webpack_require__(74)
 const path = __webpack_require__(3)
-const less = __webpack_require__(95)
-const csso = __webpack_require__(96)
+const less = __webpack_require__(96)
+const csso = __webpack_require__(97)
 
 const _ = __webpack_require__(10)
 
@@ -15284,7 +15444,7 @@ module.exports = {
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15293,23 +15453,23 @@ module.exports = {
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(15));
+var _declaration = _interopRequireDefault(__webpack_require__(14));
 
 var _processor = _interopRequireDefault(__webpack_require__(36));
 
-var _stringify = _interopRequireDefault(__webpack_require__(17));
+var _stringify = _interopRequireDefault(__webpack_require__(16));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(18));
 
-var _atRule = _interopRequireDefault(__webpack_require__(20));
+var _atRule = _interopRequireDefault(__webpack_require__(19));
 
-var _vendor = _interopRequireDefault(__webpack_require__(94));
+var _vendor = _interopRequireDefault(__webpack_require__(95));
 
-var _parse = _interopRequireDefault(__webpack_require__(18));
+var _parse = _interopRequireDefault(__webpack_require__(17));
 
 var _list = _interopRequireDefault(__webpack_require__(43));
 
-var _rule = _interopRequireDefault(__webpack_require__(22));
+var _rule = _interopRequireDefault(__webpack_require__(21));
 
 var _root = _interopRequireDefault(__webpack_require__(44));
 
@@ -15576,7 +15736,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 var x=String;
@@ -15586,13 +15746,13 @@ module.exports.createColors = create;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15947,7 +16107,7 @@ module.exports = exports.default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(38).Buffer))
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16104,7 +16264,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
@@ -16195,7 +16355,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -16206,7 +16366,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -16279,7 +16439,7 @@ exports.decode = function (charCode) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -16364,7 +16524,7 @@ exports.MappingList = MappingList;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -16375,10 +16535,10 @@ exports.MappingList = MappingList;
  */
 
 var util = __webpack_require__(8);
-var binarySearch = __webpack_require__(83);
+var binarySearch = __webpack_require__(84);
 var ArraySet = __webpack_require__(42).ArraySet;
 var base64VLQ = __webpack_require__(41);
-var quickSort = __webpack_require__(84).quickSort;
+var quickSort = __webpack_require__(85).quickSort;
 
 function SourceMapConsumer(aSourceMap, aSourceMapURL) {
   var sourceMap = aSourceMap;
@@ -17515,7 +17675,7 @@ exports.IndexedSourceMapConsumer = IndexedSourceMapConsumer;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -17632,7 +17792,7 @@ exports.search = function search(aNeedle, aHaystack, aCompare, aBias) {
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -17752,7 +17912,7 @@ exports.quickSort = function (ary, comparator) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -18171,7 +18331,7 @@ exports.SourceNode = SourceNode;
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18195,7 +18355,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18204,7 +18364,7 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _warning = _interopRequireDefault(__webpack_require__(88));
+var _warning = _interopRequireDefault(__webpack_require__(89));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18415,7 +18575,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18553,7 +18713,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18562,17 +18722,17 @@ module.exports = exports.default;
 exports.__esModule = true;
 exports.default = void 0;
 
-var _declaration = _interopRequireDefault(__webpack_require__(15));
+var _declaration = _interopRequireDefault(__webpack_require__(14));
 
-var _tokenize = _interopRequireDefault(__webpack_require__(90));
+var _tokenize = _interopRequireDefault(__webpack_require__(91));
 
-var _comment = _interopRequireDefault(__webpack_require__(19));
+var _comment = _interopRequireDefault(__webpack_require__(18));
 
-var _atRule = _interopRequireDefault(__webpack_require__(20));
+var _atRule = _interopRequireDefault(__webpack_require__(19));
 
 var _root = _interopRequireDefault(__webpack_require__(44));
 
-var _rule = _interopRequireDefault(__webpack_require__(22));
+var _rule = _interopRequireDefault(__webpack_require__(21));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19169,7 +19329,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19471,7 +19631,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19484,7 +19644,7 @@ var _path = _interopRequireDefault(__webpack_require__(3));
 
 var _cssSyntaxError = _interopRequireDefault(__webpack_require__(34));
 
-var _previousMap = _interopRequireDefault(__webpack_require__(92));
+var _previousMap = _interopRequireDefault(__webpack_require__(93));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19692,7 +19852,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19705,7 +19865,7 @@ var _sourceMap = _interopRequireDefault(__webpack_require__(39));
 
 var _path = _interopRequireDefault(__webpack_require__(3));
 
-var _fs = _interopRequireDefault(__webpack_require__(93));
+var _fs = _interopRequireDefault(__webpack_require__(94));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19872,13 +20032,13 @@ module.exports = exports.default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(38).Buffer))
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19938,7 +20098,7 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31218,12 +31378,12 @@ module.exports = exports.default;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var csstree = __webpack_require__(1);
 var parse = csstree.parse;
-var compress = __webpack_require__(192);
+var compress = __webpack_require__(193);
 var generate = csstree.generate;
 
 function debugOutput(name, options, startTime, data) {
@@ -31351,7 +31511,7 @@ function minifyBlock(source, options) {
 }
 
 module.exports = {
-    version: __webpack_require__(226).version,
+    version: __webpack_require__(227).version,
 
     // main methods
     minify: minifyStylesheet,
@@ -31366,7 +31526,7 @@ module.exports = {
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function merge() {
@@ -31382,30 +31542,30 @@ function merge() {
     return dest;
 }
 
-module.exports = __webpack_require__(98).create(
+module.exports = __webpack_require__(99).create(
     merge(
-        __webpack_require__(125),
-        __webpack_require__(167),
-        __webpack_require__(191)
+        __webpack_require__(126),
+        __webpack_require__(168),
+        __webpack_require__(192)
     )
 );
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(7);
 var Tokenizer = __webpack_require__(0);
-var Lexer = __webpack_require__(101);
-var grammar = __webpack_require__(109);
-var createParser = __webpack_require__(110);
-var createGenerator = __webpack_require__(112);
-var createConvertor = __webpack_require__(121);
-var createWalker = __webpack_require__(122);
-var clone = __webpack_require__(123);
-var names = __webpack_require__(26);
-var mix = __webpack_require__(124);
+var Lexer = __webpack_require__(102);
+var grammar = __webpack_require__(110);
+var createParser = __webpack_require__(111);
+var createGenerator = __webpack_require__(113);
+var createConvertor = __webpack_require__(122);
+var createWalker = __webpack_require__(123);
+var clone = __webpack_require__(124);
+var names = __webpack_require__(25);
+var mix = __webpack_require__(125);
 
 function assign(dest, src) {
     for (var key in src) {
@@ -31474,15 +31634,15 @@ exports.create = function(config) {
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var CssSyntaxError = __webpack_require__(100);
+var CssSyntaxError = __webpack_require__(101);
 
-var constants = __webpack_require__(24);
+var constants = __webpack_require__(23);
 var TYPE = constants.TYPE;
 var NAME = constants.NAME;
 var SYMBOL_TYPE = constants.SYMBOL_TYPE;
@@ -32112,13 +32272,13 @@ module.exports = Tokenizer;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createCustomError = __webpack_require__(23);
+var createCustomError = __webpack_require__(22);
 var MAX_LINE_LENGTH = 100;
 var OFFSET_CORRECTION = 60;
 var TAB_REPLACEMENT = '    ';
@@ -32203,7 +32363,7 @@ module.exports = CssSyntaxError;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32211,17 +32371,17 @@ module.exports = CssSyntaxError;
 
 var SyntaxReferenceError = __webpack_require__(46).SyntaxReferenceError;
 var MatchError = __webpack_require__(46).MatchError;
-var names = __webpack_require__(26);
-var generic = __webpack_require__(102);
-var parse = __webpack_require__(27);
-var generate = __webpack_require__(25);
+var names = __webpack_require__(25);
+var generic = __webpack_require__(103);
+var parse = __webpack_require__(26);
+var generate = __webpack_require__(24);
 var walk = __webpack_require__(48);
-var astToTokens = __webpack_require__(104);
+var astToTokens = __webpack_require__(105);
 var buildMatchGraph = __webpack_require__(49).buildMatchGraph;
-var matchAsTree = __webpack_require__(105).matchAsTree;
-var trace = __webpack_require__(106);
-var search = __webpack_require__(107);
-var getStructureFromConfig = __webpack_require__(108).getStructureFromConfig;
+var matchAsTree = __webpack_require__(106).matchAsTree;
+var trace = __webpack_require__(107);
+var search = __webpack_require__(108);
+var getStructureFromConfig = __webpack_require__(109).getStructureFromConfig;
 var cssWideKeywords = buildMatchGraph(parse('inherit | initial | unset'));
 var cssWideKeywordsWithExpression = buildMatchGraph(parse('inherit | initial | unset | <expression>'));
 
@@ -32537,7 +32697,7 @@ module.exports = Lexer;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var tokenizerUtils = __webpack_require__(45);
@@ -32545,7 +32705,7 @@ var findIdentifierEnd = tokenizerUtils.findIdentifierEnd;
 var findNumberEnd = tokenizerUtils.findNumberEnd;
 var findDecimalNumberEnd = tokenizerUtils.findDecimalNumberEnd;
 var isHex = tokenizerUtils.isHex;
-var tokenizerConst = __webpack_require__(24);
+var tokenizerConst = __webpack_require__(23);
 var SYMBOL_TYPE = tokenizerConst.SYMBOL_TYPE;
 var IDENTIFIER = tokenizerConst.TYPE.Identifier;
 var PLUSSIGN = tokenizerConst.TYPE.PlusSign;
@@ -32958,7 +33118,7 @@ module.exports = {
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var SyntaxParseError = __webpack_require__(47).SyntaxParseError;
@@ -33019,7 +33179,7 @@ module.exports = Tokenizer;
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -33082,7 +33242,7 @@ module.exports = {
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33628,7 +33788,7 @@ module.exports = {
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 function getTrace(node) {
@@ -33713,7 +33873,7 @@ module.exports = {
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(7);
@@ -33784,7 +33944,7 @@ module.exports = {
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(7);
@@ -33953,19 +34113,19 @@ module.exports = {
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
     SyntaxParseError: __webpack_require__(47).SyntaxParseError,
-    parse: __webpack_require__(27),
-    generate: __webpack_require__(25),
+    parse: __webpack_require__(26),
+    generate: __webpack_require__(24),
     walk: __webpack_require__(48)
 };
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33973,7 +34133,7 @@ module.exports = {
 
 var Tokenizer = __webpack_require__(0);
 var List = __webpack_require__(7);
-var sequence = __webpack_require__(111);
+var sequence = __webpack_require__(112);
 var noop = function() {};
 
 function createParseContext(name) {
@@ -34149,7 +34309,7 @@ module.exports = function createParser(config) {
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -34209,13 +34369,13 @@ module.exports = function readSequence(recognizer) {
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var sourceMap = __webpack_require__(113);
+var sourceMap = __webpack_require__(114);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 function processChildren(node, delimeter) {
@@ -34284,13 +34444,13 @@ module.exports = function createGenerator(config) {
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var SourceMapGenerator = __webpack_require__(114).SourceMapGenerator;
+var SourceMapGenerator = __webpack_require__(115).SourceMapGenerator;
 var trackNodes = {
     Atrule: true,
     Selector: true,
@@ -34388,7 +34548,7 @@ module.exports = function generateSourceMap(handlers) {
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -34397,12 +34557,12 @@ module.exports = function generateSourceMap(handlers) {
  * http://opensource.org/licenses/BSD-3-Clause
  */
 exports.SourceMapGenerator = __webpack_require__(50).SourceMapGenerator;
-exports.SourceMapConsumer = __webpack_require__(117).SourceMapConsumer;
-exports.SourceNode = __webpack_require__(120).SourceNode;
+exports.SourceMapConsumer = __webpack_require__(118).SourceMapConsumer;
+exports.SourceNode = __webpack_require__(121).SourceNode;
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -34475,7 +34635,7 @@ exports.decode = function (charCode) {
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -34560,7 +34720,7 @@ exports.MappingList = MappingList;
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -34571,10 +34731,10 @@ exports.MappingList = MappingList;
  */
 
 var util = __webpack_require__(9);
-var binarySearch = __webpack_require__(118);
+var binarySearch = __webpack_require__(119);
 var ArraySet = __webpack_require__(52).ArraySet;
 var base64VLQ = __webpack_require__(51);
-var quickSort = __webpack_require__(119).quickSort;
+var quickSort = __webpack_require__(120).quickSort;
 
 function SourceMapConsumer(aSourceMap) {
   var sourceMap = aSourceMap;
@@ -35648,7 +35808,7 @@ exports.IndexedSourceMapConsumer = IndexedSourceMapConsumer;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -35765,7 +35925,7 @@ exports.search = function search(aNeedle, aHaystack, aCompare, aBias) {
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -35885,7 +36045,7 @@ exports.quickSort = function (ary, comparator) {
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* -*- Mode: js; js-indent-level: 2; -*- */
@@ -36304,7 +36464,7 @@ exports.SourceNode = SourceNode;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(7);
@@ -36338,7 +36498,7 @@ module.exports = function createConvertors(walk) {
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36561,7 +36721,7 @@ module.exports = function createWalker(config) {
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36591,7 +36751,7 @@ module.exports = function clone(node) {
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -36691,27 +36851,27 @@ module.exports = function(dest, src) {
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var data = __webpack_require__(126);
+var data = __webpack_require__(127);
 
 module.exports = {
     generic: true,
     types: data.types,
     properties: data.properties,
-    node: __webpack_require__(28)
+    node: __webpack_require__(27)
 };
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"generic\":true,\"types\":{\"absolute-size\":\"xx-small | x-small | small | medium | large | x-large | xx-large\",\"alpha-value\":\"<number> | <percentage>\",\"angle-percentage\":\"<angle> | <percentage>\",\"animateable-feature\":\"scroll-position | contents | <custom-ident>\",\"attachment\":\"scroll | fixed | local\",\"auto-repeat\":\"repeat( [ auto-fill | auto-fit ] , [ <line-names>? <fixed-size> ]+ <line-names>? )\",\"auto-track-list\":\"[ <line-names>? [ <fixed-size> | <fixed-repeat> ] ]* <line-names>? <auto-repeat> [ <line-names>? [ <fixed-size> | <fixed-repeat> ] ]* <line-names>?\",\"baseline-position\":\"[ first | last ]? baseline\",\"basic-shape\":\"<inset()> | <circle()> | <ellipse()> | <polygon()>\",\"bg-image\":\"none | <image>\",\"bg-layer\":\"<bg-image> || <bg-position> [ / <bg-size> ]? || <repeat-style> || <attachment> || <box> || <box>\",\"bg-position\":\"[ [ left | center | right | top | bottom | <length-percentage> ] | [ left | center | right | <length-percentage> ] [ top | center | bottom | <length-percentage> ] | [ center | [ left | right ] <length-percentage>? ] && [ center | [ top | bottom ] <length-percentage>? ] ]\",\"bg-size\":\"[ <length-percentage> | auto ]{1,2} | cover | contain\",\"blur()\":\"blur( <length> )\",\"blend-mode\":\"normal | multiply | screen | overlay | darken | lighten | color-dodge | color-burn | hard-light | soft-light | difference | exclusion | hue | saturation | color | luminosity\",\"box\":\"border-box | padding-box | content-box\",\"br-style\":\"none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset\",\"br-width\":\"<length> | thin | medium | thick\",\"brightness()\":\"brightness( <number-percentage> )\",\"calc()\":\"calc( <calc-sum> )\",\"calc-sum\":\"<calc-product> [ [ '+' | '-' ] <calc-product> ]*\",\"calc-product\":\"<calc-value> [ '*' <calc-value> | '/' <number> ]*\",\"calc-value\":\"<number> | <dimension> | <percentage> | ( <calc-sum> )\",\"cf-final-image\":\"<image> | <color>\",\"cf-mixing-image\":\"<percentage>? && <image>\",\"circle()\":\"circle( [ <shape-radius> ]? [ at <position> ]? )\",\"clip-source\":\"<url>\",\"color\":\"<rgb()> | <rgba()> | <hsl()> | <hsla()> | <hex-color> | <named-color> | currentcolor | <deprecated-system-color>\",\"color-stop\":\"<color> <length-percentage>?\",\"color-stop-list\":\"<color-stop>#{2,}\",\"common-lig-values\":\"[ common-ligatures | no-common-ligatures ]\",\"composite-style\":\"clear | copy | source-over | source-in | source-out | source-atop | destination-over | destination-in | destination-out | destination-atop | xor\",\"compositing-operator\":\"add | subtract | intersect | exclude\",\"contextual-alt-values\":\"[ contextual | no-contextual ]\",\"content-distribution\":\"space-between | space-around | space-evenly | stretch\",\"content-list\":\"[ <string> | contents | <url> | <quote> | <attr()> | counter( <ident> , <'list-style-type'>? ) ]+\",\"content-position\":\"center | start | end | flex-start | flex-end\",\"content-replacement\":\"<image>\",\"contrast()\":\"contrast( [ <number-percentage> ] )\",\"counter-style\":\"<counter-style-name> | symbols( )\",\"counter-style-name\":\"<custom-ident>\",\"cross-fade()\":\"cross-fade( <cf-mixing-image> , <cf-final-image>? )\",\"cubic-bezier-timing-function\":\"ease | ease-in | ease-out | ease-in-out | cubic-bezier( <number> , <number> , <number> , <number> )\",\"deprecated-system-color\":\"ActiveBorder | ActiveCaption | AppWorkspace | Background | ButtonFace | ButtonHighlight | ButtonShadow | ButtonText | CaptionText | GrayText | Highlight | HighlightText | InactiveBorder | InactiveCaption | InactiveCaptionText | InfoBackground | InfoText | Menu | MenuText | Scrollbar | ThreeDDarkShadow | ThreeDFace | ThreeDHighlight | ThreeDLightShadow | ThreeDShadow | Window | WindowFrame | WindowText\",\"discretionary-lig-values\":\"[ discretionary-ligatures | no-discretionary-ligatures ]\",\"display-box\":\"contents | none\",\"display-inside\":\"flow | flow-root | table | flex | grid | subgrid | ruby\",\"display-internal\":\"table-row-group | table-header-group | table-footer-group | table-row | table-cell | table-column-group | table-column | table-caption | ruby-base | ruby-text | ruby-base-container | ruby-text-container\",\"display-legacy\":\"inline-block | inline-list-item | inline-table | inline-flex | inline-grid\",\"display-listitem\":\"<display-outside>? && [ flow | flow-root ]? && list-item\",\"display-outside\":\"block | inline | run-in\",\"drop-shadow()\":\"drop-shadow( <length>{2,3} <color>? )\",\"east-asian-variant-values\":\"[ jis78 | jis83 | jis90 | jis04 | simplified | traditional ]\",\"east-asian-width-values\":\"[ full-width | proportional-width ]\",\"element()\":\"element( <id-selector> )\",\"ellipse()\":\"ellipse( [ <shape-radius>{2} ]? [ at <position> ]? )\",\"ending-shape\":\"circle | ellipse\",\"explicit-track-list\":\"[ <line-names>? <track-size> ]+ <line-names>?\",\"family-name\":\"<string> | <custom-ident>+\",\"feature-tag-value\":\"<string> [ <integer> | on | off ]?\",\"feature-value-name\":\"<custom-ident>\",\"fill-rule\":\"nonzero | evenodd\",\"filter-function\":\"<blur()> | <brightness()> | <contrast()> | <drop-shadow()> | <grayscale()> | <hue-rotate()> | <invert()> | <opacity()> | <saturate()> | <sepia()>\",\"filter-function-list\":\"[ <filter-function> | <url> ]+\",\"final-bg-layer\":\"<'background-color'> || <bg-image> || <bg-position> [ / <bg-size> ]? || <repeat-style> || <attachment> || <box> || <box>\",\"fit-content()\":\"fit-content( [ <length> | <percentage> ] )\",\"fixed-breadth\":\"<length-percentage>\",\"fixed-repeat\":\"repeat( [ <positive-integer> ] , [ <line-names>? <fixed-size> ]+ <line-names>? )\",\"fixed-size\":\"<fixed-breadth> | minmax( <fixed-breadth> , <track-breadth> ) | minmax( <inflexible-breadth> , <fixed-breadth> )\",\"font-variant-css21\":\"[ normal | small-caps ]\",\"frames-timing-function\":\"frames( <integer> )\",\"frequency-percentage\":\"<frequency> | <percentage>\",\"generic-family\":\"serif | sans-serif | cursive | fantasy | monospace | -apple-system\",\"generic-name\":\"serif | sans-serif | cursive | fantasy | monospace\",\"geometry-box\":\"<shape-box> | fill-box | stroke-box | view-box\",\"gradient\":\"<-legacy-gradient> | <linear-gradient()> | <repeating-linear-gradient()> | <radial-gradient()> | <repeating-radial-gradient()>\",\"grayscale()\":\"grayscale( <number-percentage> )\",\"grid-line\":\"auto | <custom-ident> | [ <integer> && <custom-ident>? ] | [ span && [ <integer> || <custom-ident> ] ]\",\"historical-lig-values\":\"[ historical-ligatures | no-historical-ligatures ]\",\"hsl()\":\"hsl( <hue> <percentage> <percentage> [ / <alpha-value> ]? ) | hsl( <hue> , <percentage> , <percentage> , <alpha-value>? )\",\"hsla()\":\"hsla( <hue> <percentage> <percentage> [ / <alpha-value> ]? ) | hsla( <hue> , <percentage> , <percentage> , <alpha-value>? )\",\"hue\":\"<number> | <angle>\",\"hue-rotate()\":\"hue-rotate( <angle> )\",\"image\":\"<url> | <image()> | <image-set()> | <element()> | <cross-fade()> | <gradient>\",\"image()\":\"image( [ [ <image> | <string> ]? , <color>? ]! )\",\"image-set()\":\"image-set( <image-set-option># )\",\"image-set-option\":\"[ <image> | <string> ] <resolution>\",\"inflexible-breadth\":\"<length> | <percentage> | min-content | max-content | auto\",\"inset()\":\"inset( <length-percentage>{1,4} [ round <'border-radius'> ]? )\",\"invert()\":\"invert( <number-percentage> )\",\"keyframes-name\":\"<custom-ident> | <string>\",\"keyframe-selector\":\"from | to | <percentage>\",\"leader()\":\"leader( <leader-type> )\",\"leader-type\":\"dotted | solid | space | <string>\",\"length-percentage\":\"<length> | <percentage>\",\"line-names\":\"'[' <custom-ident>* ']'\",\"line-name-list\":\"[ <line-names> | <name-repeat> ]+\",\"linear-gradient()\":\"linear-gradient( [ <angle> | to <side-or-corner> ]? , <color-stop-list> )\",\"mask-layer\":\"<mask-reference> || <position> [ / <bg-size> ]? || <repeat-style> || <geometry-box> || [ <geometry-box> | no-clip ] || <compositing-operator> || <masking-mode>\",\"mask-position\":\"[ <length-percentage> | left | center | right ] [ <length-percentage> | top | center | bottom ]?\",\"mask-reference\":\"none | <image> | <mask-source>\",\"mask-source\":\"<url>\",\"masking-mode\":\"alpha | luminance | match-source\",\"matrix()\":\"matrix( <number> [, <number> ]{5} )\",\"matrix3d()\":\"matrix3d( <number> [, <number> ]{15} )\",\"media-type\":\"<ident>\",\"mf-boolean\":\"<mf-name>\",\"mf-name\":\"<ident>\",\"minmax()\":\"minmax( [ <length> | <percentage> | <flex> | min-content | max-content | auto ] , [ <length> | <percentage> | <flex> | min-content | max-content | auto ] )\",\"named-color\":\"transparent | aliceblue | antiquewhite | aqua | aquamarine | azure | beige | bisque | black | blanchedalmond | blue | blueviolet | brown | burlywood | cadetblue | chartreuse | chocolate | coral | cornflowerblue | cornsilk | crimson | cyan | darkblue | darkcyan | darkgoldenrod | darkgray | darkgreen | darkgrey | darkkhaki | darkmagenta | darkolivegreen | darkorange | darkorchid | darkred | darksalmon | darkseagreen | darkslateblue | darkslategray | darkslategrey | darkturquoise | darkviolet | deeppink | deepskyblue | dimgray | dimgrey | dodgerblue | firebrick | floralwhite | forestgreen | fuchsia | gainsboro | ghostwhite | gold | goldenrod | gray | green | greenyellow | grey | honeydew | hotpink | indianred | indigo | ivory | khaki | lavender | lavenderblush | lawngreen | lemonchiffon | lightblue | lightcoral | lightcyan | lightgoldenrodyellow | lightgray | lightgreen | lightgrey | lightpink | lightsalmon | lightseagreen | lightskyblue | lightslategray | lightslategrey | lightsteelblue | lightyellow | lime | limegreen | linen | magenta | maroon | mediumaquamarine | mediumblue | mediumorchid | mediumpurple | mediumseagreen | mediumslateblue | mediumspringgreen | mediumturquoise | mediumvioletred | midnightblue | mintcream | mistyrose | moccasin | navajowhite | navy | oldlace | olive | olivedrab | orange | orangered | orchid | palegoldenrod | palegreen | paleturquoise | palevioletred | papayawhip | peachpuff | peru | pink | plum | powderblue | purple | rebeccapurple | red | rosybrown | royalblue | saddlebrown | salmon | sandybrown | seagreen | seashell | sienna | silver | skyblue | slateblue | slategray | slategrey | snow | springgreen | steelblue | tan | teal | thistle | tomato | turquoise | violet | wheat | white | whitesmoke | yellow | yellowgreen | <-non-standard-color>\",\"namespace-prefix\":\"<ident>\",\"number-percentage\":\"<number> | <percentage>\",\"numeric-figure-values\":\"[ lining-nums | oldstyle-nums ]\",\"numeric-fraction-values\":\"[ diagonal-fractions | stacked-fractions ]\",\"numeric-spacing-values\":\"[ proportional-nums | tabular-nums ]\",\"opacity()\":\"opacity( [ <number-percentage> ] )\",\"overflow-position\":\"unsafe | safe\",\"outline-radius\":\"<border-radius>\",\"perspective()\":\"perspective( <length> )\",\"polygon()\":\"polygon( <fill-rule>? , [ <length-percentage> <length-percentage> ]# )\",\"position\":\"[ [ left | center | right ] || [ top | center | bottom ] | [ left | center | right | <length-percentage> ] [ top | center | bottom | <length-percentage> ]? | [ [ left | right ] <length-percentage> ] && [ [ top | bottom ] <length-percentage> ] ]\",\"quote\":\"open-quote | close-quote | no-open-quote | no-close-quote\",\"radial-gradient()\":\"radial-gradient( [ <ending-shape> || <size> ]? [ at <position> ]? , <color-stop-list> )\",\"relative-size\":\"larger | smaller\",\"repeat-style\":\"repeat-x | repeat-y | [ repeat | space | round | no-repeat ]{1,2}\",\"repeating-linear-gradient()\":\"repeating-linear-gradient( [ <angle> | to <side-or-corner> ]? , <color-stop-list> )\",\"repeating-radial-gradient()\":\"repeating-radial-gradient( [ <ending-shape> || <size> ]? [ at <position> ]? , <color-stop-list> )\",\"rgb()\":\"rgb( <percentage>{3} [ / <alpha-value> ]? ) | rgb( <number>{3} [ / <alpha-value> ]? ) | rgb( <percentage>#{3} , <alpha-value>? ) | rgb( <number>#{3} , <alpha-value>? )\",\"rgba()\":\"rgba( <percentage>{3} [ / <alpha-value> ]? ) | rgba( <number>{3} [ / <alpha-value> ]? ) | rgba( <percentage>#{3} , <alpha-value>? ) | rgba( <number>#{3} , <alpha-value>? )\",\"rotate()\":\"rotate( <angle> )\",\"rotate3d()\":\"rotate3d( <number> , <number> , <number> , <angle> )\",\"rotateX()\":\"rotateX( <angle> )\",\"rotateY()\":\"rotateY( <angle> )\",\"rotateZ()\":\"rotateZ( <angle> )\",\"saturate()\":\"saturate( <number-percentage> )\",\"scale()\":\"scale( <number> [, <number> ]? )\",\"scale3d()\":\"scale3d( <number> , <number> , <number> )\",\"scaleX()\":\"scaleX( <number> )\",\"scaleY()\":\"scaleY( <number> )\",\"scaleZ()\":\"scaleZ( <number> )\",\"self-position\":\"center | start | end | self-start | self-end | flex-start | flex-end\",\"shape-radius\":\"<length-percentage> | closest-side | farthest-side\",\"skew()\":\"skew( <angle> [, <angle> ]? )\",\"skewX()\":\"skewX( <angle> )\",\"skewY()\":\"skewY( <angle> )\",\"sepia()\":\"sepia( <number-percentage> )\",\"shadow\":\"inset? && <length>{2,4} && <color>?\",\"shadow-t\":\"[ <length>{2,3} && <color>? ]\",\"shape\":\"rect( [ [ <top> , <right> , <bottom> , <left> ] | [ <top> <right> <bottom> <left> ] ] )\",\"shape-box\":\"<box> | margin-box\",\"side-or-corner\":\"[ left | right ] || [ top | bottom ]\",\"single-animation\":\"<time> || <single-timing-function> || <time> || <single-animation-iteration-count> || <single-animation-direction> || <single-animation-fill-mode> || <single-animation-play-state> || [ none | <keyframes-name> ]\",\"single-animation-direction\":\"normal | reverse | alternate | alternate-reverse\",\"single-animation-fill-mode\":\"none | forwards | backwards | both\",\"single-animation-iteration-count\":\"infinite | <number>\",\"single-animation-play-state\":\"running | paused\",\"single-timing-function\":\"linear | <cubic-bezier-timing-function> | <step-timing-function> | <frames-timing-function>\",\"single-transition\":\"<single-transition-timing-function> || [ none | <single-transition-property> ] || <time> || <time>\",\"single-transition-timing-function\":\"<single-timing-function>\",\"single-transition-property\":\"all | <custom-ident>\",\"size\":\"closest-side | farthest-side | closest-corner | farthest-corner | <length> | <length-percentage>{2}\",\"step-timing-function\":\"step-start | step-end | steps( <integer> [, [ start | end ] ]? )\",\"symbol\":\"<string> | <image> | <custom-ident>\",\"target\":\"<target-counter()> | <target-counters()> | <target-text()>\",\"target-counter()\":\"target-counter( [ <string> | <url> ] , <custom-ident> , <counter-style>? )\",\"target-counters()\":\"target-counters( [ <string> | <url> ] , <custom-ident> , <string> , <counter-style>? )\",\"target-text()\":\"target-text( [ <string> | <url> ] , [ content | before | after | first-letter ]? )\",\"time-percentage\":\"<time> | <percentage>\",\"track-breadth\":\"<length-percentage> | <flex> | min-content | max-content | auto\",\"track-list\":\"[ <line-names>? [ <track-size> | <track-repeat> ] ]+ <line-names>?\",\"track-repeat\":\"repeat( [ <positive-integer> ] , [ <line-names>? <track-size> ]+ <line-names>? )\",\"track-size\":\"<track-breadth> | minmax( <inflexible-breadth> , <track-breadth> ) | fit-content( [ <length> | <percentage> ] )\",\"transform-function\":\"<matrix()> | <translate()> | <translateX()> | <translateY()> | <scale()> | <scaleX()> | <scaleY()> | <rotate()> | <skew()> | <skewX()> | <skewY()> | <matrix3d()> | <translate3d()> | <translateZ()> | <scale3d()> | <scaleZ()> | <rotate3d()> | <rotateX()> | <rotateY()> | <rotateZ()> | <perspective()>\",\"transform-list\":\"<transform-function>+\",\"translate()\":\"translate( <length-percentage> [, <length-percentage> ]? )\",\"translate3d()\":\"translate3d( <length-percentage> , <length-percentage> , <length> )\",\"translateX()\":\"translateX( <length-percentage> )\",\"translateY()\":\"translateY( <length-percentage> )\",\"translateZ()\":\"translateZ( <length> )\",\"type-or-unit\":\"string | integer | color | url | integer | number | length | angle | time | frequency | em | ex | px | rem | vw | vh | vmin | vmax | mm | q | cm | in | pt | pc | deg | grad | rad | ms | s | Hz | kHz | %\",\"viewport-length\":\"auto | <length-percentage>\",\"-legacy-gradient\":\"<-webkit-gradient()> | <-legacy-linear-gradient> | <-legacy-repeating-linear-gradient> | <-legacy-radial-gradient> | <-legacy-repeating-radial-gradient>\",\"-legacy-linear-gradient\":\"-moz-linear-gradient( <-legacy-linear-gradient-arguments> ) | -webkit-linear-gradient( <-legacy-linear-gradient-arguments> ) | -o-linear-gradient( <-legacy-linear-gradient-arguments> )\",\"-legacy-repeating-linear-gradient\":\"-moz-repeating-linear-gradient( <-legacy-linear-gradient-arguments> ) | -webkit-repeating-linear-gradient( <-legacy-linear-gradient-arguments> ) | -o-repeating-linear-gradient( <-legacy-linear-gradient-arguments> )\",\"-legacy-linear-gradient-arguments\":\"[ <angle> | <side-or-corner> ]? , <color-stop-list>\",\"-legacy-radial-gradient\":\"-moz-radial-gradient( <-legacy-radial-gradient-arguments> ) | -webkit-radial-gradient( <-legacy-radial-gradient-arguments> ) | -o-radial-gradient( <-legacy-radial-gradient-arguments> )\",\"-legacy-repeating-radial-gradient\":\"-moz-repeating-radial-gradient( <-legacy-radial-gradient-arguments> ) | -webkit-repeating-radial-gradient( <-legacy-radial-gradient-arguments> ) | -o-repeating-radial-gradient( <-legacy-radial-gradient-arguments> )\",\"-legacy-radial-gradient-arguments\":\"[ <position> , ]? [ [ [ <-legacy-radial-gradient-shape> || <-legacy-radial-gradient-size> ] | [ <length> | <percentage> ]{2} ] , ]? <color-stop-list>\",\"-legacy-radial-gradient-size\":\"closest-side | closest-corner | farthest-side | farthest-corner | contain | cover\",\"-legacy-radial-gradient-shape\":\"circle | ellipse\",\"-non-standard-font\":\"-apple-system-body | -apple-system-headline | -apple-system-subheadline | -apple-system-caption1 | -apple-system-caption2 | -apple-system-footnote | -apple-system-short-body | -apple-system-short-headline | -apple-system-short-subheadline | -apple-system-short-caption1 | -apple-system-short-footnote | -apple-system-tall-body\",\"-non-standard-color\":\"-moz-ButtonDefault | -moz-ButtonHoverFace | -moz-ButtonHoverText | -moz-CellHighlight | -moz-CellHighlightText | -moz-Combobox | -moz-ComboboxText | -moz-Dialog | -moz-DialogText | -moz-dragtargetzone | -moz-EvenTreeRow | -moz-Field | -moz-FieldText | -moz-html-CellHighlight | -moz-html-CellHighlightText | -moz-mac-accentdarkestshadow | -moz-mac-accentdarkshadow | -moz-mac-accentface | -moz-mac-accentlightesthighlight | -moz-mac-accentlightshadow | -moz-mac-accentregularhighlight | -moz-mac-accentregularshadow | -moz-mac-chrome-active | -moz-mac-chrome-inactive | -moz-mac-focusring | -moz-mac-menuselect | -moz-mac-menushadow | -moz-mac-menutextselect | -moz-MenuHover | -moz-MenuHoverText | -moz-MenuBarText | -moz-MenuBarHoverText | -moz-nativehyperlinktext | -moz-OddTreeRow | -moz-win-communicationstext | -moz-win-mediatext | -moz-activehyperlinktext | -moz-default-background-color | -moz-default-color | -moz-hyperlinktext | -moz-visitedhyperlinktext | -webkit-activelink | -webkit-focus-ring-color | -webkit-link | -webkit-text\",\"-non-standard-image-rendering\":\"optimize-contrast | -moz-crisp-edges | -o-crisp-edges | -webkit-optimize-contrast\",\"-non-standard-overflow\":\"-moz-scrollbars-none | -moz-scrollbars-horizontal | -moz-scrollbars-vertical | -moz-hidden-unscrollable\",\"-non-standard-width\":\"min-intrinsic | intrinsic | -moz-min-content | -moz-max-content | -webkit-min-content | -webkit-max-content\",\"-non-standard-word-break\":\"break-word\",\"-webkit-gradient()\":\"-webkit-gradient( <-webkit-gradient-type> , <-webkit-gradient-point> [, <-webkit-gradient-point> | , <-webkit-gradient-radius> , <-webkit-gradient-point> ] [, <-webkit-gradient-radius> ]? [, <-webkit-gradient-color-stop> ]* )\",\"-webkit-gradient-color-stop\":\"from( <color> ) | color-stop( [ <number-zero-one> | <percentage> ] , <color> ) | to( <color> )\",\"-webkit-gradient-point\":\"[ left | center | right | <length-percentage> ] [ top | center | bottom | <length-percentage> ]\",\"-webkit-gradient-radius\":\"<length> | <percentage>\",\"-webkit-gradient-type\":\"linear | radial\",\"-webkit-mask-box-repeat\":\"repeat | stretch | round\",\"-webkit-mask-clip-style\":\"border | border-box | padding | padding-box | content | content-box | text\",\"-ms-filter\":\"[ <progid> | FlipH | FlipV ]+\",\"age\":\"child | young | old\",\"border-radius\":\"<length-percentage>{1,2}\",\"bottom\":\"<length> | auto\",\"generic-voice\":\"[ <age>? <gender> <integer>? ]\",\"gender\":\"male | female | neutral\",\"left\":\"<length> | auto\",\"mask-image\":\"<mask-reference>#\",\"name-repeat\":\"repeat( [ <positive-integer> | auto-fill ] , <line-names>+ )\",\"paint\":\"none | currentColor | <color> | <url> [ none | currentColor | <color> ]?\",\"path()\":\"path( <string> )\",\"right\":\"<length> | auto\",\"svg-length\":\"<percentage> | <length> | <number>\",\"svg-writing-mode\":\"lr-tb | rl-tb | tb-rl | lr | rl | tb\",\"top\":\"<length> | auto\",\"x\":\"<number>\",\"y\":\"<number>\"},\"properties\":{\"-ms-accelerator\":\"false | true\",\"-ms-block-progression\":\"tb | rl | bt | lr\",\"-ms-content-zoom-chaining\":\"none | chained\",\"-ms-content-zooming\":\"none | zoom\",\"-ms-content-zoom-limit\":\"<'-ms-content-zoom-limit-min'> <'-ms-content-zoom-limit-max'>\",\"-ms-content-zoom-limit-max\":\"<percentage>\",\"-ms-content-zoom-limit-min\":\"<percentage>\",\"-ms-content-zoom-snap\":\"<'-ms-content-zoom-snap-type'> || <'-ms-content-zoom-snap-points'>\",\"-ms-content-zoom-snap-points\":\"snapInterval( <percentage> , <percentage> ) | snapList( <percentage># )\",\"-ms-content-zoom-snap-type\":\"none | proximity | mandatory\",\"-ms-filter\":\"<string>\",\"-ms-flow-from\":\"[ none | <custom-ident> ]#\",\"-ms-flow-into\":\"[ none | <custom-ident> ]#\",\"-ms-high-contrast-adjust\":\"auto | none\",\"-ms-hyphenate-limit-chars\":\"auto | <integer>{1,3}\",\"-ms-hyphenate-limit-lines\":\"no-limit | <integer>\",\"-ms-hyphenate-limit-zone\":\"<percentage> | <length>\",\"-ms-ime-align\":\"auto | after\",\"-ms-overflow-style\":\"auto | none | scrollbar | -ms-autohiding-scrollbar\",\"-ms-scrollbar-3dlight-color\":\"<color>\",\"-ms-scrollbar-arrow-color\":\"<color>\",\"-ms-scrollbar-base-color\":\"<color>\",\"-ms-scrollbar-darkshadow-color\":\"<color>\",\"-ms-scrollbar-face-color\":\"<color>\",\"-ms-scrollbar-highlight-color\":\"<color>\",\"-ms-scrollbar-shadow-color\":\"<color>\",\"-ms-scrollbar-track-color\":\"<color>\",\"-ms-scroll-chaining\":\"chained | none\",\"-ms-scroll-limit\":\"<'-ms-scroll-limit-x-min'> <'-ms-scroll-limit-y-min'> <'-ms-scroll-limit-x-max'> <'-ms-scroll-limit-y-max'>\",\"-ms-scroll-limit-x-max\":\"auto | <length>\",\"-ms-scroll-limit-x-min\":\"<length>\",\"-ms-scroll-limit-y-max\":\"auto | <length>\",\"-ms-scroll-limit-y-min\":\"<length>\",\"-ms-scroll-rails\":\"none | railed\",\"-ms-scroll-snap-points-x\":\"snapInterval( <length-percentage> , <length-percentage> ) | snapList( <length-percentage># )\",\"-ms-scroll-snap-points-y\":\"snapInterval( <length-percentage> , <length-percentage> ) | snapList( <length-percentage># )\",\"-ms-scroll-snap-type\":\"none | proximity | mandatory\",\"-ms-scroll-snap-x\":\"<'-ms-scroll-snap-type'> <'-ms-scroll-snap-points-x'>\",\"-ms-scroll-snap-y\":\"<'-ms-scroll-snap-type'> <'-ms-scroll-snap-points-y'>\",\"-ms-scroll-translation\":\"none | vertical-to-horizontal\",\"-ms-text-autospace\":\"none | ideograph-alpha | ideograph-numeric | ideograph-parenthesis | ideograph-space\",\"-ms-touch-select\":\"grippers | none\",\"-ms-user-select\":\"none | element | text\",\"-ms-wrap-flow\":\"auto | both | start | end | maximum | clear\",\"-ms-wrap-margin\":\"<length>\",\"-ms-wrap-through\":\"wrap | none\",\"-moz-appearance\":\"none | button | button-arrow-down | button-arrow-next | button-arrow-previous | button-arrow-up | button-bevel | button-focus | caret | checkbox | checkbox-container | checkbox-label | checkmenuitem | dualbutton | groupbox | listbox | listitem | menuarrow | menubar | menucheckbox | menuimage | menuitem | menuitemtext | menulist | menulist-button | menulist-text | menulist-textfield | menupopup | menuradio | menuseparator | meterbar | meterchunk | progressbar | progressbar-vertical | progresschunk | progresschunk-vertical | radio | radio-container | radio-label | radiomenuitem | range | range-thumb | resizer | resizerpanel | scale-horizontal | scalethumbend | scalethumb-horizontal | scalethumbstart | scalethumbtick | scalethumb-vertical | scale-vertical | scrollbarbutton-down | scrollbarbutton-left | scrollbarbutton-right | scrollbarbutton-up | scrollbarthumb-horizontal | scrollbarthumb-vertical | scrollbartrack-horizontal | scrollbartrack-vertical | searchfield | separator | sheet | spinner | spinner-downbutton | spinner-textfield | spinner-upbutton | splitter | statusbar | statusbarpanel | tab | tabpanel | tabpanels | tab-scroll-arrow-back | tab-scroll-arrow-forward | textfield | textfield-multiline | toolbar | toolbarbutton | toolbarbutton-dropdown | toolbargripper | toolbox | tooltip | treeheader | treeheadercell | treeheadersortarrow | treeitem | treeline | treetwisty | treetwistyopen | treeview | -moz-mac-unified-toolbar | -moz-win-borderless-glass | -moz-win-browsertabbar-toolbox | -moz-win-communicationstext | -moz-win-communications-toolbox | -moz-win-exclude-glass | -moz-win-glass | -moz-win-mediatext | -moz-win-media-toolbox | -moz-window-button-box | -moz-window-button-box-maximized | -moz-window-button-close | -moz-window-button-maximize | -moz-window-button-minimize | -moz-window-button-restore | -moz-window-frame-bottom | -moz-window-frame-left | -moz-window-frame-right | -moz-window-titlebar | -moz-window-titlebar-maximized\",\"-moz-binding\":\"<url> | none\",\"-moz-border-bottom-colors\":\"<color>+ | none\",\"-moz-border-left-colors\":\"<color>+ | none\",\"-moz-border-right-colors\":\"<color>+ | none\",\"-moz-border-top-colors\":\"<color>+ | none\",\"-moz-context-properties\":\"none | [ fill | fill-opacity | stroke | stroke-opacity ]#\",\"-moz-float-edge\":\"border-box | content-box | margin-box | padding-box\",\"-moz-force-broken-image-icon\":\"<integer>\",\"-moz-image-region\":\"<shape> | auto\",\"-moz-orient\":\"inline | block | horizontal | vertical\",\"-moz-outline-radius\":\"<outline-radius>{1,4} [ / <outline-radius>{1,4} ]?\",\"-moz-outline-radius-bottomleft\":\"<outline-radius>\",\"-moz-outline-radius-bottomright\":\"<outline-radius>\",\"-moz-outline-radius-topleft\":\"<outline-radius>\",\"-moz-outline-radius-topright\":\"<outline-radius>\",\"-moz-stack-sizing\":\"ignore | stretch-to-fit\",\"-moz-text-blink\":\"none | blink\",\"-moz-user-focus\":\"ignore | normal | select-after | select-before | select-menu | select-same | select-all | none\",\"-moz-user-input\":\"auto | none | enabled | disabled\",\"-moz-user-modify\":\"read-only | read-write | write-only\",\"-moz-window-dragging\":\"drag | no-drag\",\"-moz-window-shadow\":\"default | menu | tooltip | sheet | none\",\"-webkit-appearance\":\"none | button | button-bevel | caps-lock-indicator | caret | checkbox | default-button | listbox | listitem | media-fullscreen-button | media-mute-button | media-play-button | media-seek-back-button | media-seek-forward-button | media-slider | media-sliderthumb | menulist | menulist-button | menulist-text | menulist-textfield | push-button | radio | scrollbarbutton-down | scrollbarbutton-left | scrollbarbutton-right | scrollbarbutton-up | scrollbargripper-horizontal | scrollbargripper-vertical | scrollbarthumb-horizontal | scrollbarthumb-vertical | scrollbartrack-horizontal | scrollbartrack-vertical | searchfield | searchfield-cancel-button | searchfield-decoration | searchfield-results-button | searchfield-results-decoration | slider-horizontal | slider-vertical | sliderthumb-horizontal | sliderthumb-vertical | square-button | textarea | textfield\",\"-webkit-border-before\":\"<'border-width'> || <'border-style'> || <'color'>\",\"-webkit-border-before-color\":\"<'color'>\",\"-webkit-border-before-style\":\"<'border-style'>\",\"-webkit-border-before-width\":\"<'border-width'>\",\"-webkit-box-reflect\":\"[ above | below | right | left ]? <length>? <image>?\",\"-webkit-mask\":\"[ <mask-reference> || <position> [ / <bg-size> ]? || <repeat-style> || [ <box> | border | padding | content | text ] || [ <box> | border | padding | content ] ]#\",\"-webkit-mask-attachment\":\"<attachment>#\",\"-webkit-mask-clip\":\"<-webkit-mask-clip-style> [, <-webkit-mask-clip-style> ]*\",\"-webkit-mask-composite\":\"<composite-style>#\",\"-webkit-mask-image\":\"<mask-reference>#\",\"-webkit-mask-origin\":\"[ <box> | border | padding | content ]#\",\"-webkit-mask-position\":\"<position>#\",\"-webkit-mask-position-x\":\"[ <length-percentage> | left | center | right ]#\",\"-webkit-mask-position-y\":\"[ <length-percentage> | top | center | bottom ]#\",\"-webkit-mask-repeat\":\"<repeat-style>#\",\"-webkit-mask-repeat-x\":\"repeat | no-repeat | space | round\",\"-webkit-mask-repeat-y\":\"repeat | no-repeat | space | round\",\"-webkit-mask-size\":\"<bg-size>#\",\"-webkit-overflow-scrolling\":\"auto | touch\",\"-webkit-tap-highlight-color\":\"<color>\",\"-webkit-text-fill-color\":\"<color>\",\"-webkit-text-stroke\":\"<length> || <color>\",\"-webkit-text-stroke-color\":\"<color>\",\"-webkit-text-stroke-width\":\"<length>\",\"-webkit-touch-callout\":\"default | none\",\"-webkit-user-modify\":\"read-only | read-write | read-write-plaintext-only\",\"align-content\":\"normal | <baseline-position> | <content-distribution> | <overflow-position>? <content-position>\",\"align-items\":\"normal | stretch | <baseline-position> | [ <overflow-position>? <self-position> ]\",\"align-self\":\"auto | normal | stretch | <baseline-position> | <overflow-position>? <self-position>\",\"all\":\"initial | inherit | unset | revert\",\"animation\":\"<single-animation>#\",\"animation-delay\":\"<time>#\",\"animation-direction\":\"<single-animation-direction>#\",\"animation-duration\":\"<time>#\",\"animation-fill-mode\":\"<single-animation-fill-mode>#\",\"animation-iteration-count\":\"<single-animation-iteration-count>#\",\"animation-name\":\"[ none | <keyframes-name> ]#\",\"animation-play-state\":\"<single-animation-play-state>#\",\"animation-timing-function\":\"<single-timing-function>#\",\"appearance\":\"auto | none\",\"azimuth\":\"<angle> | [ [ left-side | far-left | left | center-left | center | center-right | right | far-right | right-side ] || behind ] | leftwards | rightwards\",\"backdrop-filter\":\"none | <filter-function-list>\",\"backface-visibility\":\"visible | hidden\",\"background\":\"[ <bg-layer> , ]* <final-bg-layer>\",\"background-attachment\":\"<attachment>#\",\"background-blend-mode\":\"<blend-mode>#\",\"background-clip\":\"<box>#\",\"background-color\":\"<color>\",\"background-image\":\"<bg-image>#\",\"background-origin\":\"<box>#\",\"background-position\":\"<bg-position>#\",\"background-position-x\":\"[ center | [ left | right | x-start | x-end ]? <length-percentage>? ]#\",\"background-position-y\":\"[ center | [ top | bottom | y-start | y-end ]? <length-percentage>? ]#\",\"background-repeat\":\"<repeat-style>#\",\"background-size\":\"<bg-size>#\",\"block-overflow\":\"clip | ellipsis | <string>\",\"block-size\":\"<'width'>\",\"border\":\"<br-width> || <br-style> || <color>\",\"border-block-end\":\"<'border-width'> || <'border-style'> || <'color'>\",\"border-block-end-color\":\"<'color'>\",\"border-block-end-style\":\"<'border-style'>\",\"border-block-end-width\":\"<'border-width'>\",\"border-block-start\":\"<'border-width'> || <'border-style'> || <'color'>\",\"border-block-start-color\":\"<'color'>\",\"border-block-start-style\":\"<'border-style'>\",\"border-block-start-width\":\"<'border-width'>\",\"border-bottom\":\"<br-width> || <br-style> || <color>\",\"border-bottom-color\":\"<color>\",\"border-bottom-left-radius\":\"<length-percentage>{1,2}\",\"border-bottom-right-radius\":\"<length-percentage>{1,2}\",\"border-bottom-style\":\"<br-style>\",\"border-bottom-width\":\"<br-width>\",\"border-collapse\":\"collapse | separate\",\"border-color\":\"<color>{1,4}\",\"border-image\":\"<'border-image-source'> || <'border-image-slice'> [ / <'border-image-width'> | / <'border-image-width'>? / <'border-image-outset'> ]? || <'border-image-repeat'>\",\"border-image-outset\":\"[ <length> | <number> ]{1,4}\",\"border-image-repeat\":\"[ stretch | repeat | round | space ]{1,2}\",\"border-image-slice\":\"<number-percentage>{1,4} && fill?\",\"border-image-source\":\"none | <image>\",\"border-image-width\":\"[ <length-percentage> | <number> | auto ]{1,4}\",\"border-inline-end\":\"<'border-width'> || <'border-style'> || <'color'>\",\"border-inline-end-color\":\"<'color'>\",\"border-inline-end-style\":\"<'border-style'>\",\"border-inline-end-width\":\"<'border-width'>\",\"border-inline-start\":\"<'border-width'> || <'border-style'> || <'color'>\",\"border-inline-start-color\":\"<'color'>\",\"border-inline-start-style\":\"<'border-style'>\",\"border-inline-start-width\":\"<'border-width'>\",\"border-left\":\"<br-width> || <br-style> || <color>\",\"border-left-color\":\"<color>\",\"border-left-style\":\"<br-style>\",\"border-left-width\":\"<br-width>\",\"border-radius\":\"<length-percentage>{1,4} [ / <length-percentage>{1,4} ]?\",\"border-right\":\"<br-width> || <br-style> || <color>\",\"border-right-color\":\"<color>\",\"border-right-style\":\"<br-style>\",\"border-right-width\":\"<br-width>\",\"border-spacing\":\"<length> <length>?\",\"border-style\":\"<br-style>{1,4}\",\"border-top\":\"<br-width> || <br-style> || <color>\",\"border-top-color\":\"<color>\",\"border-top-left-radius\":\"<length-percentage>{1,2}\",\"border-top-right-radius\":\"<length-percentage>{1,2}\",\"border-top-style\":\"<br-style>\",\"border-top-width\":\"<br-width>\",\"border-width\":\"<br-width>{1,4}\",\"bottom\":\"<length> | <percentage> | auto\",\"box-align\":\"start | center | end | baseline | stretch\",\"box-decoration-break\":\"slice | clone\",\"box-direction\":\"normal | reverse | inherit\",\"box-flex\":\"<number>\",\"box-flex-group\":\"<integer>\",\"box-lines\":\"single | multiple\",\"box-ordinal-group\":\"<integer>\",\"box-orient\":\"horizontal | vertical | inline-axis | block-axis | inherit\",\"box-pack\":\"start | center | end | justify\",\"box-shadow\":\"none | <shadow>#\",\"box-sizing\":\"content-box | border-box\",\"break-after\":\"auto | avoid | avoid-page | page | left | right | recto | verso | avoid-column | column | avoid-region | region\",\"break-before\":\"auto | avoid | avoid-page | page | left | right | recto | verso | avoid-column | column | avoid-region | region\",\"break-inside\":\"auto | avoid | avoid-page | avoid-column | avoid-region\",\"caption-side\":\"top | bottom | block-start | block-end | inline-start | inline-end\",\"caret-color\":\"auto | <color>\",\"clear\":\"none | left | right | both | inline-start | inline-end\",\"clip\":\"<shape> | auto\",\"clip-path\":\"<clip-source> | [ <basic-shape> || <geometry-box> ] | none\",\"color\":\"<color>\",\"color-adjust\":\"economy | exact\",\"column-count\":\"<integer> | auto\",\"column-fill\":\"auto | balance | balance-all\",\"column-gap\":\"normal | <length-percentage>\",\"column-rule\":\"<'column-rule-width'> || <'column-rule-style'> || <'column-rule-color'>\",\"column-rule-color\":\"<color>\",\"column-rule-style\":\"<'border-style'>\",\"column-rule-width\":\"<'border-width'>\",\"column-span\":\"none | all\",\"column-width\":\"<length> | auto\",\"columns\":\"<'column-width'> || <'column-count'>\",\"contain\":\"none | strict | content | [ size || layout || style || paint ]\",\"content\":\"normal | none | [ <content-replacement> | <content-list> ] [ / <string> ]?\",\"counter-increment\":\"[ <custom-ident> <integer>? ]+ | none\",\"counter-reset\":\"[ <custom-ident> <integer>? ]+ | none\",\"cursor\":\"[ [ <url> [ <x> <y> ]? , ]* [ auto | default | none | context-menu | help | pointer | progress | wait | cell | crosshair | text | vertical-text | alias | copy | move | no-drop | not-allowed | e-resize | n-resize | ne-resize | nw-resize | s-resize | se-resize | sw-resize | w-resize | ew-resize | ns-resize | nesw-resize | nwse-resize | col-resize | row-resize | all-scroll | zoom-in | zoom-out | grab | grabbing | hand | -webkit-grab | -webkit-grabbing | -webkit-zoom-in | -webkit-zoom-out | -moz-grab | -moz-grabbing | -moz-zoom-in | -moz-zoom-out ] ]\",\"direction\":\"ltr | rtl\",\"display\":\"none | inline | block | list-item | inline-list-item | inline-block | inline-table | table | table-cell | table-column | table-column-group | table-footer-group | table-header-group | table-row | table-row-group | flex | inline-flex | grid | inline-grid | run-in | ruby | ruby-base | ruby-text | ruby-base-container | ruby-text-container | contents | -ms-flexbox | -ms-inline-flexbox | -ms-grid | -ms-inline-grid | -webkit-flex | -webkit-inline-flex | -webkit-box | -webkit-inline-box | -moz-inline-stack | -moz-box | -moz-inline-box\",\"empty-cells\":\"show | hide\",\"filter\":\"none | <filter-function-list> | <-ms-filter>\",\"flex\":\"none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]\",\"flex-basis\":\"content | <'width'>\",\"flex-direction\":\"row | row-reverse | column | column-reverse\",\"flex-flow\":\"<'flex-direction'> || <'flex-wrap'>\",\"flex-grow\":\"<number>\",\"flex-shrink\":\"<number>\",\"flex-wrap\":\"nowrap | wrap | wrap-reverse\",\"float\":\"left | right | none | inline-start | inline-end\",\"font\":\"[ [ <'font-style'> || <font-variant-css21> || <'font-weight'> || <'font-stretch'> ]? <'font-size'> [ / <'line-height'> ]? <'font-family'> ] | caption | icon | menu | message-box | small-caption | status-bar | <-non-standard-font>\",\"font-family\":\"[ <family-name> | <generic-family> ]#\",\"font-feature-settings\":\"normal | <feature-tag-value>#\",\"font-kerning\":\"auto | normal | none\",\"font-language-override\":\"normal | <string>\",\"font-optical-sizing\":\"auto | none\",\"font-variation-settings\":\"normal | [ <string> <number> ]#\",\"font-size\":\"<absolute-size> | <relative-size> | <length-percentage>\",\"font-size-adjust\":\"none | <number>\",\"font-stretch\":\"normal | ultra-condensed | extra-condensed | condensed | semi-condensed | semi-expanded | expanded | extra-expanded | ultra-expanded\",\"font-style\":\"normal | italic | oblique\",\"font-synthesis\":\"none | [ weight || style ]\",\"font-variant\":\"normal | none | [ <common-lig-values> || <discretionary-lig-values> || <historical-lig-values> || <contextual-alt-values> || stylistic( <feature-value-name> ) || historical-forms || styleset( <feature-value-name># ) || character-variant( <feature-value-name># ) || swash( <feature-value-name> ) || ornaments( <feature-value-name> ) || annotation( <feature-value-name> ) || [ small-caps | all-small-caps | petite-caps | all-petite-caps | unicase | titling-caps ] || <numeric-figure-values> || <numeric-spacing-values> || <numeric-fraction-values> || ordinal || slashed-zero || <east-asian-variant-values> || <east-asian-width-values> || ruby ]\",\"font-variant-alternates\":\"normal | [ stylistic( <feature-value-name> ) || historical-forms || styleset( <feature-value-name># ) || character-variant( <feature-value-name># ) || swash( <feature-value-name> ) || ornaments( <feature-value-name> ) || annotation( <feature-value-name> ) ]\",\"font-variant-caps\":\"normal | small-caps | all-small-caps | petite-caps | all-petite-caps | unicase | titling-caps\",\"font-variant-east-asian\":\"normal | [ <east-asian-variant-values> || <east-asian-width-values> || ruby ]\",\"font-variant-ligatures\":\"normal | none | [ <common-lig-values> || <discretionary-lig-values> || <historical-lig-values> || <contextual-alt-values> ]\",\"font-variant-numeric\":\"normal | [ <numeric-figure-values> || <numeric-spacing-values> || <numeric-fraction-values> || ordinal || slashed-zero ]\",\"font-variant-position\":\"normal | sub | super\",\"font-weight\":\"normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900\",\"gap\":\"<'row-gap'> <'column-gap'>?\",\"grid\":\"<'grid-template'> | <'grid-template-rows'> / [ auto-flow && dense? ] <'grid-auto-columns'>? | [ auto-flow && dense? ] <'grid-auto-rows'>? / <'grid-template-columns'>\",\"grid-area\":\"<grid-line> [ / <grid-line> ]{0,3}\",\"grid-auto-columns\":\"<track-size>+\",\"grid-auto-flow\":\"[ row | column ] || dense\",\"grid-auto-rows\":\"<track-size>+\",\"grid-column\":\"<grid-line> [ / <grid-line> ]?\",\"grid-column-end\":\"<grid-line>\",\"grid-column-gap\":\"<length-percentage>\",\"grid-column-start\":\"<grid-line>\",\"grid-gap\":\"<'grid-row-gap'> <'grid-column-gap'>?\",\"grid-row\":\"<grid-line> [ / <grid-line> ]?\",\"grid-row-end\":\"<grid-line>\",\"grid-row-gap\":\"<length-percentage>\",\"grid-row-start\":\"<grid-line>\",\"grid-template\":\"none | [ <'grid-template-rows'> / <'grid-template-columns'> ] | [ <line-names>? <string> <track-size>? <line-names>? ]+ [ / <explicit-track-list> ]?\",\"grid-template-areas\":\"none | <string>+\",\"grid-template-columns\":\"none | <track-list> | <auto-track-list>\",\"grid-template-rows\":\"none | <track-list> | <auto-track-list>\",\"hanging-punctuation\":\"none | [ first || [ force-end | allow-end ] || last ]\",\"height\":\"[ <length> | <percentage> ] && [ border-box | content-box ]? | available | min-content | max-content | fit-content | auto\",\"hyphens\":\"none | manual | auto\",\"image-orientation\":\"from-image | <angle> | [ <angle>? flip ]\",\"image-rendering\":\"auto | crisp-edges | pixelated | optimizeSpeed | optimizeQuality | <-non-standard-image-rendering>\",\"image-resolution\":\"[ from-image || <resolution> ] && snap?\",\"ime-mode\":\"auto | normal | active | inactive | disabled\",\"initial-letter\":\"normal | [ <number> <integer>? ]\",\"initial-letter-align\":\"[ auto | alphabetic | hanging | ideographic ]\",\"inline-size\":\"<'width'>\",\"isolation\":\"auto | isolate\",\"justify-content\":\"normal | <content-distribution> | <overflow-position>? [ <content-position> | left | right ]\",\"justify-items\":\"normal | stretch | <baseline-position> | <overflow-position>? [ <self-position> | left | right ] | legacy | legacy && [ left | right | center ]\",\"justify-self\":\"auto | normal | stretch | <baseline-position> | <overflow-position>? [ <self-position> | left | right ]\",\"left\":\"<length> | <percentage> | auto\",\"letter-spacing\":\"normal | <length-percentage>\",\"line-break\":\"auto | loose | normal | strict\",\"line-clamp\":\"none | <integer>\",\"line-height\":\"normal | <number> | <length> | <percentage>\",\"line-height-step\":\"none | <length>\",\"list-style\":\"<'list-style-type'> || <'list-style-position'> || <'list-style-image'>\",\"list-style-image\":\"<url> | none\",\"list-style-position\":\"inside | outside\",\"list-style-type\":\"<counter-style> | <string> | none\",\"margin\":\"[ <length> | <percentage> | auto ]{1,4}\",\"margin-block-end\":\"<'margin-left'>\",\"margin-block-start\":\"<'margin-left'>\",\"margin-bottom\":\"<length> | <percentage> | auto\",\"margin-inline-end\":\"<'margin-left'>\",\"margin-inline-start\":\"<'margin-left'>\",\"margin-left\":\"<length> | <percentage> | auto\",\"margin-right\":\"<length> | <percentage> | auto\",\"margin-top\":\"<length> | <percentage> | auto\",\"mask\":\"<mask-layer>#\",\"mask-border\":\"<'mask-border-source'> || <'mask-border-slice'> [ / <'mask-border-width'>? [ / <'mask-border-outset'> ]? ]? || <'mask-border-repeat'> || <'mask-border-mode'>\",\"mask-border-mode\":\"luminance | alpha\",\"mask-border-outset\":\"[ <length> | <number> ]{1,4}\",\"mask-border-repeat\":\"[ stretch | repeat | round | space ]{1,2}\",\"mask-border-slice\":\"<number-percentage>{1,4} fill?\",\"mask-border-source\":\"none | <image>\",\"mask-border-width\":\"[ <length-percentage> | <number> | auto ]{1,4}\",\"mask-clip\":\"[ <geometry-box> | no-clip ]#\",\"mask-composite\":\"<compositing-operator>#\",\"mask-image\":\"<mask-reference>#\",\"mask-mode\":\"<masking-mode>#\",\"mask-origin\":\"<geometry-box>#\",\"mask-position\":\"<position>#\",\"mask-repeat\":\"<repeat-style>#\",\"mask-size\":\"<bg-size>#\",\"mask-type\":\"luminance | alpha\",\"max-block-size\":\"<'max-width'>\",\"max-height\":\"<length> | <percentage> | none | max-content | min-content | fit-content | fill-available\",\"max-inline-size\":\"<'max-width'>\",\"max-lines\":\"none | <integer>\",\"max-width\":\"<length> | <percentage> | none | max-content | min-content | fit-content | fill-available | <-non-standard-width>\",\"min-block-size\":\"<'min-width'>\",\"min-height\":\"<length> | <percentage> | auto | max-content | min-content | fit-content | fill-available\",\"min-inline-size\":\"<'min-width'>\",\"min-width\":\"<length> | <percentage> | auto | max-content | min-content | fit-content | fill-available | <-non-standard-width>\",\"mix-blend-mode\":\"<blend-mode>\",\"object-fit\":\"fill | contain | cover | none | scale-down\",\"object-position\":\"<position>\",\"offset\":\"[ <'offset-position'>? [ <'offset-path'> [ <'offset-distance'> || <'offset-rotate'> ]? ]? ]! [ / <'offset-anchor'> ]?\",\"offset-anchor\":\"auto | <position>\",\"offset-block-end\":\"<'left'>\",\"offset-block-start\":\"<'left'>\",\"offset-inline-end\":\"<'left'>\",\"offset-inline-start\":\"<'left'>\",\"offset-distance\":\"<length-percentage>\",\"offset-path\":\"none | ray( [ <angle> && <size>? && contain? ] ) | <path()> | <url> | [ <basic-shape> || <geometry-box> ]\",\"offset-position\":\"auto | <position>\",\"offset-rotate\":\"[ auto | reverse ] || <angle>\",\"opacity\":\"<number-zero-one>\",\"order\":\"<integer>\",\"orphans\":\"<integer>\",\"outline\":\"[ <'outline-color'> || <'outline-style'> || <'outline-width'> ]\",\"outline-color\":\"<color> | invert\",\"outline-offset\":\"<length>\",\"outline-style\":\"auto | <br-style>\",\"outline-width\":\"<br-width>\",\"overflow\":\"visible | hidden | scroll | auto | <-non-standard-overflow>\",\"overflow-anchor\":\"auto | none\",\"overflow-block\":\"<'overflow'>\",\"overflow-clip-box\":\"padding-box | content-box\",\"overflow-inline\":\"<'overflow'>\",\"overflow-wrap\":\"normal | break-word\",\"overflow-x\":\"visible | hidden | clip | scroll | auto\",\"overflow-y\":\"visible | hidden | clip | scroll | auto\",\"overscroll-behavior\":\"[ contain | none | auto ]{1,2}\",\"overscroll-behavior-x\":\"contain | none | auto\",\"overscroll-behavior-y\":\"contain | none | auto\",\"padding\":\"[ <length> | <percentage> ]{1,4}\",\"padding-block-end\":\"<'padding-left'>\",\"padding-block-start\":\"<'padding-left'>\",\"padding-bottom\":\"<length> | <percentage>\",\"padding-inline-end\":\"<'padding-left'>\",\"padding-inline-start\":\"<'padding-left'>\",\"padding-left\":\"<length> | <percentage>\",\"padding-right\":\"<length> | <percentage>\",\"padding-top\":\"<length> | <percentage>\",\"page-break-after\":\"auto | always | avoid | left | right | recto | verso\",\"page-break-before\":\"auto | always | avoid | left | right | recto | verso\",\"page-break-inside\":\"auto | avoid\",\"paint-order\":\"normal | [ fill || stroke || markers ]\",\"perspective\":\"none | <length>\",\"perspective-origin\":\"<position>\",\"place-content\":\"<'align-content'> <'justify-content'>?\",\"pointer-events\":\"auto | none | visiblePainted | visibleFill | visibleStroke | visible | painted | fill | stroke | all | inherit\",\"position\":\"static | relative | absolute | sticky | fixed | -webkit-sticky\",\"quotes\":\"none | [ <string> <string> ]+\",\"resize\":\"none | both | horizontal | vertical\",\"right\":\"<length> | <percentage> | auto\",\"rotate\":\"none | [ x | y | z | <number>{3} ]? && <angle>\",\"row-gap\":\"normal | <length-percentage>\",\"ruby-align\":\"start | center | space-between | space-around\",\"ruby-merge\":\"separate | collapse | auto\",\"ruby-position\":\"over | under | inter-character\",\"scale\":\"none | <number>{1,3}\",\"scroll-behavior\":\"auto | smooth\",\"scroll-snap-coordinate\":\"none | <position>#\",\"scroll-snap-destination\":\"<position>\",\"scroll-snap-points-x\":\"none | repeat( <length-percentage> )\",\"scroll-snap-points-y\":\"none | repeat( <length-percentage> )\",\"scroll-snap-type\":\"none | mandatory | proximity\",\"scroll-snap-type-x\":\"none | mandatory | proximity\",\"scroll-snap-type-y\":\"none | mandatory | proximity\",\"shape-image-threshold\":\"<number>\",\"shape-margin\":\"<length-percentage>\",\"shape-outside\":\"none | <shape-box> || <basic-shape> | <image>\",\"tab-size\":\"<integer> | <length>\",\"table-layout\":\"auto | fixed\",\"text-align\":\"start | end | left | right | center | justify | match-parent\",\"text-align-last\":\"auto | start | end | left | right | center | justify\",\"text-combine-upright\":\"none | all | [ digits <integer>? ]\",\"text-decoration\":\"<'text-decoration-line'> || <'text-decoration-style'> || <'text-decoration-color'>\",\"text-decoration-color\":\"<color>\",\"text-decoration-line\":\"none | [ underline || overline || line-through || blink ]\",\"text-decoration-skip\":\"none | [ objects || [ spaces | [ leading-spaces || trailing-spaces ] ] || edges || box-decoration ]\",\"text-decoration-skip-ink\":\"auto | none\",\"text-decoration-style\":\"solid | double | dotted | dashed | wavy\",\"text-emphasis\":\"<'text-emphasis-style'> || <'text-emphasis-color'>\",\"text-emphasis-color\":\"<color>\",\"text-emphasis-position\":\"[ over | under ] && [ right | left ]\",\"text-emphasis-style\":\"none | [ [ filled | open ] || [ dot | circle | double-circle | triangle | sesame ] ] | <string>\",\"text-indent\":\"<length-percentage> && hanging? && each-line?\",\"text-justify\":\"auto | inter-character | inter-word | none\",\"text-orientation\":\"mixed | upright | sideways\",\"text-overflow\":\"[ clip | ellipsis | <string> ]{1,2}\",\"text-rendering\":\"auto | optimizeSpeed | optimizeLegibility | geometricPrecision\",\"text-shadow\":\"none | <shadow-t>#\",\"text-size-adjust\":\"none | auto | <percentage>\",\"text-transform\":\"none | capitalize | uppercase | lowercase | full-width\",\"text-underline-position\":\"auto | [ under || [ left | right ] ]\",\"top\":\"<length> | <percentage> | auto\",\"touch-action\":\"auto | none | [ [ pan-x | pan-left | pan-right ] || [ pan-y | pan-up | pan-down ] || pinch-zoom ] | manipulation\",\"transform\":\"none | <transform-list>\",\"transform-box\":\"border-box | fill-box | view-box\",\"transform-origin\":\"[ [ <length-percentage> | left | center | right ] && [ <length-percentage> | top | center | bottom ] ] <length>? | [ <length-percentage> | left | center | right | top | bottom ]\",\"transform-style\":\"flat | preserve-3d\",\"transition\":\"<single-transition>#\",\"transition-delay\":\"<time>#\",\"transition-duration\":\"<time>#\",\"transition-property\":\"none | <single-transition-property>#\",\"transition-timing-function\":\"<single-transition-timing-function>#\",\"translate\":\"none | <length-percentage> [ <length-percentage> <length>? ]?\",\"unicode-bidi\":\"normal | embed | isolate | bidi-override | isolate-override | plaintext | -moz-isolate | -moz-isolate-override | -moz-plaintext | -webkit-isolate\",\"user-select\":\"auto | text | none | contain | all\",\"vertical-align\":\"baseline | sub | super | text-top | text-bottom | middle | top | bottom | <percentage> | <length>\",\"visibility\":\"visible | hidden | collapse\",\"white-space\":\"normal | pre | nowrap | pre-wrap | pre-line\",\"widows\":\"<integer>\",\"width\":\"[ <length> | <percentage> ] && [ border-box | content-box ]? | available | min-content | max-content | fit-content | auto\",\"will-change\":\"auto | <animateable-feature>#\",\"word-break\":\"normal | break-all | keep-all | <-non-standard-word-break>\",\"word-spacing\":\"normal | <length-percentage>\",\"word-wrap\":\"normal | break-word\",\"writing-mode\":\"horizontal-tb | vertical-rl | vertical-lr | sideways-rl | sideways-lr | <svg-writing-mode>\",\"z-index\":\"auto | <integer>\",\"zoom\":\"normal | reset | <number> | <percentage>\",\"-moz-background-clip\":\"padding | border\",\"-moz-border-radius-bottomleft\":\"<'border-bottom-left-radius'>\",\"-moz-border-radius-bottomright\":\"<'border-bottom-right-radius'>\",\"-moz-border-radius-topleft\":\"<'border-top-left-radius'>\",\"-moz-border-radius-topright\":\"<'border-bottom-right-radius'>\",\"-moz-osx-font-smoothing\":\"auto | grayscale\",\"-moz-user-select\":\"none | text | all | -moz-none\",\"-ms-flex-align\":\"start | end | center | baseline | stretch\",\"-ms-flex-item-align\":\"auto | start | end | center | baseline | stretch\",\"-ms-flex-line-pack\":\"start | end | center | justify | distribute | stretch\",\"-ms-flex-negative\":\"<'flex-shrink'>\",\"-ms-flex-pack\":\"start | end | center | justify | distribute\",\"-ms-flex-order\":\"<integer>\",\"-ms-flex-positive\":\"<'flex-grow'>\",\"-ms-flex-preferred-size\":\"<'flex-basis'>\",\"-ms-interpolation-mode\":\"nearest-neighbor | bicubic\",\"-ms-grid-column-align\":\"start | end | center | stretch\",\"-ms-grid-row-align\":\"start | end | center | stretch\",\"-webkit-background-clip\":\"[ <box> | border | padding | content | text ]#\",\"-webkit-column-break-after\":\"always | auto | avoid\",\"-webkit-column-break-before\":\"always | auto | avoid\",\"-webkit-column-break-inside\":\"always | auto | avoid\",\"-webkit-font-smoothing\":\"auto | none | antialiased | subpixel-antialiased\",\"-webkit-line-clamp\":\"<positive-integer>\",\"-webkit-mask-box-image\":\"[ <url> | <gradient> | none ] [ <length-percentage>{4} <-webkit-mask-box-repeat>{2} ]?\",\"-webkit-print-color-adjust\":\"economy | exact\",\"-webkit-text-security\":\"none | circle | disc | square\",\"-webkit-user-drag\":\"none | element | auto\",\"-webkit-user-select\":\"auto | none | text | all\",\"alignment-baseline\":\"auto | baseline | before-edge | text-before-edge | middle | central | after-edge | text-after-edge | ideographic | alphabetic | hanging | mathematical\",\"baseline-shift\":\"baseline | sub | super | <svg-length>\",\"behavior\":\"<url>+\",\"clip-rule\":\"nonzero | evenodd\",\"cue\":\"<'cue-before'> <'cue-after'>?\",\"cue-after\":\"<url> <decibel>? | none\",\"cue-before\":\"<url> <decibel>? | none\",\"dominant-baseline\":\"auto | use-script | no-change | reset-size | ideographic | alphabetic | hanging | mathematical | central | middle | text-after-edge | text-before-edge\",\"fill\":\"<paint>\",\"fill-opacity\":\"<number-zero-one>\",\"fill-rule\":\"nonzero | evenodd\",\"glyph-orientation-horizontal\":\"<angle>\",\"glyph-orientation-vertical\":\"<angle>\",\"kerning\":\"auto | <svg-length>\",\"marker\":\"none | <url>\",\"marker-end\":\"none | <url>\",\"marker-mid\":\"none | <url>\",\"marker-start\":\"none | <url>\",\"pause\":\"<'pause-before'> <'pause-after'>?\",\"pause-after\":\"<time> | none | x-weak | weak | medium | strong | x-strong\",\"pause-before\":\"<time> | none | x-weak | weak | medium | strong | x-strong\",\"rest\":\"<'rest-before'> <'rest-after'>?\",\"rest-after\":\"<time> | none | x-weak | weak | medium | strong | x-strong\",\"rest-before\":\"<time> | none | x-weak | weak | medium | strong | x-strong\",\"shape-rendering\":\"auto | optimizeSpeed | crispEdges | geometricPrecision\",\"src\":\"[ <url> [ format( <string># ) ]? | local( <family-name> ) ]#\",\"speak\":\"auto | none | normal\",\"speak-as\":\"normal | spell-out || digits || [ literal-punctuation | no-punctuation ]\",\"stroke\":\"<paint>\",\"stroke-dasharray\":\"none | [ <svg-length>+ ]#\",\"stroke-dashoffset\":\"<svg-length>\",\"stroke-linecap\":\"butt | round | square\",\"stroke-linejoin\":\"miter | round | bevel\",\"stroke-miterlimit\":\"<number-one-or-greater>\",\"stroke-opacity\":\"<number-zero-one>\",\"stroke-width\":\"<svg-length>\",\"text-anchor\":\"start | middle | end\",\"unicode-range\":\"<unicode-range>#\",\"voice-balance\":\"<number> | left | center | right | leftwards | rightwards\",\"voice-duration\":\"auto | <time>\",\"voice-family\":\"[ [ <family-name> | <generic-voice> ] , ]* [ <family-name> | <generic-voice> ] | preserve\",\"voice-pitch\":\"<frequency> && absolute | [ [ x-low | low | medium | high | x-high ] || [ <frequency> | <semitones> | <percentage> ] ]\",\"voice-range\":\"<frequency> && absolute | [ [ x-low | low | medium | high | x-high ] || [ <frequency> | <semitones> | <percentage> ] ]\",\"voice-rate\":\"[ normal | x-slow | slow | medium | fast | x-fast ] || <percentage>\",\"voice-stress\":\"normal | strong | moderate | none | reduced\",\"voice-volume\":\"silent | [ [ x-soft | soft | medium | loud | x-loud ] || <decibel> ]\"}}");
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cmpChar = __webpack_require__(0).cmpChar;
@@ -36897,7 +37057,7 @@ module.exports = {
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37009,7 +37169,7 @@ module.exports = {
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37066,7 +37226,7 @@ module.exports = {
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37234,7 +37394,7 @@ module.exports = {
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37330,7 +37490,7 @@ module.exports = {
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37369,7 +37529,7 @@ module.exports = {
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var CDC = __webpack_require__(0).TYPE.CDC;
@@ -37394,7 +37554,7 @@ module.exports = {
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var CDO = __webpack_require__(0).TYPE.CDO;
@@ -37419,7 +37579,7 @@ module.exports = {
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37449,7 +37609,7 @@ module.exports = {
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37498,7 +37658,7 @@ module.exports = {
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37539,10 +37699,10 @@ module.exports = {
 
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isCustomProperty = __webpack_require__(26).isCustomProperty;
+var isCustomProperty = __webpack_require__(25).isCustomProperty;
 var TYPE = __webpack_require__(0).TYPE;
 
 var IDENTIFIER = TYPE.Identifier;
@@ -37689,7 +37849,7 @@ function getImportant(scanner) {
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37743,7 +37903,7 @@ module.exports = {
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var NUMBER = __webpack_require__(0).TYPE.Number;
@@ -37794,7 +37954,7 @@ module.exports = {
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37839,7 +37999,7 @@ module.exports = {
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isHex = __webpack_require__(0).isHex;
@@ -37919,7 +38079,7 @@ module.exports = {
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37944,7 +38104,7 @@ module.exports = {
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -37974,7 +38134,7 @@ module.exports = {
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38053,7 +38213,7 @@ module.exports = {
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38127,7 +38287,7 @@ module.exports = {
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var COMMA = __webpack_require__(0).TYPE.Comma;
@@ -38169,7 +38329,7 @@ module.exports = {
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports) {
 
 // https://drafts.csswg.org/css-syntax-3/#the-anb-type
@@ -38227,7 +38387,7 @@ module.exports = {
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var NUMBER = __webpack_require__(0).TYPE.Number;
@@ -38251,7 +38411,7 @@ module.exports = {
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports) {
 
 // '/' | '*' | ',' | ':' | '+' | '-'
@@ -38278,7 +38438,7 @@ module.exports = {
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38317,7 +38477,7 @@ module.exports = {
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38350,7 +38510,7 @@ module.exports = {
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38417,7 +38577,7 @@ module.exports = {
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38485,7 +38645,7 @@ module.exports = {
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isNumber = __webpack_require__(0).isNumber;
@@ -38548,7 +38708,7 @@ module.exports = {
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -38588,7 +38748,7 @@ module.exports = {
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38647,7 +38807,7 @@ module.exports = {
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -38685,7 +38845,7 @@ module.exports = {
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38730,7 +38890,7 @@ module.exports = {
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var STRING = __webpack_require__(0).TYPE.String;
@@ -38754,7 +38914,7 @@ module.exports = {
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38841,7 +39001,7 @@ module.exports = {
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -38900,7 +39060,7 @@ module.exports = {
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isHex = __webpack_require__(0).isHex;
@@ -39031,7 +39191,7 @@ module.exports = {
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -39086,7 +39246,7 @@ module.exports = {
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -39111,7 +39271,7 @@ module.exports = {
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var WHITESPACE = __webpack_require__(0).TYPE.WhiteSpace;
@@ -39143,7 +39303,7 @@ module.exports = {
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
@@ -39166,21 +39326,10 @@ module.exports = {
         declaration: 'Declaration',
         value: 'Value'
     },
-    scope: __webpack_require__(168),
-    atrule: __webpack_require__(174),
-    pseudo: __webpack_require__(180),
-    node: __webpack_require__(28)
-};
-
-
-/***/ }),
-/* 168 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = {
-    AtrulePrelude: __webpack_require__(169),
-    Selector: __webpack_require__(170),
-    Value: __webpack_require__(171)
+    scope: __webpack_require__(169),
+    atrule: __webpack_require__(175),
+    pseudo: __webpack_require__(181),
+    node: __webpack_require__(27)
 };
 
 
@@ -39189,12 +39338,23 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    getNode: __webpack_require__(53)
+    AtrulePrelude: __webpack_require__(170),
+    Selector: __webpack_require__(171),
+    Value: __webpack_require__(172)
 };
 
 
 /***/ }),
 /* 170 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = {
+    getNode: __webpack_require__(53)
+};
+
+
+/***/ }),
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -39256,20 +39416,20 @@ module.exports = {
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
     getNode: __webpack_require__(53),
     '-moz-element': __webpack_require__(54),
     'element': __webpack_require__(54),
-    'expression': __webpack_require__(172),
-    'var': __webpack_require__(173)
+    'expression': __webpack_require__(173),
+    'var': __webpack_require__(174)
 };
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 // legacy IE function
@@ -39282,7 +39442,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -39328,20 +39488,20 @@ module.exports = function() {
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    'font-face': __webpack_require__(175),
-    'import': __webpack_require__(176),
-    'media': __webpack_require__(177),
-    'page': __webpack_require__(178),
-    'supports': __webpack_require__(179)
+    'font-face': __webpack_require__(176),
+    'import': __webpack_require__(177),
+    'media': __webpack_require__(178),
+    'page': __webpack_require__(179),
+    'supports': __webpack_require__(180)
 };
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -39355,7 +39515,7 @@ module.exports = {
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -39399,7 +39559,7 @@ module.exports = {
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -39417,7 +39577,7 @@ module.exports = {
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -39435,7 +39595,7 @@ module.exports = {
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TYPE = __webpack_require__(0).TYPE;
@@ -39540,33 +39700,20 @@ module.exports = {
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    'dir': __webpack_require__(181),
-    'has': __webpack_require__(182),
-    'lang': __webpack_require__(183),
-    'matches': __webpack_require__(184),
-    'not': __webpack_require__(185),
-    'nth-child': __webpack_require__(186),
-    'nth-last-child': __webpack_require__(187),
-    'nth-last-of-type': __webpack_require__(188),
-    'nth-of-type': __webpack_require__(189),
-    'slotted': __webpack_require__(190)
-};
-
-
-/***/ }),
-/* 181 */
-/***/ (function(module, exports) {
-
-module.exports = {
-    parse: function() {
-        return this.createSingleNodeList(
-            this.Identifier()
-        );
-    }
+    'dir': __webpack_require__(182),
+    'has': __webpack_require__(183),
+    'lang': __webpack_require__(184),
+    'matches': __webpack_require__(185),
+    'not': __webpack_require__(186),
+    'nth-child': __webpack_require__(187),
+    'nth-last-child': __webpack_require__(188),
+    'nth-last-of-type': __webpack_require__(189),
+    'nth-of-type': __webpack_require__(190),
+    'slotted': __webpack_require__(191)
 };
 
 
@@ -39577,7 +39724,7 @@ module.exports = {
 module.exports = {
     parse: function() {
         return this.createSingleNodeList(
-            this.SelectorList()
+            this.Identifier()
         );
     }
 };
@@ -39590,7 +39737,7 @@ module.exports = {
 module.exports = {
     parse: function() {
         return this.createSingleNodeList(
-            this.Identifier()
+            this.SelectorList()
         );
     }
 };
@@ -39598,9 +39745,15 @@ module.exports = {
 
 /***/ }),
 /* 184 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = __webpack_require__(55);
+module.exports = {
+    parse: function() {
+        return this.createSingleNodeList(
+            this.Identifier()
+        );
+    }
+};
 
 
 /***/ }),
@@ -39614,7 +39767,7 @@ module.exports = __webpack_require__(55);
 /* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(56);
+module.exports = __webpack_require__(55);
 
 
 /***/ }),
@@ -39628,7 +39781,7 @@ module.exports = __webpack_require__(56);
 /* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(57);
+module.exports = __webpack_require__(56);
 
 
 /***/ }),
@@ -39640,6 +39793,13 @@ module.exports = __webpack_require__(57);
 
 /***/ }),
 /* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(57);
+
+
+/***/ }),
+/* 191 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -39652,24 +39812,24 @@ module.exports = {
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-    node: __webpack_require__(28)
+    node: __webpack_require__(27)
 };
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
 var clone = __webpack_require__(1).clone;
-var usageUtils = __webpack_require__(193);
-var clean = __webpack_require__(194);
-var replace = __webpack_require__(202);
-var restructure = __webpack_require__(214);
+var usageUtils = __webpack_require__(194);
+var clean = __webpack_require__(195);
+var replace = __webpack_require__(203);
+var restructure = __webpack_require__(215);
 var walk = __webpack_require__(1).walk;
 
 function readChunk(children, specialComments) {
@@ -39862,7 +40022,7 @@ module.exports = function compress(ast, options) {
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports) {
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -39947,18 +40107,18 @@ module.exports = {
 
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
 var handlers = {
-    Atrule: __webpack_require__(195),
-    Rule: __webpack_require__(196),
-    Declaration: __webpack_require__(197),
-    TypeSelector: __webpack_require__(198),
-    Comment: __webpack_require__(199),
-    Operator: __webpack_require__(200),
-    WhiteSpace: __webpack_require__(201)
+    Atrule: __webpack_require__(196),
+    Rule: __webpack_require__(197),
+    Declaration: __webpack_require__(198),
+    TypeSelector: __webpack_require__(199),
+    Comment: __webpack_require__(200),
+    Operator: __webpack_require__(201),
+    WhiteSpace: __webpack_require__(202)
 };
 
 module.exports = function(ast, options) {
@@ -39973,7 +40133,7 @@ module.exports = function(ast, options) {
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var resolveKeyword = __webpack_require__(1).keyword;
@@ -40044,7 +40204,7 @@ module.exports = function cleanAtrule(node, item, list) {
 
 
 /***/ }),
-/* 196 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -40137,7 +40297,7 @@ module.exports = function cleanRuleset(node, item, list, options) {
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports) {
 
 module.exports = function cleanDeclartion(node, item, list) {
@@ -40148,7 +40308,7 @@ module.exports = function cleanDeclartion(node, item, list) {
 
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports) {
 
 // remove useless universal selector
@@ -40173,7 +40333,7 @@ module.exports = function cleanType(node, item, list) {
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 module.exports = function cleanComment(data, item, list) {
@@ -40182,7 +40342,7 @@ module.exports = function cleanComment(data, item, list) {
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports) {
 
 // remove white spaces around operators when safe
@@ -40202,7 +40362,7 @@ module.exports = function cleanWhitespace(node, item, list) {
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports) {
 
 module.exports = function cleanWhitespace(node, item, list) {
@@ -40227,22 +40387,22 @@ module.exports = function cleanWhitespace(node, item, list) {
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
 var handlers = {
-    Atrule: __webpack_require__(203),
-    AttributeSelector: __webpack_require__(205),
-    Value: __webpack_require__(206),
-    Dimension: __webpack_require__(210),
-    Percentage: __webpack_require__(211),
+    Atrule: __webpack_require__(204),
+    AttributeSelector: __webpack_require__(206),
+    Value: __webpack_require__(207),
+    Dimension: __webpack_require__(211),
+    Percentage: __webpack_require__(212),
     Number: __webpack_require__(11),
-    String: __webpack_require__(212),
-    Url: __webpack_require__(213),
-    HexColor: __webpack_require__(29).compressHex,
-    Identifier: __webpack_require__(29).compressIdent,
-    Function: __webpack_require__(29).compressFunction
+    String: __webpack_require__(213),
+    Url: __webpack_require__(214),
+    HexColor: __webpack_require__(28).compressHex,
+    Identifier: __webpack_require__(28).compressIdent,
+    Function: __webpack_require__(28).compressFunction
 };
 
 module.exports = function(ast) {
@@ -40257,11 +40417,11 @@ module.exports = function(ast) {
 
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var resolveKeyword = __webpack_require__(1).keyword;
-var compressKeyframes = __webpack_require__(204);
+var compressKeyframes = __webpack_require__(205);
 
 module.exports = function(node) {
     // compress @keyframe selectors
@@ -40272,7 +40432,7 @@ module.exports = function(node) {
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports) {
 
 module.exports = function(node) {
@@ -40299,7 +40459,7 @@ module.exports = function(node) {
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports) {
 
 // Can unquote attribute detection
@@ -40338,14 +40498,14 @@ module.exports = function(node) {
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var resolveName = __webpack_require__(1).property;
 var handlers = {
-    'font': __webpack_require__(207),
-    'font-weight': __webpack_require__(208),
-    'background': __webpack_require__(209),
+    'font': __webpack_require__(208),
+    'font-weight': __webpack_require__(209),
+    'background': __webpack_require__(210),
     'border': __webpack_require__(58),
     'outline': __webpack_require__(58)
 };
@@ -40364,7 +40524,7 @@ module.exports = function compressValue(node) {
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports) {
 
 module.exports = function compressFont(node) {
@@ -40415,7 +40575,7 @@ module.exports = function compressFont(node) {
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports) {
 
 module.exports = function compressFontWeight(node) {
@@ -40443,7 +40603,7 @@ module.exports = function compressFontWeight(node) {
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
@@ -40518,7 +40678,7 @@ module.exports = function compressBackground(node) {
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var packNumber = __webpack_require__(11).pack;
@@ -40580,7 +40740,7 @@ module.exports = function compressDimension(node, item) {
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var packNumber = __webpack_require__(11).pack;
@@ -40641,7 +40801,7 @@ module.exports = function compressPercentage(node, item) {
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports) {
 
 module.exports = function(node) {
@@ -40659,7 +40819,7 @@ module.exports = function(node) {
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports) {
 
 var UNICODE = '\\\\[0-9a-f]{1,6}(\\r\\n|[ \\n\\r\\t\\f])?';
@@ -40698,17 +40858,17 @@ module.exports = function(node) {
 
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var prepare = __webpack_require__(215);
-var mergeAtrule = __webpack_require__(219);
-var initialMergeRuleset = __webpack_require__(220);
-var disjoinRuleset = __webpack_require__(221);
-var restructShorthand = __webpack_require__(222);
-var restructBlock = __webpack_require__(223);
-var mergeRuleset = __webpack_require__(224);
-var restructRuleset = __webpack_require__(225);
+var prepare = __webpack_require__(216);
+var mergeAtrule = __webpack_require__(220);
+var initialMergeRuleset = __webpack_require__(221);
+var disjoinRuleset = __webpack_require__(222);
+var restructShorthand = __webpack_require__(223);
+var restructBlock = __webpack_require__(224);
+var mergeRuleset = __webpack_require__(225);
+var restructRuleset = __webpack_require__(226);
 
 module.exports = function(ast, options) {
     // prepare ast for restructing
@@ -40739,14 +40899,14 @@ module.exports = function(ast, options) {
 
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var resolveKeyword = __webpack_require__(1).keyword;
 var walk = __webpack_require__(1).walk;
 var generate = __webpack_require__(1).generate;
-var createDeclarationIndexer = __webpack_require__(216);
-var processSelector = __webpack_require__(217);
+var createDeclarationIndexer = __webpack_require__(217);
+var processSelector = __webpack_require__(218);
 
 module.exports = function prepare(ast, options) {
     var markDeclaration = createDeclarationIndexer();
@@ -40788,7 +40948,7 @@ module.exports = function prepare(ast, options) {
 
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var generate = __webpack_require__(1).generate;
@@ -40825,11 +40985,11 @@ module.exports = function createDeclarationIndexer() {
 
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var generate = __webpack_require__(1).generate;
-var specificity = __webpack_require__(218);
+var specificity = __webpack_require__(219);
 
 var nonFreezePseudoElements = {
     'first-letter': true,
@@ -40925,7 +41085,7 @@ module.exports = function freeze(node, usageData) {
 
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports) {
 
 module.exports = function specificity(simpleSelector) {
@@ -40988,7 +41148,7 @@ module.exports = function specificity(simpleSelector) {
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
@@ -41101,11 +41261,11 @@ module.exports = function rejoinAtrule(ast, options) {
 
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(29);
 
 function processRule(node, item, list) {
     var selectors = node.prelude.children;
@@ -41154,7 +41314,7 @@ module.exports = function initialMergeRule(ast) {
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
@@ -41202,7 +41362,7 @@ module.exports = function disjoinRule(ast) {
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
@@ -41636,7 +41796,7 @@ module.exports = function restructBlock(ast, indexer) {
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var resolveProperty = __webpack_require__(1).property;
@@ -41938,11 +42098,11 @@ module.exports = function restructBlock(ast) {
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(29);
 
 /*
     At this step all rules has single simple selector. We try to join by equal
@@ -42030,12 +42190,12 @@ module.exports = function mergeRule(ast) {
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var List = __webpack_require__(1).List;
 var walk = __webpack_require__(1).walk;
-var utils = __webpack_require__(30);
+var utils = __webpack_require__(29);
 
 function calcSelectorLength(list) {
     var length = 0;
@@ -42193,13 +42353,13 @@ module.exports = function restructRule(ast) {
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"name\":\"csso\",\"version\":\"3.5.1\",\"description\":\"CSS minifier with structural optimisations\",\"keywords\":[\"css\",\"compress\",\"minifier\",\"minify\",\"optimise\",\"optimisation\",\"csstree\"],\"homepage\":\"https://github.com/css/csso\",\"author\":\"Sergey Kryzhanovsky <skryzhanovsky@ya.ru> (https://github.com/afelix)\",\"maintainers\":[{\"name\":\"Roman Dvornov\",\"email\":\"rdvornov@gmail.com\",\"github-username\":\"lahmatiy\"}],\"license\":\"MIT\",\"repository\":\"css/csso\",\"bugs\":{\"url\":\"https://github.com/css/csso/issues\"},\"main\":\"./lib/index\",\"eslintConfig\":{\"env\":{\"node\":true,\"mocha\":true,\"es6\":true},\"rules\":{\"no-duplicate-case\":2,\"no-undef\":2,\"no-unused-vars\":[2,{\"vars\":\"all\",\"args\":\"after-used\"}]}},\"scripts\":{\"test\":\"mocha --reporter dot\",\"codestyle\":\"jscs lib test && eslint lib test\",\"codestyle-and-test\":\"npm run codestyle && npm test\",\"hydrogen\":\"node --trace-hydrogen --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=code.asm --trace_hydrogen_file=code.cfg --print-opt-code bin/csso --stat -o /dev/null\",\"coverage\":\"istanbul cover _mocha -- -R dot\",\"coveralls\":\"istanbul cover _mocha --report lcovonly -- -R dot && cat ./coverage/lcov.info | coveralls\",\"travis\":\"npm run codestyle-and-test && npm run coveralls\",\"browserify\":\"browserify -t package-json-versionify --standalone csso lib/index.js | uglifyjs --compress --mangle -o dist/csso-browser.js\",\"gh-pages\":\"git clone --depth=1 -b gh-pages https://github.com/css/csso.git .gh-pages && npm run browserify && cp dist/csso-browser.js .gh-pages/ && cd .gh-pages && git commit -am \\\"update\\\" && git push && cd .. && rm -rf .gh-pages\",\"prepublish\":\"npm run browserify\",\"postpublish\":\"npm run gh-pages\"},\"dependencies\":{\"css-tree\":\"1.0.0-alpha.29\"},\"devDependencies\":{\"browserify\":\"^13.0.0\",\"coveralls\":\"^2.11.6\",\"eslint\":\"^2.2.0\",\"istanbul\":\"^0.4.2\",\"jscs\":\"~3.0.7\",\"mocha\":\"^3.5.3\",\"package-json-versionify\":\"^1.0.4\",\"source-map\":\"^0.5.6\",\"uglify-js\":\"^2.6.1\"},\"engines\":{\"node\":\">=0.10.0\"},\"files\":[\"dist/csso-browser.js\",\"lib\",\"HISTORY.md\",\"LICENSE\",\"README.md\"]}");
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const path = __webpack_require__(3)
@@ -42258,7 +42418,7 @@ module.exports = {
 
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {const _ = __webpack_require__(10)
@@ -42296,22 +42456,24 @@ module.exports = function() {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {const jComponent = __webpack_require__(31)
 
-const api = __webpack_require__(230)
+const api = __webpack_require__(231)
 
 const officialTagList = [
-    'view', 'scroll-view', 'swiper', 'movable-view', 'cover-view', 'cover-view',
-    'icon', 'text', 'rich-text', 'progress',
-    'button', 'checkbox', 'form', 'input', 'label', 'picker', 'picker', 'picker-view', 'radio', 'slider', 'switch', 'textarea',
-    'navigator', 'function-page-navigator',
-    'audio', 'image', 'video', 'camera', 'live-player', 'live-pusher',
+    'cover-image', 'cover-view', 'grid-view', 'list-view', 'match-media', 'movable-area', 'movable-view', 'page-container', 'root-portal', 'scroll-view', 'share-element', 'sticky-header', 'sticky-section', 'swiper', 'swiper-item', 'view',
+    'icon', 'progress', 'rich-text', 'text',
+    'button', 'checkbox', 'checkbox-group', 'editor', 'form', 'input', 'keyboard-accessory', 'label', 'picker', 'picker-view', 'picker-view-column', 'radio', 'radio-group', 'slider', 'switch', 'textarea',
+    'functional-page-navigator', 'navigator',
+	'audio', 'camera', 'channel-live', 'channel-video', 'image', 'live-player', 'live-pusher', 'video', 'voip-room',
     'map',
     'canvas',
-    'open-data', 'web-view', 'ad'
+    'web-view', 'ad', 'ad-custom', 'official-account', 'open-data',
+    'navigation-bar',
+    'page-meta',
 ]
 
 module.exports = function() {
@@ -42332,355 +42494,1362 @@ module.exports = function() {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Animation = __webpack_require__(231)
-const MapContext = __webpack_require__(232)
+const Animation = __webpack_require__(232)
 const UpdateManager = __webpack_require__(233)
-const dataApi = __webpack_require__(234)
-const openApi = __webpack_require__(235)
-const _ = __webpack_require__(12)
+const _ = __webpack_require__(30)
+const {
+  systemInfo,
+  skylineInfo,
+  userAgent,
+  launchOptions,
+  preDownloadSubpackageTask,
+  userCryptoManager,
+  eventChannel,
+  cacheManager,
+  userInfo,
+  setting,
+  stats,
+  ad,
+  audioBuffer,
+} = __webpack_require__(234)
+const { LogManager, RealtimeLogManager } = __webpack_require__(235)
+const Performance = __webpack_require__(236)
+const {
+  RequestTask,
+  DownloadTask,
+  UploadTask,
+  SocketTask,
+  TCPSocket,
+  UDPSocket,
+} = __webpack_require__(237)
+const SelectorQuery = __webpack_require__(238)
+const {
+  OffscreenCanvas,
+  CanvasContext,
+} = __webpack_require__(59)
+const {
+  MapContext,
+  VideoContext,
+  LivePlayerContext,
+  LivePusherContext,
+  CameraContext,
+} = __webpack_require__(239)
 
 let nextTickQueue = []
 let nextTickTimer = null
 
+const updateManager = new UpdateManager()
+const realtimeLogManager = new RealtimeLogManager()
+const logManager = new LogManager()
+const performance = new Performance()
+
+const MockBezier = () => t => t
+
 module.exports = {
-    request: _.mockAsync('request'),
+  // 基础
+  env: { USER_DATA_PATH: '/usr/' },
+  canIUse: _.mockSync(true),
+  base64ToArrayBuffer: _.mockSync(Uint8Array.from([]).buffer),
+  arrayBufferToBase64: _.mockSync(''),
 
-    uploadFile: _.mockAsync('uploadFile'),
-    downloadFile: _.mockAsync('downloadFile'),
+  // 基础 - 系统
+  openSystemBluetoothSetting: _.mockAsyncAndPromise(
+    'openSystemBluetoothSetting'
+  ),
+  openAppAuthorizeSetting: _.mockAsyncAndPromise('openAppAuthorizeSetting'),
+  getWindowInfo: _.mockSync({
+    pixelRatio: 3,
+    screenWidth: 428,
+    screenHeight: 926,
+    windowWidth: 428,
+    windowHeight: 835,
+    statusBarHeight: 47,
+    safeArea: {
+      left: 0,
+      right: 428,
+      top: 47,
+      bottom: 892,
+      width: 428,
+      height: 845,
+    },
+    screenTop: 91,
+  }),
+  getSystemSetting: _.mockSync({
+    bluetoothEnabled: true,
+    deviceOrientation: 'portrait',
+    locationEnabled: true,
+    wifiEnabled: true,
+  }),
+  getSystemInfoSync: _.mockSync(systemInfo),
+  getSystemInfoAsync: _.mockAsync('getSystemInfoAsync', systemInfo),
+  getSystemInfo: _.mockAsyncAndPromise('getSystemInfo', systemInfo),
+  getSkylineInfoSync: _.mockSync(skylineInfo),
+  getSkylineInfo: _.mockAsync('getSkylineInfo', skylineInfo),
+  getRendererUserAgent: _.mockAsyncAndPromise(
+    'getRendererUserAgent',
+    { userAgent },
+    userAgent
+  ),
+  getDeviceInfo: _.mockSync({
+    abi: '',
+    deviceAbi: '',
+    benchmarkLevel: 1,
+    brand: 'devtools',
+    model: 'iPhone 12/13 Pro Max',
+    system: 'iOS 10.0.1',
+    platform: 'ios',
+    cpuType: '',
+    memorySize: '',
+  }),
+  getAppBaseInfo: _.mockSync({
+    SDKVersion: '2.32.3',
+    enableDebug: false,
+    host: { env: 'WeChat' },
+    language: 'zh_CN',
+    version: '8.0.5',
+    theme: 'light',
+  }),
+  getAppAuthorizeSetting: _.mockSync({
+    albumAuthorized: 'not determined',
+    bluetoothAuthorized: 'not determined',
+    cameraAuthorized: 'not determined',
+    locationAuthorized: 'not determined',
+    locationReducedAccuracy: true,
+    microphoneAuthorized: 'not determined',
+    notificationAuthorized: 'not determined',
+    notificationAlertAuthorized: 'not determined',
+    notificationBadgeAuthorized: 'not determined',
+    notificationSoundAuthorized: 'not determined',
+    phoneCalendarAuthorized: 'not determined',
+  }),
 
-    connectSocket: _.mockAsync('connectSocket'),
-    onSocketOpen: _.mockAsync('onSocketOpen'),
-    onSocketError: _.mockAsync('onSocketError'),
-    sendSocketMessage: _.mockAsync('sendSocketMessage'),
-    onSocketMessage: _.mockAsync('onSocketMessage'),
-    closeSocket: _.mockAsync('closeSocket'),
-    onSocketClose: _.mockAsync('onSocketClose'),
+  // 基础 - 更新
+  updateWeChatApp: _.mockAsyncAndPromise('updateWeChatApp'),
+  getUpdateManager: () => updateManager,
 
-    chooseImage: _.mockAsync('chooseImage'),
-    previewImage: _.mockAsync('previewImage'),
-    getImageInfo: _.mockAsync('getImageInfo'),
-    saveImageToPhotosAlbum: _.mockAsync('saveImageToPhotosAlbum'),
+  // 基础 - 小程序 - 生命周期
+  getLaunchOptionsSync: _.mockSync(launchOptions),
+  getEnterOptionsSync: _.mockSync(launchOptions),
 
-    startRecord: _.mockAsync('startRecord'),
-    stopRecord: _.mockAsync('stopRecord'),
+  // 基础 - 小程序 - 应用级事件
+  onUnhandledRejection() {},
+  onThemeChange() {},
+  onPageNotFound() {},
+  onLazyLoadError() {},
+  onError() {},
+  onAudioInterruptionEnd() {},
+  onAudioInterruptionBegin() {},
+  onAppShow() {},
+  onAppHide() {},
+  offUnhandledRejection() {},
+  offThemeChange() {},
+  offPageNotFound() {},
+  offLazyLoadError() {},
+  offError() {},
+  offAudioInterruptionEnd() {},
+  offAudioInterruptionBegin() {},
+  offAppShow() {},
+  offAppHide() {},
 
-    getRecorderManager: _.mockAsync('getRecorderManager'),
+  // 基础 - 小程序 - 调试
+  setEnableDebug: _.mockAsyncAndPromise('setEnableDebug'),
+  getRealtimeLogManager: () => realtimeLogManager,
+  getLogManager: () => logManager,
 
-    playVoice: _.mockAsync('playVoice'),
-    pauseVoice: _.mockAsync('pauseVoice'),
-    stopVoice: _.mockAsync('stopVoice'),
+  // 基础 - 小程序 - 性能
+  reportPerformance() {},
+  preloadWebview: _.mockAsync('preloadWebview'),
+  preloadSkylineView: _.mockAsync('preloadSkylineView'),
+  preloadAssets: _.mockAsync('preloadAssets'),
+  getPerformance: () => performance,
 
-    getBackgroundAudioPlayerState: _.mockAsync('getBackgroundAudioPlayerState'),
-    playBackgroundAudio: _.mockAsync('playBackgroundAudio'),
-    pauseBackgroundAudio: _.mockAsync('pauseBackgroundAudio'),
-    seekBackgroundAudio: _.mockAsync('seekBackgroundAudio'),
-    stopBackgroundAudio: _.mockAsync('stopBackgroundAudio'),
-    onBackgroundAudioPlay: _.mockAsync('onBackgroundAudioPlay'),
-    onBackgroundAudioPause: _.mockAsync('onBackgroundAudioPause'),
-    onBackgroundAudioStop: _.mockAsync('onBackgroundAudioStop'),
+  // 基础 - 小程序 - 分包加载
+  preDownloadSubpackage: () => preDownloadSubpackageTask,
+  getUserCryptoManager: () => userCryptoManager,
 
-    getBackgroundAudioManager: _.mockAsync('getBackgroundAudioManager'),
+  // 路由
+  switchTab: _.mockAsyncAndPromise('switchTab'),
+  reLaunch: _.mockAsyncAndPromise('reLaunch'),
+  redirectTo: _.mockAsyncAndPromise('redirectTo'),
+  navigateTo: _.mockAsyncAndPromise('navigateTo', { eventChannel }),
+  navigateBack: _.mockAsyncAndPromise('navigateBack'),
 
-    createAudioContext: _.mockAsync('createAudioContext'),
-    createInnerAudioContext: _.mockAsync('createInnerAudioContext'),
-    getAvailableAudioSources: _.mockAsync('getAvailableAudioSources'),
+  // 路由 - 自定义路由
+  router: {
+    addRouteBuilder() {},
+    getRouteContext: () => null,
+    removeRouteBuilder() {},
+  },
 
-    chooseVideo: _.mockAsync('chooseVideo'),
-    saveVideoToPhotosAlbum: _.mockAsync('saveVideoToPhotosAlbum'),
+  // 跳转
+  openEmbeddedMiniProgram: _.mockAsyncAndPromise('openEmbeddedMiniProgram'),
+  navigateToMiniProgram: _.mockAsyncAndPromise('navigateToMiniProgram'),
+  navigateBackMiniProgram: _.mockAsyncAndPromise('navigateBackMiniProgram'),
+  exitMiniProgram: _.mockAsyncAndPromise('exitMiniProgram'),
 
-    createVideoContext: _.mockAsync('createVideoContext'),
+  // 转发
+  updateShareMenu: _.mockAsyncAndPromise('updateShareMenu'),
+  showShareMenu: _.mockAsyncAndPromise('showShareMenu'),
+  showShareImageMenu: _.mockAsyncAndPromise('showShareImageMenu'),
+  shareVideoMessage: _.mockAsyncAndPromise('shareVideoMessage'),
+  shareFileMessage: _.mockAsyncAndPromise('shareFileMessage'),
+  onCopyUrl() {},
+  offCopyUrl() {},
+  hideShareMenu: _.mockAsyncAndPromise('hideShareMenu'),
+  getShareInfo: _.mockAsync('getShareInfo', {
+    encryptedData: '987654321',
+    iv: '123456789',
+    cloudID: '',
+  }),
+  authPrivateMessage: _.mockAsync('authPrivateMessage', {
+    valid: true,
+    encryptedData: '987654321',
+    iv: '123456789',
+  }),
 
-    createCameraContext: _.mockAsync('createCameraContext'),
+  // 界面 - 交互
+  showToast: _.mockAsyncAndPromise('showToast'),
+  showModal: _.mockAsyncAndPromise('showModal', {
+    content: '',
+    confirm: true,
+    cancel: false,
+  }),
+  showLoading: _.mockAsyncAndPromise('showLoading'),
+  showActionSheet: _.mockAsyncAndPromise('showActionSheet', { tapIndex: 0 }),
+  hideToast: _.mockAsyncAndPromise('hideToast'),
+  hideLoading: _.mockAsyncAndPromise('hideLoading'),
+  enableAlertBeforeUnload: _.mockAsync('enableAlertBeforeUnload'),
+  disableAlertBeforeUnload: _.mockAsync('disableAlertBeforeUnload'),
 
-    createLivePlayerContext: _.mockAsync('createLivePlayerContext'),
-    createLivePusherContext: _.mockAsync('createLivePusherContext'),
+  // 界面 - 导航栏
+  showNavigationBarLoading: _.mockAsyncAndPromise('showNavigationBarLoading'),
+  setNavigationBarTitle: _.mockAsyncAndPromise('setNavigationBarTitle'),
+  setNavigationBarColor: _.mockAsyncAndPromise('setNavigationBarColor'),
+  hideNavigationBarLoading: _.mockAsyncAndPromise('hideNavigationBarLoading'),
+  hideHomeButton: _.mockAsyncAndPromise('hideHomeButton'),
 
-    loadFontFace: _.mockAsync('loadFontFace'),
+  // 界面 - 背景
+  setBackgroundTextStyle: _.mockAsyncAndPromise('setBackgroundTextStyle'),
+  setBackgroundColor: _.mockAsyncAndPromise('setBackgroundColor'),
 
-    saveFile: _.mockAsync('saveFile'),
-    getFileInfo: _.mockAsync('getFileInfo'),
-    getSavedFileList: _.mockAsync('getSavedFileList'),
-    getSavedFileInfo: _.mockAsync('getSavedFileInfo'),
+  // 界面 - Tab Bar
+  showTabBarRedDot: _.mockAsyncAndPromise('showTabBarRedDot'),
+  showTabBar: _.mockAsyncAndPromise('showTabBar'),
+  setTabBarStyle: _.mockAsyncAndPromise('setTabBarStyle'),
+  setTabBarItem: _.mockAsyncAndPromise('setTabBarItem'),
+  setTabBarBadge: _.mockAsyncAndPromise('setTabBarBadge'),
+  removeTabBarBadge: _.mockAsyncAndPromise('removeTabBarBadge'),
+  hideTabBarRedDot: _.mockAsyncAndPromise('hideTabBarRedDot'),
+  hideTabBar: _.mockAsyncAndPromise('hideTabBar'),
+
+  // 界面 - 字体
+  loadFontFace: _.mockAsyncAndPromise('loadFontFace', { status: 'loaded' }),
+
+  // 界面 - 下拉刷新
+  stopPullDownRefresh: _.mockAsyncAndPromise('stopPullDownRefresh'),
+  startPullDownRefresh: _.mockAsyncAndPromise('startPullDownRefresh'),
+
+  // 界面 - 滚动
+  pageScrollTo: _.mockAsyncAndPromise('pageScrollTo'),
+
+  // 界面 - 动画
+  createAnimation: (transition = {}) => new Animation(transition),
+
+  // 界面 - 置顶
+  setTopBarText: _.mockAsyncAndPromise('setTopBarText'),
+
+  // 界面 - 自定义组件
+  nextTick(func) {
+    if (typeof func !== 'function') return
+
+    nextTickQueue.push(func)
+
+    if (nextTickTimer) return
+    nextTickTimer = setTimeout(() => {
+      const funcQueue = nextTickQueue
+      nextTickQueue = []
+      nextTickTimer = null
+
+      for (const func of funcQueue) {
+        if (func) func()
+      }
+    }, 0)
+  },
+
+  // 界面 - 菜单
+  getMenuButtonBoundingClientRect: _.mockSync({
+    width: 87,
+    height: 32,
+    top: 51,
+    right: 421,
+    bottom: 83,
+    left: 334,
+  }),
+
+  // 界面 - 窗口
+  setWindowSize: _.mockAsync('setWindowSize'),
+  onWindowResize() {},
+  offWindowResize() {},
+  checkIsPictureInPictureActive: _.mockSync(false),
+
+  // 界面 - worklet 动画
+  worklet: {
+    cancelAnimation() {},
+
+    derived(updaterWorklet) {
+      if (typeof updaterWorklet !== 'function') return
+      return { value: updaterWorklet() }
+    },
+
+    shared: value => ({ value }),
+
+    decay(config) {
+      if (config && config.clamp) return config.clamp[0] || 0
+      return 0
+    },
+
+    Easing: {
+      bounce: t => {
+        if (t < 1 / 2.75) return 7.5625 * t * t
+        if (t < 2 / 2.75) {
+          const t2 = t - 1.5 / 2.75
+          return 7.5625 * t2 * t2 + 0.75
+        }
+        if (t < 2.5 / 2.75) {
+          const t2 = t - 2.25 / 2.75
+          return 7.5625 * t2 * t2 + 0.9375
+        }
+        const t2 = t - 2.625 / 2.75
+        return 7.5625 * t2 * t2 + 0.984375
+      },
+      ease: t => MockBezier(0.42, 0, 1, 1)(t),
+      elastic:
+        (bounciness = 1) =>
+        t =>
+          1 -
+          Math.pow(Math.cos((t * Math.PI) / 2), 3) *
+            Math.cos(t * bounciness * Math.PI),
+      linear: t => t,
+      quad: t => t * t,
+      cubic: t => t * t * t,
+      poly: n => t => Math.pow(t, n),
+      bezier: (x1, y1, x2, y2) => ({
+        factory: () => MockBezier(x1, y1, x2, y2),
+      }),
+      circle: t => 1 - Math.sqrt(1 - t * t),
+      sin: t => 1 - Math.cos((t * Math.PI) / 2),
+      exp: t => Math.pow(2, 10 * (t - 1)),
+      in: easing => easing,
+      out: easing => t => 1 - easing(1 - t),
+      inOut: easing => t => {
+        if (t < 0.5) return easing(t * 2) / 2
+        return 1 - easing((1 - t) * 2) / 2
+      },
+    },
+
+    spring(value, options, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return value
+    },
+
+    timing(value, options, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return value
+    },
+
+    delay: (delayTime, delayedAnimation) => (delayedAnimation || 0),
+
+    repeat(animation, numberOfReps, reverse, callback) {
+      if (typeof callback === 'function') setTimeout(() => callback(false), 100)
+      return animation || 0
+    },
+
+    sequence: animation => animation || 0,
+
+    runOnJS: func => typeof func === 'function' ? func : () => {},
+
+    runOnUI: func => typeof func === 'function' ? func : () => {},
+  },
+
+  // 网络 - 发起请求
+  request: options => new RequestTask(options),
+
+  // 网络 - 下载
+  downloadFile: options => new DownloadTask(options),
+
+  // 网络 - 上传
+  uploadFile: options => new UploadTask(options),
+
+  // 网络 - WebSocket
+  sendSocketMessage: _.mockAsyncAndPromise('sendSocketMessage'),
+  onSocketOpen() {},
+  onSocketMessage() {},
+  onSocketError() {},
+  onSocketClose() {},
+  connectSocket: options => new SocketTask(options),
+  closeSocket: _.mockAsync('closeSocket'),
+
+  // 网络 - mDNS
+  stopLocalServiceDiscovery: _.mockAsyncAndPromise('stopLocalServiceDiscovery'),
+  startLocalServiceDiscovery: _.mockAsyncAndPromise(
+    'startLocalServiceDiscovery'
+  ),
+  onLocalServiceResolveFail() {},
+  onLocalServiceLost() {},
+  onLocalServiceFound() {},
+  onLocalServiceDiscoveryStop() {},
+  offLocalServiceResolveFail() {},
+  offLocalServiceLost() {},
+  offLocalServiceFound() {},
+  offLocalServiceDiscoveryStop() {},
+
+  // 网络 - TCP 通信
+  createTCPSocket: () => new TCPSocket(),
+
+  // 网络 - UDP 通信
+  createUDPSocket: () => new UDPSocket(),
+
+  // 支付
+  requestPluginPayment: _.mockAsync('requestPluginPayment'),
+  requestPayment: _.mockAsyncAndPromise('requestPayment'),
+
+  // 数据缓存
+  setStorageSync() {},
+  setStorage: _.mockAsync('setStorage'),
+  revokeBufferURL() {},
+  removeStorageSync() {},
+  removeStorage: _.mockAsync('removeStorage'),
+  getStorageSync: _.mockSync(''),
+  getStorageInfoSync: _.mockSync({
+    currentSize: 1,
+    keys: [],
+    limitSize: 10240,
+  }),
+  getStorageInfo: _.mockAsync('getStorageInfo', {
+    currentSize: 1,
+    keys: [],
+    limitSize: 10240,
+  }),
+  getStorage: _.mockAsync('getStorage', { data: '' }),
+  createBufferURL: _.mockSync(''),
+  clearStorageSync() {},
+  clearStorage: _.mockAsync('clearStorage'),
+  batchSetStorageSync() {},
+  batchSetStorage: _.mockAsync('batchSetStorage'),
+  batchGetStorageSync: _.mockSync([]),
+  batchGetStorage: _.mockAsync('batchGetStorage', { dataList: [] }),
+
+  // 数据缓存 - 周期性更新
+  setBackgroundFetchToken: _.mockAsyncAndPromise('setBackgroundFetchToken'),
+  onBackgroundFetchData() {},
+  getBackgroundFetchToken: _.mockAsyncAndPromise('getBackgroundFetchToken', {
+    token: '',
+  }),
+  getBackgroundFetchData: _.mockAsyncAndPromise('getBackgroundFetchData', {
+    fetchedData: '',
+    timeStamp: Date.now(),
+    path: '/',
+    query: '',
+    scene: 1001,
+  }),
+
+  // 数据缓存 - 缓存管理器
+  createCacheManager: () => cacheManager,
+
+  // 数据分析
+  reportMonitor() {},
+  reportEvent() {},
+  reportAnalytics() {},
+  getExptInfoSync: _.mockSync({}),
+
+  // XR-FRAME
+  // 暂不支持
+
+  // 画布
+  createOffscreenCanvas: () => new OffscreenCanvas(),
+  createCanvasContext: () => new CanvasContext(),
+  canvasToTempFilePath: _.mockAsyncAndPromise('canvasToTempFilePath', { tempFilePath: '' }),
+  canvasPutImageData: _.mockAsyncAndPromise('canvasPutImageData'),
+  canvasGetImageData: _.mockAsyncAndPromise('canvasGetImageData', {
+    width: 100,
+    height: 100,
+    data: Uint8Array.from(0),
+  }),
+
+  // 媒体 - 地图
+  createMapContext: () => new MapContext(),
+
+  // 媒体 - 图片
+  saveImageToPhotosAlbum: _.mockAsyncAndPromise('saveImageToPhotosAlbum'),
+  previewMedia: _.mockAsyncAndPromise('previewMedia'),
+  previewImage: _.mockAsyncAndPromise('previewImage'),
+  getImageInfo: _.mockAsyncAndPromise('getImageInfo', {
+    width: 100,
+    height: 100,
+    path: '/',
+    orientation: 'up',
+    type: 'jpeg',
+  }),
+  editImage: _.mockAsync('editImage', { tempFilePath: '/' }),
+  cropImage: _.mockAsync('cropImage', { tempFilePath: '/' }),
+  compressImage: _.mockAsyncAndPromise('compressImage', { tempFilePath: '/' }),
+  chooseMessageFile: _.mockAsyncAndPromise('chooseMessageFile', { tempFiles: [] }),
+  chooseImage: _.mockAsyncAndPromise('chooseImage', {
+    tempFilePaths: [], 
+    tempFiles: [],
+  }),
+
+  // 媒体 - 视频
+  saveVideoToPhotosAlbum: _.mockAsyncAndPromise('saveVideoToPhotosAlbum'),
+  openVideoEditor: _.mockAsync('openVideoEditor', {
+    duration: 0,
+    size: 1024,
+    tempFilePath: '',
+    tempThumbPath: '',
+  }),
+  getVideoInfo: _.mockAsyncAndPromise('getVideoInfo', {
+    orientation: 'up',
+    type: 'mp4',
+    duration: 0,
+    size: 0,
+    height: 0,
+    width: 0,
+    fps: 0,
+    bitrate: 0,
+  }),
+  createVideoContext: () => new VideoContext(),
+  compressVideo: _.mockAsyncAndPromise('compressVideo', {
+    tempFilePath: '',
+    size: 1024,
+  }),
+  chooseVideo: _.mockAsyncAndPromise('chooseVideo', {
+    tempFilePath: '',
+    duration: 0,
+    size: 1024,
+    height: 0,
+    width: 0,
+  }),
+  chooseMedia: _.mockAsyncAndPromise('chooseMedia', {
+    tempFiles: [],
+    type: 'mix',
+  }),
+
+  // 媒体 - 音频
+  stopVoice: _.mockAsyncAndPromise('stopVoice'),
+  setInnerAudioOption: _.mockAsyncAndPromise('setInnerAudioOption'),
+  playVoice: _.mockAsyncAndPromise('playVoice'),
+  pauseVoice: _.mockAsyncAndPromise('pauseVoice'),
+  getAvailableAudioSources: _.mockAsyncAndPromise('getAvailableAudioSources', { audioSources: ['auto'] }),
+  createWebAudioContext: _.mockSync({
+    state: '',
+    onstatechange() {},
+    currentTime: 0,
+    WebAudioContextNode: {
+      positionX: 0,
+      positionY: 0,
+      positionZ: 0,
+      forwardX: 0,
+      forwardY: 0,
+      forwardZ: 0,
+      upX: 0,
+      upY: 0,
+      upZ: 0,
+      setOrientation() {},
+      setPosition() {},
+    },
+    listener() {},
+    sampleRate: 0,
+    close: _.mockSync(Promise.resolve({})),
+    createAnalyser: _.mockSync(null),
+    createBiquadFilter: _.mockSync(null),
+    createBuffer: _.mockSync(audioBuffer),
+    createBufferSource: _.mockSync(null),
+    createChannelMerger: _.mockSync(null),
+    createChannelSplitter: _.mockSync(null),
+    createConstantSource: _.mockSync(null),
+    createDelay: _.mockSync(null),
+    createDynamicsCompressor: _.mockSync(null),
+    createGain: _.mockSync(null),
+    createIIRFilter: _.mockSync(null),
+    createOscillator: _.mockSync(null),
+    createPanner: _.mockSync(null),
+    createPeriodicWave: _.mockSync(null),
+    createScriptProcessor: _.mockSync(null),
+    createWaveShaper: _.mockSync(null),
+    decodeAudioData: _.mockSync(audioBuffer),
+    resume: _.mockSync(Promise.resolve({})),
+    suspend: _.mockSync(Promise.resolve({})),
+  }),
+  createMediaAudioPlayer: _.mockSync({
+    volume: 0,
+    addAudioSource: _.mockSync(Promise.resolve({})),
+    destroy: _.mockSync(Promise.resolve({})),
+    removeAudioSource: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
+  createInnerAudioContext: _.mockSync({
+    src: '',
+    startTime: 0,
+    autoplay: true,
+    loop: true,
+    obeyMuteSwitch: true,
+    volume: 0,
+    playbackRate: 0,
+    duration: 0,
+    currentTime: 0,
+    paused: true,
+    buffered: 0,
+    referrerPolicy: '',
+    destroy() {},
+    offCanplay() {},
+    offEnded() {},
+    offError() {},
+    offPause() {},
+    offPlay() {},
+    offSeeked() {},
+    offSeeking() {},
+    offStop() {},
+    offTimeUpdate() {},
+    offWaiting() {},
+    onCanplay() {},
+    onEnded() {},
+    onError() {},
+    onPause() {},
+    onPlay() {},
+    onSeeked() {},
+    onSeeking() {},
+    onStop() {},
+    onTimeUpdate() {},
+    onWaiting() {},
+    pause() {},
+    play() {},
+    seek() {},
+    stop() {},
+  }),
+  createAudioContext: _.mockSync({
+    pause() {},
+    play() {},
+    seek() {},
+    setSrc() {},
+  }),
+
+  // 媒体 - 背景音频
+  stopBackgroundAudio: _.mockAsyncAndPromise('stopBackgroundAudio'),
+  seekBackgroundAudio: _.mockAsyncAndPromise('seekBackgroundAudio'),
+  playBackgroundAudio: _.mockAsyncAndPromise('playBackgroundAudio'),
+  pauseBackgroundAudio: _.mockAsyncAndPromise('pauseBackgroundAudio'),
+  onBackgroundAudioStop() {},
+  onBackgroundAudioPlay() {},
+  onBackgroundAudioPause() {},
+  getBackgroundAudioPlayerState: _.mockAsyncAndPromise('getBackgroundAudioPlayerState', {
+    duration: 0,
+    currentPosition: 0,
+    status: 0,
+    downloadPercent: 0,
+    dataUrl: '',
+  }),
+  getBackgroundAudioManager: _.mockSync({
+    src: '',
+    startTime: 0,
+    title: '',
+    epname: '',
+    singer: '',
+    coverImgUrl: '',
+    webUrl: '',
+    protocol: '',
+    playbackRate: 0,
+    duration: 0,
+    currentTime: 0,
+    paused: true,
+    buffered: 0,
+    referrerPolicy: '',
+    onCanplay() {},
+    onEnded() {},
+    onError() {},
+    onNext() {},
+    onPause() {},
+    onPlay() {},
+    onPrev() {},
+    onSeeked() {},
+    onSeeking() {},
+    onStop() {},
+    onTimeUpdate() {},
+    onWaiting() {},
+    pause() {},
+    play() {},
+    seek() {},
+    stop() {},
+  }),
+
+  // 媒体 - 实时音视频
+  createLivePusherContext: () => new LivePusherContext(),
+  createLivePlayerContext: () => new LivePlayerContext(),
+
+  // 媒体 - 录音
+  stopRecord: _.mockAsyncAndPromise('stopRecord'),
+  startRecord: _.mockAsyncAndPromise('startRecord', { tempFilePath: '/' }),
+  getRecorderManager: _.mockSync({
+    onError() {},
+    onFrameRecorded() {},
+    onInterruptionBegin() {},
+    onInterruptionEnd() {},
+    onPause() {},
+    onResume() {},
+    onStart() {},
+    onStop() {},
+    pause() {},
+    resume() {},
+    start() {},
+    stop() {},
+  }),
+
+  // 媒体 - 相机
+  createCameraContext: () => new CameraContext(),
+
+  // 媒体 - 音视频合成
+  createMediaContainer: _.mockSync({
+    addTrack() {},
+    destroy() {},
+    export() {},
+    extractDataSource() {},
+    removeTrack() {},
+  }),
+
+  // 媒体 - 实时语音
+  updateVoIPChatMuteConfig: _.mockAsyncAndPromise('updateVoIPChatMuteConfig'),
+  subscribeVoIPVideoMembers: _.mockAsyncAndPromise('subscribeVoIPVideoMembers'),
+  setEnable1v1Chat: _.mockAsyncAndPromise('setEnable1v1Chat'),
+  onVoIPVideoMembersChanged() {},
+  onVoIPChatStateChanged() {},
+  onVoIPChatSpeakersChanged() {},
+  onVoIPChatMembersChanged() {},
+  onVoIPChatInterrupted() {},
+  offVoIPVideoMembersChanged() {},
+  offVoIPChatStateChanged() {},
+  offVoIPChatSpeakersChanged() {},
+  offVoIPChatMembersChanged() {},
+  offVoIPChatInterrupted() {},
+  joinVoIPChat: _.mockAsyncAndPromise('joinVoIPChat', { openIdList: [] }),
+  join1v1Chat: _.mockAsyncAndPromise('join1v1Chat'),
+  exitVoIPChat: _.mockAsyncAndPromise('exitVoIPChat'),
+
+  // 媒体 - 画面录制器
+  createMediaRecorder: _.mockSync({
+    destroy: _.mockSync(Promise.resolve({})),
+    off() {},
+    on() {},
+    pause: _.mockSync(Promise.resolve({})),
+    requestFrame: _.mockSync(Promise.resolve({})),
+    resume: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
+
+  // 媒体 - 视频解码器
+  createVideoDecoder: _.mockSync({
+    getFrameData: _.mockSync({
+      width: 0,
+      height: 0,
+      data: Uint8Array.from(0).buffer,
+      pkPts: 0,
+      pkDts: 0,
+    }),
+    off() {},
+    on() {},
+    remove: _.mockSync(Promise.resolve({})),
+    seek: _.mockSync(Promise.resolve({})),
+    start: _.mockSync(Promise.resolve({})),
+    stop: _.mockSync(Promise.resolve({})),
+  }),
+
+  // 位置
+  stopLocationUpdate: _.mockAsyncAndPromise('stopLocationUpdate'),
+  startLocationUpdateBackground: _.mockAsyncAndPromise(
+    'startLocationUpdateBackground'
+  ),
+  startLocationUpdate: _.mockAsyncAndPromise('startLocationUpdate'),
+  openLocation: _.mockAsyncAndPromise('openLocation'),
+  onLocationChangeError() {},
+  onLocationChange() {},
+  offLocationChangeError() {},
+  offLocationChange() {},
+  getLocation: _.mockAsyncAndPromise('getLocation', {
+    latitude: 23.12908,
+    longitude: 113.26436,
+    speed: -1,
+    accuracy: 65,
+    altitude: 0,
+    verticalAccuracy: 65,
+    horizontalAccuracy: 65,
+  }),
+  getFuzzyLocation: _.mockAsync('getFuzzyLocation', {
+    latitude: 23.12908,
+    longitude: 113.26436,
+  }),
+  choosePoi: _.mockAsyncAndPromise('choosePoi', {
+    type: 2,
+    city: '广州',
+    name: '腾讯微信总部',
+    address: '广东省广州市海珠区tit创意园品牌街',
+    latitude: 23.1001,
+    longitude: 113.32456,
+  }),
+  chooseLocation: _.mockAsyncAndPromise('chooseLocation', {
+    name: '腾讯微信总部',
+    address: '广东省广州市海珠区tit创意园品牌街',
+    latitude: 23.1001,
+    longitude: 113.32456,
+  }),
+
+  // 文件
+  saveFileToDisk: _.mockAsync('saveFileToDisk'),
+  openDocument: _.mockAsyncAndPromise('openDocument'),
+  getFileSystemManager: _.mockSync({
+    access: _.mockAsync('access'),
+    accessSync() {},
+    appendFile: _.mockAsync('appendFile'),
+    appendFileSync() {},
+    close: _.mockAsync('close'),
+    closeSync() {},
+    copyFile: _.mockAsync('copyFile'),
+    copyFileSync() {},
+    fstat: _.mockAsync('fstat', stats),
+    fstatSync: _.mockSync(stats),
+    ftruncate: _.mockAsync('ftruncate'),
+    ftruncateSync() {},
+    getFileInfo: _.mockAsync('getFileInfo', { size: 1024 }),
+    getSavedFileList: _.mockAsync('getSavedFileList', { fileList: [] }),
+    mkdir: _.mockAsync('mkdir'),
+    mkdirSync() {},
+    open: _.mockAsync('open', { fd: '' }),
+    openSync: _.mockSync(''),
+    read: _.mockAsync('read', {
+      bytesRead: 0,
+      arrayBuffer: Uint8Array.from([]).buffer,
+    }),
+    readCompressedFile: _.mockAsync('readCompressedFile', {
+      data: Uint8Array.from([]).buffer,
+    }),
+    readCompressedFileSync: _.mockSync(Uint8Array.from([]).buffer),
+    readdir: _.mockAsync('readdir', { files: [] }),
+    readdirSync: _.mockSync([]),
+    readFile: _.mockAsync('readFile', { data: '' }),
+    readFileSync: _.mockSync(''),
+    readSync: _.mockSync({
+      bytesRead: 0,
+      arrayBuffer: Uint8Array.from([]).buffer,
+    }),
+    readZipEntry: _.mockAsync('readZipEntry', { entries: {} }),
     removeSavedFile: _.mockAsync('removeSavedFile'),
-    openDocument: _.mockAsync('openDocument'),
+    rename: _.mockAsync('rename'),
+    renameSync() {},
+    rmdir: _.mockAsync('rmdir'),
+    rmdirSync() {},
+    saveFile: _.mockAsync('saveFile', { savedFilePath: '' }),
+    saveFileSync: _.mockSync(''),
+    stat: _.mockAsync('stat', { stats }),
+    statSync: _.mockSync(stats),
+    truncate: _.mockAsync('truncate'),
+    truncateSync() {},
+    unlink: _.mockAsync('unlink'),
+    unlinkSync() {},
+    unzip: _.mockAsync('unzip'),
+    write: _.mockAsync('write', { bytesWritten: 0 }),
+    writeFile: _.mockAsync('writeFile'),
+    writeFileSync() {},
+    writeSync: _.mockSync({ bytesWritten: 0 }),
+  }),
 
-    onMemoryWarning: _.mockAsync('onMemoryWarning'),
+  // 开放接口 - 登录
+  pluginLogin: _.mockAsync('pluginLogin', { code: '123456789' }),
+  login: _.mockAsync('login', { code: '123456789' }),
+  checkSession: _.mockAsyncAndPromise('checkSession'),
 
-    getNetworkType: _.mockAsync('getNetworkType'),
-    onNetworkStatusChange: _.mockAsync('onNetworkStatusChange'),
+  // 开放接口 - 帐号信息
+  getAccountInfoSync: _.mockSync({
+    miniProgram: {
+      appId: 'wx123456789',
+      envVersion: 'develop',
+      version: '',
+    },
+    plugin: undefined,
+  }),
 
-    onAccelerometerChange: _.mockAsync('onAccelerometerChange'),
-    startAccelerometer: _.mockAsync('startAccelerometer'),
-    stopAccelerometer: _.mockAsync('stopAccelerometer'),
+  // 开放接口 - 用户信息
+  getUserProfile: _.mockAsyncAndPromise('getUserProfile', userInfo),
+  getUserInfo: _.mockAsync('getUserInfo', userInfo),
 
-    onCompassChange: _.mockAsync('onCompassChange'),
-    startCompass: _.mockAsync('startCompass'),
-    stopCompass: _.mockAsync('stopCompass'),
+  // 开放接口 - 授权
+  authorizeForMiniProgram: _.mockAsync('authorizeForMiniProgram'),
+  authorize: _.mockAsyncAndPromise('authorize'),
 
-    makePhoneCall: _.mockAsync('makePhoneCall'),
+  // 开放接口 - 设置
+  openSetting: _.mockAsyncAndPromise('openSetting', setting),
+  getSetting: _.mockAsyncAndPromise('getSetting', setting),
 
-    scanCode: _.mockAsync('scanCode'),
+  // 开放接口 - 收货地址
+  chooseAddress: _.mockAsyncAndPromise('chooseAddress', {
+    userName: '张三',
+    postalCode: '510000',
+    provinceName: '广东省',
+    cityName: '广州市',
+    countyName: '海珠区',
+    detailInfo: '新港中路397号',
+    detailInfoNew: '',
+    nationalCode: '510000',
+    telNumber: '020-81167888',
+  }),
 
-    setClipboardData: _.mockAsync('setClipboardData'),
-    getClipboardData: _.mockAsync('getClipboardData'),
+  // 开放接口 - 卡券
+  openCard: _.mockAsyncAndPromise('openCard'),
+  addCard: _.mockAsyncAndPromise('addCard', { cardList: [] }),
 
-    openBluetoothAdapter: _.mockAsync('openBluetoothAdapter'),
-    closeBluetoothAdapter: _.mockAsync('closeBluetoothAdapter'),
-    getBluetoothAdapterState: _.mockAsync('getBluetoothAdapterState'),
-    onBluetoothAdapterStateChange: _.mockAsync('onBluetoothAdapterStateChange'),
-    startBluetoothDevicesDiscovery: _.mockAsync('startBluetoothDevicesDiscovery'),
-    stopBluetoothDevicesDiscovery: _.mockAsync('stopBluetoothDevicesDiscovery'),
-    getBluetoothDevices: _.mockAsync('getBluetoothDevices'),
-    getConnectedBluetoothDevices: _.mockAsync('getConnectedBluetoothDevices'),
-    onBluetoothDeviceFound: _.mockAsync('onBluetoothDeviceFound'),
-    createBLEConnection: _.mockAsync('createBLEConnection'),
-    closeBLEConnection: _.mockAsync('closeBLEConnection'),
-    getBLEDeviceServices: _.mockAsync('getBLEDeviceServices'),
-    getBLEDeviceCharacteristics: _.mockAsync('getBLEDeviceCharacteristics'),
-    readBLECharacteristicValue: _.mockAsync('readBLECharacteristicValue'),
-    writeBLECharacteristicValue: _.mockAsync('writeBLECharacteristicValue'),
-    notifyBLECharacteristicValueChange: _.mockAsync('notifyBLECharacteristicValueChange'),
-    onBLEConnectionStateChange: _.mockAsync('onBLEConnectionStateChange'),
-    onBLECharacteristicValueChange: _.mockAsync('onBLECharacteristicValueChange'),
+  // 开放接口 - 发票
+  chooseInvoiceTitle: _.mockAsyncAndPromise('chooseInvoiceTitle', {
+    type: '0',
+    title: '广州腾讯科技有限公司',
+    taxNumber: '91440101327598294H',
+    companyAddress: '广州市海珠区新港中路397号自编72号(商业街F5-1)',
+    telephone: '020-81167888',
+    bankName: '招商银行股份有限公司广州市体育东路支行',
+    bankAccount: '1209 0928 2210 301',
+  }),
+  chooseInvoice: _.mockAsyncAndPromise('chooseInvoice', { invoiceInfo: '{}' }),
 
-    startBeaconDiscovery: _.mockAsync('startBeaconDiscovery'),
-    stopBeaconDiscovery: _.mockAsync('stopBeaconDiscovery'),
-    getBeacons: _.mockAsync('getBeacons'),
-    onBeaconUpdate: _.mockAsync('onBeaconUpdate'),
-    onBeaconServiceChange: _.mockAsync('onBeaconServiceChange'),
+  // 开放接口 - 生物认证
+  startSoterAuthentication: _.mockAsyncAndPromise('startSoterAuthentication', {
+    authMode: '',
+    resultJSON:
+      '{"raw":"msg","fid":"2","counter":123,"tee_n":"TEE Name","tee_v":"TEE Version","fp_n":"Fingerprint Sensor Name","fp_v":"Fingerprint Sensor Version","cpu_id":"CPU Id","uid":"21"}',
+    resultJSONSignature: '',
+  }),
+  checkIsSupportSoterAuthentication: _.mockAsyncAndPromise(
+    'checkIsSupportSoterAuthentication',
+    { supportMode: ['fingerPrint'] }
+  ),
+  checkIsSoterEnrolledInDevice: _.mockAsyncAndPromise(
+    'checkIsSoterEnrolledInDevice',
+    { isEnrolled: true }
+  ),
 
-    setScreenBrightness: _.mockAsync('setScreenBrightness'),
-    getScreenBrightness: _.mockAsync('getScreenBrightness'),
-    setKeepScreenOn: _.mockAsync('setKeepScreenOn'),
+  // 开放接口 - 微信运动
+  shareToWeRun: _.mockAsyncAndPromise('shareToWeRun'),
+  getWeRunData: _.mockAsync('getWeRunData', {
+    encryptedData: '',
+    iv: '',
+    cloudID: '',
+  }),
 
-    onUserCaptureScreen: _.mockAsync('onUserCaptureScreen'),
+  // 开放接口 - 订阅消息
+  requestSubscribeMessage: _.mockAsyncAndPromise('requestSubscribeMessage'),
+  requestSubscribeDeviceMessage: _.mockAsyncAndPromise(
+    'requestSubscribeDeviceMessage'
+  ),
 
-    vibrateLong: _.mockAsync('vibrateLong'),
-    vibrateShort: _.mockAsync('vibrateShort'),
+  // 开放接口 - 微信红包
+  showRedPackage: _.mockAsyncAndPromise('showRedPackage'),
 
-    addPhoneContact: _.mockAsync('addPhoneContact'),
+  // 开放接口 - 收藏
+  addVideoToFavorites: _.mockAsyncAndPromise('addVideoToFavorites'),
+  addFileToFavorites: _.mockAsyncAndPromise('addFileToFavorites'),
 
-    getHCEState: _.mockAsync('getHCEState'),
-    startHCE: _.mockAsync('startHCE'),
-    stopHCE: _.mockAsync('stopHCE'),
-    onHCEMessage: _.mockAsync('onHCEMessage'),
-    sendHCEMessage: _.mockAsync('sendHCEMessage'),
+  // 开放接口 - 我的小程序
+  checkIsAddedToMyMiniProgram: _.mockAsync('checkIsAddedToMyMiniProgram', {
+    added: false,
+  }),
 
-    startWifi: _.mockAsync('startWifi'),
-    stopWifi: _.mockAsync('stopWifi'),
-    connectWifi: _.mockAsync('connectWifi'),
-    getWifiList: _.mockAsync('getWifiList'),
-    onGetWifiList: _.mockAsync('onGetWifiList'),
-    setWifiList: _.mockAsync('setWifiList'),
-    onWifiConnected: _.mockAsync('onWifiConnected'),
-    getConnectedWifi: _.mockAsync('getConnectedWifi'),
+  // 开放接口 - 车牌
+  chooseLicensePlate: _.mockAsyncAndPromise('chooseLicensePlate', {
+    plateNumber: '粤A88888',
+  }),
 
-    showToast: _.mockAsync('showToast'),
-    showLoading: _.mockAsync('showLoading'),
-    hideToast: _.mockAsync('hideToast'),
-    hideLoading: _.mockAsync('hideLoading'),
-    showModal: _.mockAsync('showModal'),
-    showActionSheet: _.mockAsync('showActionSheet'),
+  // 开放接口 - 我的视频号
+  reserveChannelsLive() {},
+  openChannelsUserProfile: _.mockAsync('openChannelsUserProfile'),
+  openChannelsLive: _.mockAsync('openChannelsLive'),
+  openChannelsEvent: _.mockAsync('openChannelsEvent'),
+  openChannelsActivity: _.mockAsync('openChannelsActivity'),
+  getChannelsShareKey: _.mockAsync('getChannelsShareKey', {
+    sharerOpenId: '',
+    promoter: {
+      finderNickname: '',
+      promoterId: '',
+      promoterOpenId: '',
+    },
+  }),
+  getChannelsLiveNoticeInfo: _.mockAsync('getChannelsLiveNoticeInfo', {
+    noticeId: '',
+    status: 1,
+    startTime: '',
+    headUrl: '',
+    nickname: '',
+    reservable: false,
+    otherInfos: [],
+  }),
+  getChannelsLiveInfo: _.mockAsync('getChannelsLiveInfo', {
+    feedId: '',
+    nonceId: '',
+    description: '',
+    status: 3,
+    headUrl: '',
+    nickname: '',
+    replayStatus: 6,
+    otherInfos: [],
+  }),
 
-    setNavigationBarTitle: _.mockAsync('setNavigationBarTitle'),
-    showNavigationBarLoading: _.mockAsync('showNavigationBarLoading'),
-    hideNavigationBarLoading: _.mockAsync('hideNavigationBarLoading'),
-    setNavigationBarColor: _.mockAsync('setNavigationBarColor'),
+  // 开放接口 - 音视频通话
+  requestDeviceVoIP: _.mockAsync('requestDeviceVoIP'),
+  getDeviceVoIPList: _.mockAsync('getDeviceVoIPList', { list: [] }),
 
-    setTabBarBadge: _.mockAsync('setTabBarBadge'),
-    removeTabBarBadge: _.mockAsync('removeTabBarBadge'),
-    showTabBarRedDot: _.mockAsync('showTabBarRedDot'),
-    hideTabBarRedDot: _.mockAsync('hideTabBarRedDot'),
-    setTabBarStyle: _.mockAsync('setTabBarStyle'),
-    setTabBarItem: _.mockAsync('setTabBarItem'),
-    showTabBar: _.mockAsync('showTabBar'),
-    hideTabBar: _.mockAsync('hideTabBar'),
+  // 开放接口 - 微信群
+  getGroupEnterInfo: _.mockAsync('getGroupEnterInfo', {
+    encryptedData: '',
+    iv: '',
+    cloudID: '',
+  }),
 
-    setBackgroundColor: _.mockAsync('setBackgroundColor'),
-    setBackgroundTextStyle: _.mockAsync('setBackgroundTextStyle'),
+  // 开放接口 - 微信客服
+  openCustomerServiceChat: _.mockAsync('openCustomerServiceChat'),
 
-    setTopBarText: _.mockAsync('setTopBarText'),
+  // 设备 - 蓝牙 - 通用
+  stopBluetoothDevicesDiscovery: _.mockAsyncAndPromise('stopBluetoothDevicesDiscovery'),
+  startBluetoothDevicesDiscovery: _.mockAsyncAndPromise('startBluetoothDevicesDiscovery'),
+  openBluetoothAdapter: _.mockAsyncAndPromise('openBluetoothAdapter'),
+  onBluetoothDeviceFound() {},
+  onBluetoothAdapterStateChange() {},
+  offBluetoothDeviceFound() {},
+  offBluetoothAdapterStateChange() {},
+  makeBluetoothPair: _.mockAsyncAndPromise('makeBluetoothPair'),
+  isBluetoothDevicePaired: _.mockAsyncAndPromise('isBluetoothDevicePaired'),
+  getConnectedBluetoothDevices: _.mockAsyncAndPromise('getConnectedBluetoothDevices', { devices: [] }),
+  getBluetoothDevices: _.mockAsyncAndPromise('getBluetoothDevices', { devices: [] }),
+  getBluetoothAdapterState: _.mockAsyncAndPromise('getBluetoothAdapterState', {
+    discovering: true,
+    available: true,
+  }),
+  closeBluetoothAdapter: _.mockAsyncAndPromise('closeBluetoothAdapter'),
 
-    createAnimation(transition = {}) {
-        return new Animation(transition)
+  // 设备 - 蓝牙 - 低功耗中心设备
+  writeBLECharacteristicValue: _.mockAsyncAndPromise('writeBLECharacteristicValue'),
+  setBLEMTU: _.mockAsyncAndPromise('setBLEMTU', { mtu: 0 }),
+  readBLECharacteristicValue: _.mockAsyncAndPromise('readBLECharacteristicValue'),
+  onBLEMTUChange() {},
+  onBLEConnectionStateChange() {},
+  onBLECharacteristicValueChange() {},
+  offBLEMTUChange() {},
+  offBLEConnectionStateChange() {},
+  offBLECharacteristicValueChange() {},
+  notifyBLECharacteristicValueChange: _.mockAsyncAndPromise('notifyBLECharacteristicValueChange'),
+  getBLEMTU: _.mockAsyncAndPromise('getBLEMTU', { mtu: 0 }),
+  getBLEDeviceServices: _.mockAsyncAndPromise('getBLEDeviceServices', { services: [] }),
+  getBLEDeviceRSSI: _.mockAsyncAndPromise('getBLEDeviceRSSI', { RSSI: 0 }),
+  getBLEDeviceCharacteristics: _.mockAsyncAndPromise('getBLEDeviceCharacteristics', { characteristics: [] }),
+  createBLEConnection: _.mockAsyncAndPromise('createBLEConnection'),
+  closeBLEConnection: _.mockAsyncAndPromise('closeBLEConnection'),
+
+  // 设备 - 蓝牙 - 低功耗外围设备
+  onBLEPeripheralConnectionStateChanged() {},
+  offBLEPeripheralConnectionStateChanged() {},
+  createBLEPeripheralServer: _.mockAsyncAndPromise('createBLEPeripheralServer', {
+    server: {
+      addService: _.mockAsync('addService'),
+      close: _.mockAsync('close'),
+      removeService: _.mockAsync('removeService'),
+      startAdvertising: _.mockAsync('startAdvertising'),
+      stopAdvertising: _.mockAsync('stopAdvertising'),
+      writeCharacteristicValue: _.mockAsync('writeCharacteristicValue'),
+      onCharacteristicWriteRequest() {},
+      offCharacteristicWriteRequest() {},
+      onCharacteristicReadRequest() {},
+      offCharacteristicReadRequest() {},
+      onCharacteristicSubscribed() {},
+      offCharacteristicSubscribed() {},
+      onCharacteristicUnsubscribed() {},
+      offCharacteristicUnsubscribed() {},
+    },
+  }),
+
+  // 设备 - 蓝牙 - 信标(Beacon)
+  stopBeaconDiscovery: _.mockAsyncAndPromise('stopBeaconDiscovery'),
+  startBeaconDiscovery: _.mockAsyncAndPromise('startBeaconDiscovery'),
+  onBeaconUpdate() {},
+  onBeaconServiceChange() {},
+  offBeaconUpdate() {},
+  offBeaconServiceChange() {},
+  getBeacons: _.mockAsyncAndPromise('getBeacons', { beacons: [] }),
+
+  // 设备 - NFC 读写
+  getNFCAdapter: _.mockSync({
+    startDiscovery: _.mockAsync('startDiscovery'),
+    stopDiscovery: _.mockAsync('stopDiscovery'),
+    getNdef: _.mockSync(undefined),
+    getNfcA: _.mockSync(undefined),
+    getNfcB: _.mockSync(undefined),
+    getIsoDep: _.mockSync(undefined),
+    getNfcF: _.mockSync(undefined),
+    getNfcV: _.mockSync(undefined),
+    getMifareClassic: _.mockSync(undefined),
+    getMifareUltralight: _.mockSync(undefined),
+    onDiscovered() {},
+    offDiscovered() {},
+  }),
+
+  // 设备 - Wi-Fi
+  stopWifi: _.mockAsyncAndPromise('stopWifi'),
+  startWifi: _.mockAsyncAndPromise('startWifi'),
+  setWifiList: _.mockAsyncAndPromise('setWifiList'),
+  onWifiConnectedWithPartialInfo() {},
+  onWifiConnected() {},
+  onGetWifiList() {},
+  offWifiConnectedWithPartialInfo() {},
+  offWifiConnected() {},
+  offGetWifiList() {},
+  getWifiList: _.mockAsyncAndPromise('getWifiList'),
+  getConnectedWifi: _.mockAsyncAndPromise('getConnectedWifi', {
+    wifi: {
+      SSID: '',
+      BSSID: '',
+      secure: false,
+      signalStrength: 0,
+      frequency: 0,
+    },
+  }),
+  connectWifi: _.mockAsyncAndPromise('connectWifi'),
+
+  // 设备 - 日历
+  addPhoneRepeatCalendar: _.mockAsyncAndPromise('addPhoneRepeatCalendar'),
+  addPhoneCalendar: _.mockAsyncAndPromise('addPhoneCalendar'),
+
+  // 设备 - 联系人
+  chooseContact: _.mockAsync('chooseContact', {
+    phoneNumber: '123456789',
+    displayName: 'june',
+  }),
+  addPhoneContact: _.mockAsyncAndPromise('addPhoneContact'),
+
+  // 设备 - 无障碍
+  checkIsOpenAccessibility: _.mockAsyncAndPromise('checkIsOpenAccessibility', { open: true }),
+  
+  // 设备 - 电量
+  getBatteryInfoSync: _.mockSync({
+    level: 100,
+    isCharging: false,
+  }),
+  getBatteryInfo: _.mockAsyncAndPromise('getBatteryInfo', {
+    level: 100,
+    isCharging: false,
+  }),
+  
+  // 设备 - 剪贴板
+  setClipboardData: _.mockAsyncAndPromise('setClipboardData'),
+  getClipboardData: _.mockAsyncAndPromise('getClipboardData', { data: '' }),
+  
+  // 设备 - NFC
+  stopHCE: _.mockAsyncAndPromise('stopHCE'),
+  startHCE: _.mockAsyncAndPromise('startHCE'),
+  sendHCEMessage: _.mockAsyncAndPromise('sendHCEMessage'),
+  onHCEMessage() {},
+  offHCEMessage() {},
+  getHCEState: _.mockAsyncAndPromise('getHCEState'),
+  
+  // 设备 - 网络
+  onNetworkWeakChange() {},
+  onNetworkStatusChange() {},
+  offNetworkWeakChange() {},
+  offNetworkStatusChange() {},
+  getNetworkType: _.mockAsyncAndPromise('getNetworkType', {
+    networkType: 'wifi',
+    signalStrength: 0,
+    hasSystemProxy: false,
+  }),
+  getLocalIPAddress: _.mockAsync('getLocalIPAddress', {
+    localip: '192.168.0.1',
+    netmask: '255.255.255.0',
+  }),
+  
+  // 设备 - 加密
+  getRandomValues: userCryptoManager.getRandomValues,
+  
+  // 设备 - 屏幕
+  setVisualEffectOnCapture: _.mockAsync('setVisualEffectOnCapture'),
+  setScreenBrightness: _.mockAsyncAndPromise('setScreenBrightness'),
+  setKeepScreenOn: _.mockAsyncAndPromise('setKeepScreenOn'),
+  onUserCaptureScreen() {},
+  onScreenRecordingStateChanged() {},
+  offUserCaptureScreen() {},
+  offScreenRecordingStateChanged() {},
+  getScreenRecordingState: _.mockAsync('getScreenRecordingState', { state: 'off' }),
+  getScreenBrightness: _.mockAsyncAndPromise('getScreenBrightness', { value: 0 }),
+  
+  // 设备 - 键盘
+  onKeyboardHeightChange() {},
+  offKeyboardHeightChange() {},
+  hideKeyboard: _.mockAsyncAndPromise('hideKeyboard'),
+  getSelectedTextRange: _.mockAsyncAndPromise('getSelectedTextRange', {
+    start: 0,
+    end: 0,
+  }),
+  
+  // 设备 - 电话
+  makePhoneCall: _.mockAsyncAndPromise('makePhoneCall'),
+  
+  // 设备 - 加速计
+  stopAccelerometer: _.mockAsyncAndPromise('stopAccelerometer'),
+  startAccelerometer: _.mockAsyncAndPromise('startAccelerometer'),
+  onAccelerometerChange() {},
+  offAccelerometerChange() {},
+  
+  // 设备 - 罗盘
+  stopCompass: _.mockAsyncAndPromise('stopCompass'),
+  startCompass: _.mockAsyncAndPromise('startCompass'),
+  onCompassChange() {},
+  offCompassChange() {},
+  
+  // 设备 - 设备方向
+  stopDeviceMotionListening: _.mockAsyncAndPromise('stopDeviceMotionListening'),
+  startDeviceMotionListening: _.mockAsyncAndPromise('startDeviceMotionListening'),
+  onDeviceMotionChange() {},
+  offDeviceMotionChange() {},
+  
+  // 设备 - 陀螺仪
+  stopGyroscope: _.mockAsyncAndPromise('stopGyroscope'),
+  startGyroscope: _.mockAsyncAndPromise('startGyroscope'),
+  onGyroscopeChange() {},
+  offGyroscopeChange() {},
+  
+  // 设备 - 内存
+  onMemoryWarning() {},
+  offMemoryWarning() {},
+  
+  // 设备 - 扫码
+  scanCode: _.mockAsyncAndPromise('scanCode', {
+    result: '',
+    scanType: 'QR_CODE',
+    charSet: 'utf8',
+    path: '/',
+    rawData: '',
+  }),
+  
+  // 设备 - 短信
+  sendSms: _.mockAsync('sendSms'),
+  
+  // 设备 - 振动
+  vibrateShort: _.mockAsyncAndPromise('vibrateShort'),
+  vibrateLong: _.mockAsyncAndPromise('vibrateLong'),
+
+  // AI - AI 推理
+  getInferenceEnvInfo: _.mockAsync('getInferenceEnvInfo', { ver: '' }),
+  createInferenceSession: _.mockSync({
+    onLoad() {},
+    offLoad() {},
+    onError() {},
+    offError() {},
+    run: () => new Promise(resolve => resolve({})),
+    destroy() {},
+  }),
+
+  // AI - 视觉算法
+  isVKSupport: _.mockSync(false),
+  createVKSession: _.mockSync({
+    state: 0,
+    config: {
+      version: 'v2',
+      track: {
+        plane: { mode: 3 },
+        marker: false,
+        OSD: false,
+        face: { mode: 1 },
+        OCR: { mode: 1 },
+        body: { mode: 1 },
+        hand: { mode: 1 },
+        threeDof: false,
+      },
+      gl: undefined,
+    },
+    cameraSize: {
+      width: 414,
+      height: 672,
     },
 
-    pageScrollTo: _.mockAsync('pageScrollTo'),
+    start() {},
+    stop() {},
+    destroy() {},
+    requestAnimationFrame: func => setTimeout(func, 0),
+    cancelAnimationFrame: clearTimeout,
+    getVKFrame: () => ({
+      timestamp: 0,
+      camera: {
+        viewMatrix: Float32Array.from([]),
+        intrinsics: Float32Array.from([]),
+        getProjectionMatrix: () => Float32Array.from([]),
+      },
+      getCameraTexture: () => ({
+        yTexture: undefined,
+        uvTexture: undefined,
+      }),
+      getCameraBuffer: () => Uint8Array.from([]).buffer,
+      getDisplayTransform: () => Float32Array.from([]),
+    }),
+    hitTest: () => [],
+    addMarker: () => 0,
+    removeMarker() {},
+    getAllMarker: () => [],
+    addOSDMarker: () => 0,
+    removeOSDMarker() {},
+    getAllOSDMarker: () => [],
+    update3DMode() {},
+    updateOSDThreshold() {},
+    detectFace() {},
+    detectBody() {},
+    detectHand() {},
+    runOCR() {},
+    on() {},
+    off() {},
+  }),
 
-    createCanvasContext: _.mockAsync('createCanvasContext'),
-    createContext: _.mockAsync('createContext'),
-    drawCanvas: _.mockAsync('drawCanvas'),
-    canvasToTempFilePath: _.mockAsync('canvasToTempFilePath'),
-    canvasGetImageData: _.mockAsync('canvasGetImageData'),
-    canvasPutImageData: _.mockAsync('canvasPutImageData'),
+  // AI - 人脸检测
+  stopFaceDetect: _.mockAsync('stopFaceDetect'),
+  initFaceDetect: _.mockAsync('initFaceDetect'),
+  faceDetect: _.mockAsync('faceDetect', {
+    detectRect: { height: 0, width: 0, originX: 0, originY: 0 },
+    x: -1,
+    y: -1,
+    pointArray: [],
+    confArray: { global: 1, leftEye: 1, rightEye: 1, mouth: 1, nose: 1 },
+    angleArray: { pitch: 0, yaw: 0, roll: 0 },
+    faceInfo: [],
+  }),
 
-    startPullDownRefresh: _.mockAsync('startPullDownRefresh'),
-    stopPullDownRefresh: _.mockAsync('stopPullDownRefresh'),
+  // Worker
+  createWorker: _.mockSync({
+    postMessage() {},
+    terminate() {},
+    testOnProcessKilled() {},
+    onMessage() {},
+    onProcessKilled() {},
+  }),
 
-    createWorker: _.mockAsync('createWorker'),
+  // WXML
+  createSelectorQuery: () => new SelectorQuery(),
+  createIntersectionObserver: (compInst, options) =>
+    compInst.createIntersectionObserver(options),
 
-    // network
-    // TODO
+  // 第三方平台
+  getExtConfigSync: () => ({}),
+  getExtConfig: _.mockAsyncAndPromise('getExtConfig', { extConfig: {} }),
 
-    // media
-    // TOOD
-
-    // file
-    // TODO
-
-    // data
-    ...dataApi,
-
-    // location
-    chooseLocation(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'chooseLocation:ok',
-            address: '广东省广州市海珠区tit创意园品牌街',
-            name: '腾讯微信总部',
-            latitude: 23.1001,
-            longitude: 113.32456,
-        })
-    },
-    getLocation(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getLocation:ok',
-            accuracy: 65,
-            altitude: 0,
-            latitude: 23.12908,
-            longitude: 113.26436,
-            speed: -1,
-            verticalAccuracy: 65,
-            horizontalAccuracy: 65,
-        })
-    },
-    openLocation: _.mockAsync('openLocation'),
-
-    // device
-    // TODO
-
-    // open
-    ...openApi,
-
-    // update
-    getUpdateManager() {
-        return new UpdateManager()
-    },
-
-    // worker
-    // TODO
-
-    // report
-    reportMonitor: _.mockSync(null),
-
-    // miniprogram
-    // TODO
-
-    // base
-    canIUse: _.mockSync(true),
-
-    // canvas
-    // TODO
-
-    // debug
-    getLogManager: _.mockSync(console),
-    setEnableDebug: _.mockSync(null),
-
-    // thirdparty
-    getExtConfig(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getExtConfig:ok',
-            extConfig: wx.getExtConfigSync(),
-        })
-    },
-    getExtConfigSync() {
-        return {}
-    },
-
-    // map
-    createMapContext(...args) {
-        return new MapContext(...args)
-    },
-
-    // route
-    navigateTo: _.mockAsync('navigateTo'),
-    redirectTo: _.mockAsync('redirectTo'),
-    switchTab: _.mockAsync('switchTab'),
-    navigateBack: _.mockAsync('navigateBack'),
-    reLaunch: _.mockAsync('reLaunch'),
-
-    // share
-    getShareInfo(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getShareInfo:ok',
-            encryptedData: 'CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew==',
-            iv: 'r7BXXKkLb8qrSNn05n0qiA==',
-        })
-    },
-    hideShareMenu: _.mockAsync('hideShareMenu'),
-    showShareMenu: _.mockAsync('showShareMenu'),
-    updateShareMenu: _.mockAsync('updateShareMenu'),
-
-    // system
-    getSystemInfo(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getSystemInfo:ok',
-            ...wx.getSystemInfoSync(),
-        })
-    },
-    getSystemInfoSync() {
-        return {
-            SDKVersion: '2.3.0',
-            batteryLevel: 100,
-            benchmarkLevel: 1,
-            brand: 'devtools',
-            fontSizeSetting: 16,
-            language: 'zh_CN',
-            model: 'iPhone 7 Plus',
-            pixelRatio: 3,
-            platform: 'devtools',
-            screenHeight: 736,
-            screenWidth: 414,
-            statusBarHeight: 20,
-            system: 'iOS 10.0.1',
-            version: '6.6.3',
-            windowHeight: 672,
-            windowWidth: 414,
-        }
-    },
-
-    // wxml
-    createSelectorQuery() {
-        return {
-            in(compInst) {
-                return compInst.createSelectorQuery()
-            },
-        }
-    },
-    createIntersectionObserver(compInst, options) {
-        return compInst.createIntersectionObserver(options)
-    },
-    nextTick(func) {
-        nextTickQueue.push(func)
-
-        if (nextTickTimer) return
-        nextTickTimer = setTimeout(() => {
-            const funcQueue = nextTickQueue
-            nextTickQueue = []
-            nextTickTimer = null
-
-            for (const func of funcQueue) {
-                if (func) func()
-            }
-        }, 0)
-    },
+  // 广告
+  createRewardedVideoAd: () => ad,
+  createInterstitialAd: () => ad,
 }
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports) {
 
 class Animation {
@@ -42880,63 +44049,6 @@ module.exports = Animation
 
 
 /***/ }),
-/* 232 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable class-methods-use-this */
-const _ = __webpack_require__(12)
-
-class MapContext {
-    constructor(id, parent) {
-        this._exparserNode = parent.selectComponent(`#${id}`)
-    }
-
-    getCenterLocation(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getMapCenterLocation:ok',
-            latitude: 39.92,
-            longitude: 116.46,
-        })
-    }
-
-    getRegion(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getMapRegion:ok',
-            northeast: {
-                latitude: 39.92493685384383,
-                longitude: 116.47287460327148,
-            },
-            southwest: {
-                latitude: 39.91506279020459,
-                longitude: 116.44712539672851,
-            },
-        })
-    }
-
-    getScale(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getMapScale:ok',
-            scale: 14,
-        })
-    }
-
-    get includePoints() {
-        return _.mockAsync('includePoints')
-    }
-
-    get moveToLocation() {
-        return _.mockSync(null)
-    }
-
-    get translateMarker() {
-        return _.mockAsync('translateMarker')
-    }
-}
-
-module.exports = MapContext
-
-
-/***/ }),
 /* 233 */
 /***/ (function(module, exports) {
 
@@ -42948,17 +44060,13 @@ class UpdateManager {
 
     applyUpdate() {
         setTimeout(() => {
-            if (this.updateCallback && typeof this.updateCallback === 'function') {
-                this.updateCallback()
-            }
+            if (this.updateCallback && typeof this.updateCallback === 'function') this.updateCallback()
         }, 0)
     }
 
     onCheckForUpdate(callback) {
         setTimeout(() => {
-            if (callback && typeof callback === 'function') {
-                callback({hasUpdate: true})
-            }
+            if (callback && typeof callback === 'function') callback({hasUpdate: true})
         }, 0)
     }
 
@@ -42976,228 +44084,944 @@ module.exports = UpdateManager
 /* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* global localStorage */
-const _ = __webpack_require__(12)
+const _ = __webpack_require__(30)
+
+const systemInfo = {
+  brand: 'devtools',
+  model: 'iPhone 12/13 Pro Max',
+  pixelRatio: 3,
+  screenWidth: 428,
+  screenHeight: 926,
+  windowWidth: 428,
+  windowHeight: 835,
+  statusBarHeight: 47,
+  language: 'zh_CN',
+  version: '8.0.5',
+  system: 'iOS 10.0.1',
+  platform: 'ios',
+  fontSizeSetting: 16,
+  SDKVersion: '2.32.2',
+  benchmarkLevel: 1,
+  albumAuthorized: true,
+  cameraAuthorized: true,
+  locationAuthorized: true,
+  microphoneAuthorized: true,
+  notificationAuthorized: true,
+  notificationAlertAuthorized: true,
+  notificationBadgeAuthorized: true,
+  notificationSoundAuthorized: true,
+  phoneCalendarAuthorized: true,
+  bluetoothEnabled: true,
+  locationEnabled: true,
+  wifiEnabled: true,
+  safeArea: {
+    left: 0,
+    right: 428,
+    top: 47,
+    bottom: 892,
+    width: 428,
+    height: 845,
+  },
+  locationReducedAccuracy: true,
+  theme: 'light',
+  host: { env: 'WeChat' },
+  enableDebug: false,
+  deviceOrientation: 'portrait',
+}
+
+const skylineInfo = {
+  isSupported: false,
+  version: '',
+  reason: 'client not supported',
+}
+
+const userAgent =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1 wechatdevtools/1.06.2306020 MicroMessenger/8.0.5 webview/1 desktopapp miniprogram port/25078 token/52a059808adc79ce2644d3c4d1a24180 runtime/2'
+
+const launchOptions = {
+  path: 'pages/index/index',
+  scene: 1001,
+  query: {},
+  shareTicket: '',
+  referrerInfo: {},
+  forwardMaterials: [],
+  chatType: 1,
+  apiCategory: 'default',
+}
+
+const preDownloadSubpackageTask = {
+  onProgressUpdate(listener) {
+    setTimeout(() => {
+      if (typeof listener === 'function')
+        listener({
+          progress: 100,
+          totalBytesWritten: 1024,
+          totalBytesExpectedToWrite: 1024,
+        })
+    }, 100)
+  },
+}
+
+const userCryptoManager = {
+  getLatestUserKey: _.mockAsync('getLatestUserKey', {
+    encryptKey: '123456789',
+    expireTime: 1687853340000,
+    iv: '987654321',
+    version: 1,
+  }),
+
+  getRandomValues(options = {}) {
+    let randomValues
+    if (options.length) randomValues = new Uint8Array(options.length).buffer
+
+    const { success, fail, complete } = options
+    if (!(success || fail || complete)) {
+      // 支持 promise
+      return new Promise(resolve => {
+        options.success = res => resolve(res)
+
+        _.runInAsync(options, {
+          errMsg: 'getRandomValues:ok',
+          randomValues,
+        })
+      })
+    }
+
+    _.runInAsync(options, {
+      errMsg: 'getRandomValues:ok',
+      randomValues,
+    })
+  },
+}
+
+const eventChannel = {
+  emit() {},
+  off() {},
+  on() {},
+  once() {},
+}
+
+const cacheManager = {
+  mode: 'weakNetwork',
+  origin: '',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  state: 0,
+
+  addRules: () => [],
+  addRule: () => '',
+  deleteRules() {},
+  deleteRule() {},
+  clearRules() {},
+  on() {},
+  off() {},
+  start() {},
+  stop() {},
+  match: () => ({}),
+  deleteCaches() {},
+  deleteCache() {},
+  clearCaches() {},
+}
+
+const userInfo = {
+  userInfo: {
+    nickName: 'june',
+    avatarUrl: '',
+    gender: 0,
+    country: '',
+    province: '',
+    city: '',
+    language: 'zh_CN',
+  },
+  rawData: '',
+  signature: '',
+  encryptedDat: '',
+  iv: '',
+  cloudID: '',
+}
+
+const setting = {
+  authSetting: {
+    userInfo: true,
+    userLocation: true,
+    address: true,
+    invoiceTitle: true,
+    invoice: true,
+    werun: true,
+    record: true,
+    writePhotosAlbum: true,
+    camera: true,
+    bluetooth: true,
+    addPhoneContact: true,
+    addPhoneCalendar: true,
+  },
+  subscriptionsSetting: {
+    mainSwitch: false,
+    itemSettings: {},
+  },
+  miniprogramAuthSetting: undefined,
+}
+
+const stats = {
+  mode: '',
+  size: 1024,
+  lastAccessedTime: 1688030468,
+  lastModifiedTime: 1688030469,
+  isDirectory: () => false,
+  isFile: () => true,
+}
+
+const ad = {
+  load: Promise.resolve({}),
+  show: Promise.resolve({}),
+  destroy() {},
+  onLoad() {},
+  offLoad() {},
+  onError() {},
+  offError() {},
+  onClose() {},
+  offClose() {},
+}
+
+const audioBuffer = {
+  sampleRate: 0,
+  length: 0,
+  duration: 0,
+  numberOfChannels: 0,
+  copyFromChannel() {},
+  copyToChannel() {},
+  getChannelData: _.mockSync(Float32Array.from([])),
+}
 
 module.exports = {
-    clearStorage(options) {
-        const res = {errMsg: 'clearStorage:ok'}
-        try {
-            wx.clearStorageSync()
-        } catch (err) {
-            res.errMsg = `clearStorage:fail ${err.message}`
-        }
-
-        _.runInAsync(options, res)
-    },
-    clearStorageSync() {
-        localStorage.clear()
-    },
-    getStorage(options) {
-        const res = {errMsg: 'getStorage:ok'}
-        try {
-            res.data = wx.getStorageSync(options.key)
-        } catch (err) {
-            res.errMsg = `getStorage:fail ${err.message}`
-        }
-
-        _.runInAsync(options, res)
-    },
-    getStorageSync(key) {
-        const res = localStorage.getItem(key)
-        try {
-            return JSON.parse(res)
-        } catch (err) {
-            return res
-        }
-    },
-    getStorageInfo(options) {
-        let res = {errMsg: 'getStorageInfo:ok'}
-        try {
-            const data = wx.getStorageInfoSync()
-            res = Object.assign(res, data)
-        } catch (err) {
-            res.errMsg = `getStorageInfo:fail ${err.message}`
-        }
-
-        _.runInAsync(options, res)
-    },
-    getStorageInfoSync() {
-        const length = localStorage.length
-        const keys = []
-        let currentSize = 0
-
-        for (let i = 0; i < length; i++) {
-            const key = localStorage.key(i)
-            keys.push(key)
-            currentSize += _.getSize(localStorage.getItem(key))
-        }
-
-        return {
-            keys,
-            currentSize,
-            limitSize: 1024 * 10,
-        }
-    },
-    removeStorage(options) {
-        const res = {errMsg: 'removeStorage:ok'}
-        try {
-            wx.removeStorageSync(options.key)
-        } catch (err) {
-            res.errMsg = `removeStorage:fail ${err.message}`
-        }
-
-        _.runInAsync(options, res)
-    },
-    removeStorageSync(key) {
-        localStorage.removeItem(key)
-    },
-    setStorage(options) {
-        const res = {errMsg: 'setStorage:ok'}
-        try {
-            wx.setStorageSync(options.key, options.data)
-        } catch (err) {
-            res.errMsg = `setStorage:fail ${err.message}`
-        }
-
-        _.runInAsync(options, res)
-    },
-    setStorageSync(key, data) {
-        localStorage.setItem(key, JSON.stringify(data))
-    },
+  systemInfo,
+  skylineInfo,
+  userAgent,
+  launchOptions,
+  preDownloadSubpackageTask,
+  userCryptoManager,
+  eventChannel,
+  cacheManager,
+  userInfo,
+  setting,
+  stats,
+  ad,
+  audioBuffer,
 }
 
 
 /***/ }),
 /* 235 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-const _ = __webpack_require__(12)
+class LogManager {
+  debug() {}
+  info() {}
+  log() {}
+  warn() {}
+}
+
+class RealtimeLogManager {
+  addFilterMsg() {}
+  error() {}
+
+  getCurrentState() {
+    return {
+      size: 1024,
+      maxSize: 1024,
+      logCount: 10,
+      maxLogCount: 10,
+    }
+  }
+
+  in() {}
+  info() {}
+  setFilterMsg() {}
+
+  tag() {
+    return new RealtimeTagLogManager()
+  }
+
+  warn() {}
+}
+
+class RealtimeTagLogManager {
+  addFilterMsg() {}
+  error() {}
+  info() {}
+  setFilterMsg() {}
+  warn() {}
+}
 
 module.exports = {
-    getAccountInfoSync: _.mockSync({
-        miniProgram: {appId: 'wx4f4bc4dec97d474b'},
-    }),
-    chooseAddress(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'chooseAddress:ok',
-            cityName: '广州市',
-            countyName: '海珠区',
-            detailInfo: '新港中路397号',
-            nationalCode: '510000',
-            postalCode: '510000',
-            provinceName: '广东省',
-            telNumber: '020-81167888',
-            userName: '张三',
-        })
-    },
-    authorize: _.mockAsync('authorize'),
-    addCard(options = {}) {
-        const cardList = (options.cardList || []).map(item => ({
-            code: 'this is a mock code',
-            isSuccess: true,
-            ...item,
-        }))
+  LogManager,
+  RealtimeLogManager,
+}
 
-        _.runInAsync(options, {
-            errMsg: 'addCard:ok',
-            cardList
-        })
-    },
-    openCard: _.mockAsync('openCard'),
-    reportAnalytics: _.mockSync(null),
-    chooseInvoice(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'chooseInvoice:ok',
-            invoiceInfo: {
-                cardId: 'pjZ8Yt5crPbAouhFqFf6JFgZv4Lc',
-                encryptCode: 'fbdt/fWy1VitQwhbKtSjNeR3BJyfpeJXfZjjGsdCXiM=',
-                publisherAppId: 'wx00000000000000',
-            },
-        })
-    },
-    chooseInvoiceTitle(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'chooseInvoiceTitle:ok',
-            bankAccount: '1209 0928 2210 301',
-            bankName: '招商银行股份有限公司广州市体育东路支行',
-            companyAddress: '广州市海珠区新港中路397号自编72号(商业街F5-1)',
-            taxNumber: '91440101327598294H',
-            telephone: '020-81167888',
-            title: '广州腾讯科技有限公司',
-            type: 0,
-        })
-    },
-    checkSession: _.mockAsync('checkSession'),
-    login(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'login:ok',
-            code: '033UAswz1j8Fjb0lT4yz1Wmrwz1UAsw9',
-        })
-    },
-    navigateBackMiniProgram: _.mockAsync('navigateBackMiniProgram'),
-    navigateToMiniProgram: _.mockAsync('navigateToMiniProgram'),
-    requestPayment: _.mockAsync('requestPayment'),
-    getSetting(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'getSetting:ok',
-            authSetting: {
-                'scope.address': true,
-                'scope.invoice': true,
-                'scope.invoiceTitle': true,
-                'scope.subscribemsg': true,
-            },
-        })
-    },
-    openSetting(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'openSetting:ok',
-            authSetting: {
-                'scope.address': true,
-                'scope.invoice': true,
-                'scope.invoiceTitle': true,
-                'scope.subscribemsg': true,
-            },
-        })
-    },
-    checkIsSoterEnrolledInDevice(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'checkIsSoterEnrolledInDevice:ok',
-            isEnrolled: true,
-        })
-    },
-    checkIsSupportSoterAuthentication(options = {}) {
-        _.runInAsync(options, {
-            errMsg: 'checkIsSupportSoterAuthentication:ok',
-            supportMode: ['fingerPrint'],
-        })
-    },
-    startSoterAuthentication: _.mockAsync('startSoterAuthentication'),
-    getUserInfo(options) {
-        _.runInAsync(options, {
-            errMsg: 'getUserInfo:ok',
-            userInfo: {
-                nickName: 'Band',
-                gender: 1,
-                language: 'zh_CN',
-                city: 'Guangzhou',
-                province: 'Guangdong',
-                country: 'CN',
-                avatarUrl: 'http://wx.qlogo.cn/mmopen/vi_32/aSKcBBPpibyKNicHNTMM0qJVh8Kjgiak2AHWr8MHM4WgMEm7GFhsf8OYrySdbvAMvTsw3mo8ibKicsnfN5pRjl1p8HQ/0',
-            },
-            rawData: '{"nickName":"Band","gender":1,"language":"zh_CN","city":"Guangzhou","province":"Guangdong","country":"CN","avatarUrl":"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0"}HyVFkGl5F5OQWJZZaNzBBg==',
-            signature: '75e81ceda165f4ffa64f4068af58c64b8f54b88c',
-            encryptedData: 'CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew==',
-            iv: 'r7BXXKkLb8qrSNn05n0qiA==',
-        })
-    },
-    getWeRunData(options) {
-        _.runInAsync(options, {
-            errMsg: 'getUserInfo:ok',
-            encryptedData: 'XoLUxF76jN/OsfTGUqF/ZqRn+2PtO66lAMg/g0D3bg1L2/Nds8gTQrH7fGmbTgGtUC2R9lbJh7fLEaO9boeCqru1Em2BD/IbfN6lI/nu55himuBvypESz+H9uV7izLP/',
-            iv: 'r7BXXKkLb8qrSNn05n0qiA==',
-        })
-    },
+
+/***/ }),
+/* 236 */
+/***/ (function(module, exports) {
+
+const entryList = [{
+  entryType: 'navigation',
+  name: 'appLaunch',
+  duration: 5734,
+  navigationType: 'appLaunch',
+  pageId: 1,
+  path: 'pages/index/index',
+  startTime: 1687833887576,
+}, {
+  entryType: 'script',
+  name: 'evaluateScript',
+  startTime: 1687833890475,
+  duration: 2,
+  moduleName: '__APP__',
+  fileList: ['/app-service.js']
+}, {
+  entryType: 'loadPackage',
+  name: 'downloadPackage',
+  startTime: 1687833891277,
+  duration: 56,
+  packageName: '__APP__',
+  packageSize: 0
+}, {
+  entryType: 'render',
+  name: 'firstRender',
+  startTime: 1687833893239,
+  duration: 71,
+  path: 'pages/index/index',
+  pageId: 1,
+  viewLayerReadyTime: 1687833890600,
+  initDataSendTime: 1687833893267,
+  initDataRecvTime: 1687833893300,
+  viewLayerRenderStartTime: 1687833893300,
+  viewLayerRenderEndTime: 1687833893309
+}, {
+  entryType: 'render',
+  name: 'firstPaint',
+  startTime: 1687833893318,
+  path: 'pages/index/index',
+  pageId: 1
+}, {
+  entryType: 'render',
+  name: 'firstContentfulPaint',
+  startTime: 1687833893318,
+  path: 'pages/index/index',
+  pageId: 1
+}, {
+  entryType: 'render',
+  name: 'largestContentfulPaint',
+  startTime: 1687833893318,
+  path: 'pages/index/index',
+  pageId: 1
+}]
+
+class PerformanceObserver {
+  disconnect() {}
+  observe() {}
+}
+
+class Performance {
+  createObserver() {
+    return new PerformanceObserver()
+  }
+
+  getEntries() {
+    return [...entryList]
+  }
+
+  getEntriesByName(name, entryType) {
+    return entryList.filter(item => item.name === name && item.entryType === entryType)
+  }
+
+  getEntriesByType(entryType) {
+    return entryList.filter(item => item.entryType === entryType)
+  }
+
+  setBufferSize() {}
+}
+
+module.exports = Performance
+
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports) {
+
+class NetworkTask {
+  abort() {
+    if (this._timer) this._timer = clearTimeout(this._timer)
+  }
+
+  offChunkReceived() {}
+  offHeadersReceived() {}
+  onChunkReceived() {}
+  onHeadersReceived() {}
+}
+
+class RequestTask extends NetworkTask {
+  constructor(options = {}) {
+    super()
+    const res = {
+      errMsg: 'request:ok',
+      data: {},
+      statusCode: 200,
+      header: {},
+      cookies: [],
+      profile: {},
+    }
+    this._timer = setTimeout(() => {
+      if (typeof options.success === 'function') options.success(res)
+      if (typeof options.complete === 'function') options.complete(res)
+    }, 100)
+  }
+}
+
+class DownloadTask extends NetworkTask {
+  constructor(options = {}) {
+    super()
+    const res = {
+      errMsg: 'downloadFile:ok',
+      tempFilePath: '/',
+      filePath: '/',
+      statusCode: 200,
+      profile: {},
+    }
+    this._timer = setTimeout(() => {
+      if (typeof options.success === 'function') options.success(res)
+      if (typeof options.complete === 'function') options.complete(res)
+    }, 100)
+  }
+}
+
+class UploadTask extends NetworkTask {
+  constructor(options = {}) {
+    super()
+    const res = {
+      errMsg: 'uploadFile:ok',
+      data: {},
+      statusCode: 200,
+    }
+    this._timer = setTimeout(() => {
+      if (typeof options.success === 'function') options.success(res)
+      if (typeof options.complete === 'function') options.complete(res)
+    }, 100)
+  }
+}
+
+class SocketTask {
+  constructor(options = {}) {
+    const res = {
+      errMsg: 'connectSocket:ok',
+    }
+    this._timer = setTimeout(() => {
+      if (typeof options.success === 'function') options.success(res)
+      if (typeof options.complete === 'function') options.complete(res)
+    }, 100)
+  }
+
+  send() {}
+  close() {}
+  onOpen() {}
+  onClose() {}
+  onError() {}
+  onMessage() {}
+}
+
+class Socket {
+  connect() {}
+  write() {}
+  close() {}
+  onClose() {}
+  offClose() {}
+  onError() {}
+  offError() {}
+  onMessage() {}
+  offMessage() {}
+}
+
+class TCPSocket extends Socket {
+  bindWifi() {}
+  onConnect() {}
+  offConnect() {}
+  onBindWifi() {}
+  offBindWifi() {}
+}
+
+class UDPSocket extends Socket {
+  bind(port) {
+    return port || 888
+  }
+
+  setTTL() {}
+  send() {}
+  onListening() {}
+  offListening() {}
+}
+
+module.exports = {
+  RequestTask,
+  DownloadTask,
+  UploadTask,
+  SocketTask,
+  TCPSocket,
+  UDPSocket,
+}
+
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports) {
+
+/**
+ * 暂不考虑 context 和 node 实现
+ */
+class SelectorQuery {
+  constructor() {
+    this._commands = []
+  }
+
+  exec() {}
+
+  in(compInst) {
+    const realSelectorQuery = compInst.createSelectorQuery()
+    if (this._commands.length) {
+      this._commands.forEach(command => {
+        const func = realSelectorQuery[command[0]]
+        if (func) func.apply(realSelectorQuery, command[1])
+      })
+      this._commands = []
+    }
+
+    return realSelectorQuery
+  }
+
+  select(selector) {
+    this._commands.push(['select', [selector]])
+  }
+
+  selectAll(selector) {
+    this._commands.push(['selectAll', [selector]])
+  }
+
+  selectViewport() {
+    this._commands.push(['selectViewport', []])
+  }
+}
+
+module.exports = SelectorQuery
+
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(30)
+const {
+  OffscreenCanvas,
+} = __webpack_require__(59)
+
+class MapContext {
+	addArc(options) {
+    _.mockAsync('addArc')(options)
+  }
+
+  addCustomLayer(options) {
+    _.mockAsync('addCustomLayer')(options)
+  }
+
+  addGroundOverlay(options) {
+    _.mockAsync('addGroundOverlay')(options)
+  }
+
+  addMarkers(options) {
+    _.mockAsync('addMarkers')(options)
+  }
+
+  addVisualLayer(options) {
+    _.mockAsync('addVisualLayer')(options)
+  }
+
+  eraseLines(options) {
+    _.mockAsync('eraseLines')(options)
+  }
+
+  executeVisualLayerCommand(options) {
+    _.mockAsync('executeVisualLayerCommand', {
+      data: '{}',
+    })(options)
+  }
+
+  fromScreenLocation(options) {
+    _.mockAsync('fromScreenLocation', {
+      latitude: 23.12908,
+      longitude: 113.26436,
+    })(options)
+  }
+
+  getCenterLocation(options) {
+    _.mockAsync('getCenterLocation', {
+      latitude: 23.12908,
+      longitude: 113.26436,
+    })(options)
+  }
+
+  getRegion(options) {
+    _.mockAsync('getRegion', {
+      southwest: {
+        latitude: 39.91506279020459,
+        longitude: 116.44712539672851,
+      },
+      northeast: {
+        latitude: 39.92493685384383,
+        longitude: 116.47287460327148,
+      },
+    })(options)
+  }
+
+  getRotate(options) {
+    _.mockAsync('getRotate', {
+      rotate: 0,
+    })(options)
+  }
+
+  getScale(options) {
+    _.mockAsync('getScale', {
+      scale: 14,
+    })(options)
+  }
+
+  getSkew(options) {
+    _.mockAsync('getSkew', {
+      scale: 0,
+    })(options)
+  }
+
+  includePoints(options) {
+    _.mockAsync('includePoints')(options)
+  }
+
+  initMarkerCluster(options) {
+    _.mockAsync('initMarkerCluster')(options)
+  }
+
+  moveAlong(options) {
+    _.mockAsync('moveAlong')(options)
+  }
+
+  moveToLocation(options) {
+    _.mockAsync('moveToLocation')(options)
+  }
+
+  on() {}
+
+  openMapApp(options) {
+    _.mockAsync('openMapApp')(options)
+  }
+
+  removeArc(options) {
+    _.mockAsync('removeArc')(options)
+  }
+
+  removeCustomLayer(options) {
+    _.mockAsync('removeCustomLayer')(options)
+  }
+
+  removeGroundOverlay(options) {
+    _.mockAsync('removeGroundOverlay')(options)
+  }
+
+  removeMarkers(options) {
+    _.mockAsync('removeMarkers')(options)
+  }
+
+  removeVisualLayer(options) {
+    _.mockAsync('removeVisualLayer')(options)
+  }
+
+  setBoundary(options) {
+    _.mockAsync('setBoundary')(options)
+  }
+
+  setCenterOffset(options) {
+    _.mockAsync('setCenterOffset')(options)
+  }
+
+  setLocMarkerIcon(options) {
+    _.mockAsync('setLocMarkerIcon')(options)
+  }
+
+  toScreenLocation(options) {
+    _.mockAsync('toScreenLocation', {
+      x: 0,
+      y: 0,
+    })(options)
+  }
+
+  translateMarker(options) {
+    _.mockAsync('translateMarker')(options)
+  }
+
+  updateGroundOverlay(options) {
+    _.mockAsync('updateGroundOverlay')(options)
+  }
+}
+
+class VideoContext {
+  exitBackgroundPlayback() {}
+  exitCasting() {}
+  exitFullScreen() {}
+
+  exitPictureInPicture(options) {
+    _.mockAsync('exitPictureInPicture')(options)
+  }
+
+  hideStatusBar() {}
+  pause() {}
+  play() {}
+  playbackRate() {}
+  reconnectCasting() {}
+  requestBackgroundPlayback() {}
+  requestFullScreen() {}
+  seek() {}
+  sendDanmu() {}
+  showStatusBar() {}
+  startCasting() {}
+  stop() {}
+  switchCasting() {}
+}
+
+class LivePlayerContext {
+	exitCasting(options) {
+    _.mockAsync('exitCasting')(options)
+  }
+
+  exitFullScreen(options) {
+    _.mockAsync('exitFullScreen')(options)
+  }
+
+  exitPictureInPicture(options) {
+    _.mockAsync('exitPictureInPicture')(options)
+  }
+
+  mute(options) {
+    _.mockAsync('mute')(options)
+  }
+
+  pause(options) {
+    _.mockAsync('pause')(options)
+  }
+
+  play(options) {
+    _.mockAsync('play')(options)
+  }
+
+  reconnectCasting(options) {
+    _.mockAsync('reconnectCasting')(options)
+  }
+
+  requestFullScreen(options) {
+    _.mockAsync('requestFullScreen')(options)
+  }
+
+  requestPictureInPicture(options) {
+    _.mockAsync('requestPictureInPicture')(options)
+  }
+
+  resume(options) {
+    _.mockAsync('resume')(options)
+  }
+
+  snapshot(options) {
+    _.mockAsync('snapshot', {
+      tempImagePath: '/',
+      width: 100,
+      height: 100,
+    })(options)
+  }
+
+  startCasting(options) {
+    _.mockAsync('startCasting')(options)
+  }
+
+  stop(options) {
+    _.mockAsync('stop')(options)
+  }
+
+  switchCasting(options) {
+    _.mockAsync('switchCasting')(options)
+  }
+}
+
+class LivePusherContext {
+	applyBlusherStickMakeup(options) {
+    _.mockAsync('applyBlusherStickMakeup')(options)
+  }
+
+  applyEyeBrowMakeup(options) {
+    _.mockAsync('applyEyeBrowMakeup')(options)
+  }
+
+  applyEyeShadowMakeup(options) {
+    _.mockAsync('applyEyeShadowMakeup')(options)
+  }
+
+  applyFaceContourMakeup(options) {
+    _.mockAsync('applyFaceContourMakeup')(options)
+  }
+
+  applyFilter(options) {
+    _.mockAsync('applyFilter')(options)
+  }
+
+  applyLipStickMakeup(options) {
+    _.mockAsync('applyLipStickMakeup')(options)
+  }
+
+  applySticker(options) {
+    _.mockAsync('applySticker')(options)
+  }
+
+  clearFilters(options) {
+    _.mockAsync('clearFilters')(options)
+  }
+
+  clearMakeups(options) {
+    _.mockAsync('clearMakeups')(options)
+  }
+
+  clearStickers(options) {
+    _.mockAsync('clearStickers')(options)
+  }
+
+  createOffscreenCanvas() {
+    return new OffscreenCanvas()
+  }
+
+  exitPictureInPicture(options) {
+    _.mockAsync('exitPictureInPicture')(options)
+  }
+
+  getMaxZoom(options) {
+    _.mockAsync('getMaxZoom', {
+      maxZoom: '',
+    })(options)
+  }
+
+  onCustomRendererEvent() {}
+
+  pause(options) {
+    _.mockAsync('pause')(options)
+  }
+
+  pauseBGM(options) {
+    _.mockAsync('pauseBGM')(options)
+  }
+
+  playBGM(options) {
+    _.mockAsync('playBGM')(options)
+  }
+
+  resume(options) {
+    _.mockAsync('resume')(options)
+  }
+
+  resumeBGM(options) {
+    _.mockAsync('resumeBGM')(options)
+  }
+
+  sendMessage(options) {
+    _.mockAsync('sendMessage')(options)
+  }
+
+  setBGMVolume(options) {
+    _.mockAsync('setBGMVolume')(options)
+  }
+
+  setMICVolume(options) {
+    _.mockAsync('setMICVolume')(options)
+  }
+
+  setZoom(options) {
+    _.mockAsync('setZoom')(options)
+  }
+
+  snapshot(options) {
+    _.mockAsync('snapshot', {
+      tempImagePath: '/',
+      width: 100,
+      height: 100,
+    })(options)
+  }
+
+  start(options) {
+    _.mockAsync('start')(options)
+  }
+
+  startPreview(options) {
+    _.mockAsync('startPreview')(options)
+  }
+
+  stop(options) {
+    _.mockAsync('stop')(options)
+  }
+
+  stopBGM(options) {
+    _.mockAsync('stopBGM')(options)
+  }
+
+  stopPreview(options) {
+    _.mockAsync('stopPreview')(options)
+  }
+
+  switchCamera(options) {
+    _.mockAsync('switchCamera')(options)
+  }
+
+  toggleTorch(options) {
+    _.mockAsync('toggleTorch')(options)
+  }
+}
+
+class CameraContext {
+  onCameraFrame() {
+    return {
+      start: _.mockAsync('start'),
+      stop: _.mockAsync('stop')
+    }
+  }
+
+  setZoom(options) {
+    _.mockAsync('setZoom', { zoom: 1 })(options)
+  }
+
+  startRecord(options) {
+    _.mockAsync('startRecord', {
+      tempThumbPath: '/',
+      tempVideoPath: '/',
+    })(options)
+  }
+
+  stopRecord(options) {
+    _.mockAsync('stopRecord', {
+      tempThumbPath: '/',
+      tempVideoPath: '/',
+    })(options)
+  }
+
+  takePhoto(options) {
+    _.mockAsync('takePhoto', {
+      tempImagePath: '/',
+    })(options)
+  }
+}
+
+module.exports = {
+  MapContext,
+  VideoContext,
+  LivePlayerContext,
+  LivePusherContext,
+  CameraContext,
 }
 
 

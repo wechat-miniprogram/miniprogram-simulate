@@ -1,20 +1,20 @@
 Component({
-    properties: {
-        hasChild: {
-            type: Boolean,
-            value: false,
-        },
-        prop: {
-            type: String,
-            value: 'index.properties',
-            observer(newVal, oldVal) {
-                this.setData({
-                    observerArr: [newVal, oldVal],
-                })
-            }
-        },
+  properties: {
+    hasChild: {
+      type: Boolean,
+      value: false,
     },
-    data: {
-        observerArr: [],
+    prop: {
+      type: String,
+      value: 'index.properties',
+      observer(newVal, oldVal) {
+        this.setData({
+          observerArr: [newVal, oldVal],
+        })
+      }
     },
+  },
+  data: {
+    observerArr: [],
+  },
 })
