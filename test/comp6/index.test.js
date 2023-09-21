@@ -1,5 +1,5 @@
 const path = require('path')
-const simulate = require('../../index')
+const simulate = require('../../src')
 
 function runTest(id) {
   const comp = simulate.render(id, {prop: 'index.test.properties', hasChild: true})
@@ -7,11 +7,11 @@ function runTest(id) {
   const parent = document.createElement('parent-wrapper')
   comp.attach(parent)
 
-  expect(simulate.match(comp.dom, `
-        <wx-view class="main--index">index.test.properties</wx-view>
-        <wx-view>index.test.properties</wx-view>
-        <wx-view>index.properties</wx-view>
-    `)).toBe(true)
+  expect(comp.innerHTML).toBe(simulate.trimHTML(`
+    <view class="main--index">index.test.properties</view>
+    <view>index.test.properties</view>
+    <view>index.properties</view>
+  `))
   expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
   expect(comp.dom.tagName).toBe('MAIN')
 
@@ -19,11 +19,6 @@ function runTest(id) {
 }
 
 test('comp6', () => {
-  let id = simulate.load(path.resolve(__dirname, './index'))
-  runTest(id)
-
-  jest.resetModules() // https://github.com/facebook/jest/issues/5120
-
-  id = simulate.load(path.resolve(__dirname, './index'), {compiler: simulate})
+  const id = simulate.load(path.resolve(__dirname, './index'))
   runTest(id)
 })

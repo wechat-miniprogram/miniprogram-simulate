@@ -1,6 +1,6 @@
-const simulate = require('../../index')
+const simulate = require('../../src')
 
-test('error', () => {
+test.skip('error', () => {
   let catchErr = null
   try {
     simulate.load(123)

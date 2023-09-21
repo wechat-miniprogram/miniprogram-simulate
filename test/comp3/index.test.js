@@ -1,34 +1,25 @@
 const path = require('path')
-const simulate = require('../../index')
+const simulate = require('../../src')
 
 async function runTest(id) {
   const comp = simulate.render(id)
 
-  const parent = document.createElement('parent-wrapper')
+  const parent = document.body
   comp.attach(parent)
 
   const view = comp.querySelector('.index')
-  expect(view.dom.innerHTML).toBe('<div>index.properties</div>')
+  expect(view.dom.innerHTML).toBe('index.properties')
   expect(window.getComputedStyle(comp.querySelector('.inner').dom).color).toBe('red')
 
-  view.dispatchEvent('touchstart')
-  view.dispatchEvent('touchend')
-  await simulate.sleep(200)
-  expect(view.dom.innerHTML).toBe('<div>comp3.properties</div>')
+  view.dispatchTapEvent()
+  expect(view.dom.innerHTML).toBe('comp3.properties')
 
   expect(comp.instance.print()).toBe(123)
+
+  comp.detach()
 }
 
 test('comp3', async() => {
-  simulate.load({
-    id: 'abc',
-    template: '<div><slot/></div>',
-  })
-  let id = simulate.load(path.resolve(__dirname, './index'), {less: true})
-  await runTest(id)
-
-  jest.resetModules() // https://github.com/facebook/jest/issues/5120
-
-  id = simulate.load(path.resolve(__dirname, './index'), {less: true, compiler: 'simulate'})
+  const id = simulate.load(path.resolve(__dirname, './index'))
   await runTest(id)
 })

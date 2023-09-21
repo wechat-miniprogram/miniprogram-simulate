@@ -1,5 +1,5 @@
 const path = require('path')
-const simulate = require('../../index')
+const simulate = require('../../src')
 
 function runTest(id) {
   const comp = simulate.render(id)
@@ -20,7 +20,7 @@ function runTest(id) {
   const ul = comp.querySelectorAll('.ul')[0].instance
 
   // init
-  expect(simulate.match(comp.dom, '<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-1</wx-text></custom-li><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li></wx-view></custom-ul>')).toBe(true)
+  expect(comp.innerHTML).toBe('<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-1</text></custom-li><custom-li class="main--li"><text>li-2</text></custom-li></view></custom-ul>')
   expect(relationsData.ulLink).toBe(2)
   expect(relationsData.ulLinkTargetList.length).toBe(2)
   expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[0].instance)
@@ -46,7 +46,7 @@ function runTest(id) {
   relationsData.ulLinkTargetList.length = 0
   relationsData.liLinkTargetList.length = 0
   comp.setData({list: [2, 3, 4]})
-  expect(simulate.match(comp.dom, '<custom-ul class="main--ul"><wx-view><custom-li class="main--li"><wx-text>li-2</wx-text></custom-li><custom-li class="main--li"><wx-text>li-3</wx-text></custom-li><custom-li class="main--li"><wx-text>li-4</wx-text></custom-li></wx-view></custom-ul>')).toBe(true)
+  expect(comp.innerHTML).toBe('<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-2</text></custom-li><custom-li class="main--li"><text>li-3</text></custom-li><custom-li class="main--li"><text>li-4</text></custom-li></view></custom-ul>')
   expect(relationsData.ulLink).toBe(4)
   expect(relationsData.ulLinkTargetList.length).toBe(2)
   expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[1].instance)

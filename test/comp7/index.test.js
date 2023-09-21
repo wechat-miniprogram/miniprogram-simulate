@@ -1,5 +1,5 @@
 const path = require('path')
-const simulate = require('../../index')
+const simulate = require('../../src')
 
 function runTest(id) {
   const comp = simulate.render(id)
@@ -7,7 +7,7 @@ function runTest(id) {
   const parent = document.createElement('parent-wrapper')
   comp.attach(parent)
 
-  expect(simulate.match(comp.dom, '<wx-view>some msg</wx-view><wx-view>\'hello world\' from tools.wxs</wx-view>')).toBe(true)
+  expect(comp.innerHTML).toBe('<view>some msg</view><view>\'hello world\' from tools.wxs</view>')
 }
 
 test('comp7', () => {
