@@ -2,22 +2,23 @@ import * as adapter from "glass-easel-miniprogram-adapter";
 
 const glassEasel = adapter.glassEasel;
 const env = new adapter.MiniProgramEnv();
-const backend = new glassEasel.domlikeBackend.CurrentWindowBackendContext();
+const backend =
+  new glassEasel.domlikeBackend.CurrentWindowBackendContext() as adapter.glassEasel.domlikeBackend.Context;
 backend.onEvent((target, type, detail, options) => {
-  glassEasel.Event.triggerEvent(target, type, detail, options)
+  glassEasel.Event.triggerEvent(target, type, detail, options);
 });
 const associatedBackend = env.associateBackend(backend);
-backend.registerStyleSheetContent('', '');
+backend.registerStyleSheetContent("", "");
 
 export function getEnv(rootPath: string) {
   if (!env.getCodeSpace(rootPath)) {
-    env.createCodeSpace(rootPath, false)
+    env.createCodeSpace(rootPath, false);
   }
   return {
     glassEasel,
     env,
     backend,
     associatedBackend,
-    codeSpace: env.getCodeSpace(rootPath)!
-  }
+    codeSpace: env.getCodeSpace(rootPath)!,
+  };
 }

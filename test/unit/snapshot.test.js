@@ -1,7 +1,7 @@
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
 test('snapshot', () => {
-  const id = simulate.loadByDef(
+  const id = simulate.loadComponentByDef(
     {},
     `
       <abc class="index" bind:tap="onTap">{{prop}}</abc>

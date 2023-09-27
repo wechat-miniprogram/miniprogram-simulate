@@ -2,8 +2,8 @@ import { getEnv } from "./env";
 import {
   ComponentDefinitionParam,
   ComponentStaticConfig,
-  loadComponent,
-  loadComponentByDef,
+  loadComp,
+  loadCompByDef,
 } from "./transform";
 import path from "path";
 import { RootComponentWrapper } from "./wrapper";
@@ -14,20 +14,21 @@ const tagNameMapping: Record<string, string> = {};
 type LoadOptions = {
   rootPath?: string;
   usingComponents?: Record<string, string>;
-  componentGenerics?: {
-    [name: string]: true | { default?: string };
-  };
-  componentPlaceholder?: { [name: string]: string };
+  componentGenerics?: Record<string, true | { default?: string }>;
+  componentPlaceholder?: Record<string, string>;
 };
 
-export function load(componentPath: string): string;
-export function load(componentPath: string, options: LoadOptions): string;
-export function load(
+export function loadComponent(componentPath: string): string;
+export function loadComponent(
+  componentPath: string,
+  options: LoadOptions
+): string;
+export function loadComponent(
   componentPath: string,
   tagName: string,
   options?: LoadOptions
 ): string;
-export function load(
+export function loadComponent(
   componentPath: string,
   tagName?: string | LoadOptions,
   options?: LoadOptions
@@ -45,7 +46,7 @@ export function load(
     throw new Error(
       `path ${componentPath} is not in root path ${finalRootPath}`
     );
-  const compName = loadComponent(
+  const compName = loadComp(
     componentName,
     realTagName,
     finalRootPath,
@@ -55,14 +56,14 @@ export function load(
   return formatDomain(finalRootPath, componentName);
 }
 
-export function loadByDef(
+export function loadComponentByDef(
   staticConfig: ComponentStaticConfig,
   template: string,
   definition: ComponentDefinitionParam,
   tagName: string = "",
   rootPath: string = path.resolve()
 ): string {
-  const compName = loadComponentByDef(
+  const compName = loadCompByDef(
     guid(),
     tagName,
     rootPath,
@@ -89,4 +90,4 @@ export function render(componentId: string, properties?: Record<string, any>) {
   return new RootComponentWrapper(comp);
 }
 
-export { sleep, scroll, match, trimHTML } from "./utils";
+export { trimHTML } from "./utils";

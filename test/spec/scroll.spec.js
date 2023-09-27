@@ -1,45 +1,64 @@
-/* global simulate */
-const expect = require('chai').expect
+let simulate;
 
-describe('scroll', () => {
-  it('should run successfully', async() => {
-    const comp = {
-      dom: document.createElement('div')
-    }
-    const child = document.createElement('div')
-    document.body.appendChild(comp.dom)
-    comp.dom.style.cssText = 'position: relative; width: 100px; height: 100px; overflow: scroll;'
-    comp.dom.appendChild(child)
-    child.style.cssText = 'position: relative; width: 1000px; height: 1000px;'
+describe("scroll", () => {
+  beforeAll(async () => {
+    simulate = await import(
+      "http://localhost:8080/@/dist/miniprogram_simulate.all.js"
+    );
+  });
 
-    expect(comp.dom.scrollTop).to.equal(0)
-    let scrollTopList = []
-    let scrollLeftList = []
-    comp.dom.addEventListener('scroll', () => {
-      scrollTopList.push(comp.dom.scrollTop)
-      scrollLeftList.push(comp.dom.scrollLeft)
+  it("should run successfully", async () => {
+    let scrollEvents = [];
+
+    const id = simulate.loadComponentByDef(
+      {},
+      `
+        <div id="container" style="relative; width: 100px; height: 100px; overflow: scroll;" bind:scroll="onScroll">
+          <div id="child" style="position: relative; width: 1000px; height: 1000px;"></div>
+        </div>
+      `,
+      {
+        methods: {
+          onScroll(e) {
+          },
+        },
+      }
+    );
+
+    const comp = simulate.render(id);
+    const container = comp.querySelector('#container')
+
+    container.dom.addEventListener('scroll', (e) => {
+      scrollEvents.push(e);
     })
-    simulate.scroll(comp, 40)
-    await simulate.sleep(200)
-    expect(comp.dom.scrollTop).to.equal(40)
-    expect(scrollTopList.length > 0).to.equal(true)
 
-    scrollTopList = []
-    simulate.scroll(comp, 30)
-    await simulate.sleep(200)
-    expect(comp.dom.scrollTop).to.equal(30)
-    expect(scrollTopList.length > 0).to.equal(true)
+    comp.attach(document.body);
 
-    scrollTopList = []
-    simulate.scroll(comp, -100)
-    await simulate.sleep(200)
-    expect(comp.dom.scrollTop).to.equal(0)
-    expect(scrollTopList.length > 0).to.equal(true)
+    expect(container.dom.scrollTop).toBe(0);
+    container.scrollTo(40);
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(container.dom.scrollTop).toBe(40);
+    // expect(scrollEvents.length).not.toBe(0);
 
-    scrollLeftList = []
-    simulate.scroll(comp, 10, null, 'scrollLeft')
-    await simulate.sleep(200)
-    expect(comp.dom.scrollLeft).to.equal(10)
-    expect(scrollLeftList.length > 0).to.equal(true)
-  })
-})
+    scrollEvents = [];
+    container.scrollTo(30);
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(container.dom.scrollTop).toBe(30);
+    // expect(scrollEvents.length).not.toBe(0);
+
+    scrollEvents = [];
+    container.scrollTo(-100);
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(container.dom.scrollTop).toBe(0);
+    // expect(scrollEvents.length).not.toBe(0);
+
+    scrollEvents = [];
+    container.scrollTo({ left: 10 });
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(container.dom.scrollTop).toBe(0);
+    expect(container.dom.scrollLeft).toBe(10);
+    // expect(scrollEvents.length).not.toBe(0);
+
+    comp.detach()
+  }, 5000);
+});

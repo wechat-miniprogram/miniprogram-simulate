@@ -1,10 +1,11 @@
 const path = require('path')
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
-function runTest(id) {
+test('comp8', () => {
+  const id = simulate.loadComponent(path.resolve(__dirname, './index'))
   const comp = simulate.render(id)
 
-  const relationsData = window._relations = window._relations || {}
+  const relationsData = (window._relations = window._relations || {})
   relationsData.ulLink = 0
   relationsData.ulLinkTargetList = []
   relationsData.ulUnlink = 0
@@ -20,11 +21,17 @@ function runTest(id) {
   const ul = comp.querySelectorAll('.ul')[0].instance
 
   // init
-  expect(comp.innerHTML).toBe('<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-1</text></custom-li><custom-li class="main--li"><text>li-2</text></custom-li></view></custom-ul>')
+  expect(comp.innerHTML).toBe(
+    '<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-1</text></custom-li><custom-li class="main--li"><text>li-2</text></custom-li></view></custom-ul>'
+  )
   expect(relationsData.ulLink).toBe(2)
   expect(relationsData.ulLinkTargetList.length).toBe(2)
-  expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[0].instance)
-  expect(relationsData.ulLinkTargetList[1]).toBe(comp.querySelectorAll('.li')[1].instance)
+  expect(relationsData.ulLinkTargetList[0]).toBe(
+    comp.querySelectorAll('.li')[0].instance
+  )
+  expect(relationsData.ulLinkTargetList[1]).toBe(
+    comp.querySelectorAll('.li')[1].instance
+  )
   expect(relationsData.liLink).toBe(2)
   expect(relationsData.liLinkTargetList.length).toBe(2)
   expect(relationsData.liLinkTargetList[0]).toBe(ul)
@@ -46,11 +53,17 @@ function runTest(id) {
   relationsData.ulLinkTargetList.length = 0
   relationsData.liLinkTargetList.length = 0
   comp.setData({list: [2, 3, 4]})
-  expect(comp.innerHTML).toBe('<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-2</text></custom-li><custom-li class="main--li"><text>li-3</text></custom-li><custom-li class="main--li"><text>li-4</text></custom-li></view></custom-ul>')
+  expect(comp.innerHTML).toBe(
+    '<custom-ul class="main--ul"><view><custom-li class="main--li"><text>li-2</text></custom-li><custom-li class="main--li"><text>li-3</text></custom-li><custom-li class="main--li"><text>li-4</text></custom-li></view></custom-ul>'
+  )
   expect(relationsData.ulLink).toBe(4)
   expect(relationsData.ulLinkTargetList.length).toBe(2)
-  expect(relationsData.ulLinkTargetList[0]).toBe(comp.querySelectorAll('.li')[1].instance)
-  expect(relationsData.ulLinkTargetList[1]).toBe(comp.querySelectorAll('.li')[2].instance)
+  expect(relationsData.ulLinkTargetList[0]).toBe(
+    comp.querySelectorAll('.li')[1].instance
+  )
+  expect(relationsData.ulLinkTargetList[1]).toBe(
+    comp.querySelectorAll('.li')[2].instance
+  )
   expect(relationsData.ulUnlink).toBe(1)
   expect(relationsData.ulUnlinkTargetList.length).toBe(1)
   expect(relationsData.ulUnlinkTargetList[0]).toBe(relationNodes[0])
@@ -101,9 +114,4 @@ function runTest(id) {
 
   relationNodes = ul.getRelationNodes('./custom-li')
   expect(relationNodes.length).toBe(0)
-}
-
-test('comp8', () => {
-  const id = simulate.load(path.resolve(__dirname, './index'))
-  runTest(id)
 })

@@ -1,9 +1,9 @@
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
 test.skip('error', () => {
   let catchErr = null
   try {
-    simulate.load(123)
+    simulate.loadComponent(123)
   } catch (err) {
     catchErr = err
   }
@@ -11,7 +11,7 @@ test.skip('error', () => {
 
   catchErr = null
   try {
-    simulate.load('./index')
+    simulate.loadComponent('./index')
   } catch (err) {
     catchErr = err
   }

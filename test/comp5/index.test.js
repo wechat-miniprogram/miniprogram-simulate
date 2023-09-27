@@ -1,5 +1,5 @@
 const path = require('path')
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
 function getDest(aa) {
   return simulate.trimHTML(`
@@ -34,7 +34,9 @@ function getDest(aa) {
     `)
 }
 
-function runTest(id) {
+test('comp5', () => {
+  const id = simulate.loadComponent(path.resolve(__dirname, './index'))
+
   const comp = simulate.render(id)
 
   const parent = document.createElement('parent-wrapper')
@@ -46,11 +48,8 @@ function runTest(id) {
     aa: 'hehe',
   })
   expect(comp.innerHTML).toBe(getDest('hehe'))
-  expect(comp.querySelector('#aa').instance.data.observerArr).toEqual(['hehe', 'haha'])
-}
-
-test('comp5', () => {
-  const id = simulate.load(path.resolve(__dirname, './index'))
-
-  runTest(id)
+  expect(comp.querySelector('#aa').instance.data.observerArr).toEqual([
+    'hehe',
+    'haha',
+  ])
 })

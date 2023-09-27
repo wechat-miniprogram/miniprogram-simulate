@@ -1,23 +1,22 @@
 const path = require('path')
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
-async function runTest(id, data) {
+test('comp4', async() => {
+  const id = simulate.loadComponent(path.resolve(__dirname, './index'))
   const comp = simulate.render(id)
 
   const parent = document.createElement('parent-wrapper')
   comp.attach(parent)
 
-  if (data) {
-    const child = comp.querySelector('#a')
-    child.instance.triggerSome(data)
-    await simulate.sleep(10)
-  }
+  expect(comp.dom.innerHTML).toBe(
+    '<view>1</view><other-comp><view>component b</view></other-comp>'
+  )
 
-  expect(comp.dom.innerHTML).toBe(`<view>${data || 1}</view><other-comp><view>component b</view></other-comp>`)
-}
+  const child = comp.querySelector('#a')
+  child.instance.triggerSome(998)
+  await new Promise(resolve => setTimeout(resolve, 10))
 
-test('comp4', async() => {
-  const id = simulate.load(path.resolve(__dirname, './index'))
-  await runTest(id)
-  await runTest(id, 998)
+  expect(comp.dom.innerHTML).toBe(
+    '<view>998</view><other-comp><view>component b</view></other-comp>'
+  )
 })

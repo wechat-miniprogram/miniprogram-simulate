@@ -1,16 +1,14 @@
 const path = require('path')
-const simulate = require('../../src')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
-function runTest(id) {
+test('comp7', () => {
+  const id = simulate.loadComponent(path.resolve(__dirname, './index'))
   const comp = simulate.render(id)
 
   const parent = document.createElement('parent-wrapper')
   comp.attach(parent)
 
-  expect(comp.innerHTML).toBe('<view>some msg</view><view>\'hello world\' from tools.wxs</view>')
-}
-
-test('comp7', () => {
-  const id = simulate.load(path.resolve(__dirname, './index'))
-  runTest(id)
+  expect(comp.innerHTML).toBe(
+    "<view>some msg</view><view>'hello world' from tools.wxs</view>"
+  )
 })

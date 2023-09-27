@@ -1,44 +1,63 @@
-/* global simulate */
-const path = require('path')
-const expect = require('chai').expect
+let simulate;
 
-describe('comp5', () => {
-  it('should run successfully', async() => {
-    const id = simulate.load(path.join(__dirname, '../comp5/index'))
-    const comp = simulate.render(id)
+function getDest(aa) {
+  return simulate.trimHTML(`
+        <view>head</view>
+        <text>tmpl</text>
+        <view>
+            <text>7: I am msg</text>
+            <text>Time: 12345</text>
+        </view>
+        <view>hello june</view>
+        <view>
+            <view>if</view>
+            <view attr="I am attr value">node content</view>
+            <comp>
+                <view>
+                    <text> I am comp</text>
+                    <view>I am slot</view>
+                </view>
+            </comp>
+            <view>1-item</view>
+            <view>2-item</view>
+            <view>3-item</view>
+            <view>in block1</view>
+            <text>in block2</text>
+            <comp>
+                <view>
+                    <text>${aa} I am comp</text>
+                </view>
+            </comp>
+        </view>
+        <view>foot</view>
+    `)
+}
 
-    const parent = document.createElement('parent-wrapper')
-    comp.attach(parent)
+describe("comp5", () => {
+  beforeAll(async () => {
+    simulate = await import(
+      "http://localhost:8080/@/dist/miniprogram_simulate.all.js"
+    );
+  });
 
-    expect(simulate.match(comp.dom, `
-            <wx-view>head</wx-view>
-            <wx-text>tmpl</wx-text>
-            <wx-view>
-                <wx-text>7: I am msg</wx-text>
-                <wx-text>Time: 12345</wx-text>
-            </wx-view>
-            <wx-view>hello june</wx-view>
-            <wx-view>
-                <wx-view>if</wx-view>
-                <wx-view>node content</wx-view>
-                <comp>
-                    <wx-view>
-                        <wx-text> I am comp</wx-text>
-                        <wx-view>I am slot</wx-view>
-                    </wx-view>
-                </comp>
-                <wx-view>1-item</wx-view>
-                <wx-view>2-item</wx-view>
-                <wx-view>3-item</wx-view>
-                <wx-view>in block1</wx-view>
-                <wx-text>in block2</wx-text>
-                <comp>
-                    <wx-view>
-                        <wx-text>haha I am comp</wx-text>
-                    </wx-view>
-                </comp>
-            </wx-view>
-            <wx-view>foot</wx-view>
-        `)).to.equal(true)
-  })
-})
+  it("should run successfully", async () => {
+    const id = simulate.loadComponent("/test/comp5/index");
+
+    const comp = simulate.render(id);
+
+    comp.attach(document.body);
+
+    expect(comp.innerHTML).toBe(getDest("haha"));
+
+    comp.setData({
+      aa: "hehe",
+    });
+    expect(comp.innerHTML).toBe(getDest("hehe"));
+    expect(comp.querySelector("#aa").instance.data.observerArr).toEqual([
+      "hehe",
+      "haha",
+    ]);
+
+    comp.detach()
+  });
+});

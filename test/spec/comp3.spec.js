@@ -1,27 +1,31 @@
-/* global simulate */
-const path = require('path')
-const expect = require('chai').expect
+let simulate;
 
-describe('comp3', () => {
-  it('should run successfully', async() => {
-    simulate.load({
-      id: 'abc',
-      template: '<div><slot/></div>',
-    }, {compiler: 'simulate'})
-    const id = simulate.load(path.join(__dirname, '../comp3/index'), {less: true})
-    const comp = simulate.render(id)
+describe("comp3", () => {
+  beforeAll(async () => {
+    simulate = await import(
+      "http://localhost:8080/@/dist/miniprogram_simulate.all.js"
+    );
+  });
 
-    comp.attach(document.body)
+  it("should run successfully", () => {
+    const id = simulate.loadComponent("/test/comp3/index");
 
-    const view = comp.querySelector('.index')
-    expect(view.dom.innerHTML).to.equal('<div>index.properties</div>')
-    expect(window.getComputedStyle(comp.querySelector('.inner').dom).color).to.equal('rgb(255, 0, 0)')
+    const comp = simulate.render(id);
 
-    view.dispatchEvent('touchstart')
-    view.dispatchEvent('touchend')
-    await simulate.sleep(10)
-    expect(view.dom.innerHTML).to.equal('<div>comp3.properties</div>')
+    const parent = document.body;
+    comp.attach(parent);
 
-    expect(comp.instance.print()).to.equal(123)
-  })
-})
+    const view = comp.querySelector(".index");
+    expect(view.dom.innerHTML).toBe("index.properties");
+    expect(
+      window.getComputedStyle(comp.querySelector(".inner").dom).color
+    ).toBe("rgb(255, 0, 0)");
+
+    view.dispatchTapEvent();
+    expect(view.dom.innerHTML).toBe("comp3.properties");
+
+    expect(comp.instance.print()).toBe(123);
+
+    comp.detach();
+  });
+});

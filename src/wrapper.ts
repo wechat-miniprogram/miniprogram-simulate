@@ -1,31 +1,45 @@
-import { glassEasel } from "glass-easel-miniprogram-adapter";
-import { getInnerHTML, getOuterHTML } from "./utils";
+import { glassEasel, component } from "glass-easel-miniprogram-adapter";
+import { getInnerHTML, getOuterHTML, isNodeJs } from "./utils";
+import { ComponentCaller } from "glass-easel-miniprogram-adapter/dist/types/src/component";
+
+const Touch =
+  globalThis.Touch ||
+  class Touch {
+    constructor(init: TouchInit) {
+      Object.assign(this, init);
+    }
+  };
+
+const TouchEvent =
+  globalThis.TouchEvent ||
+  class TouchEvent extends Event {
+    constructor(type: string, init: TouchEventInit) {
+      super(type, init);
+      Object.assign(this, {
+        touches: init.touches,
+        changedTouches: init.changedTouches,
+      });
+    }
+  };
 
 export class ElementWrapper {
   constructor(protected _node: glassEasel.Element) {}
 
-  get dom() {
-    if (this._node.isVirtual()) {
-      const frag = new DocumentFragment();
-      this._node.forEachNonVirtualComposedChild((node) => {
-        frag.appendChild(node.$$ as any as Node);
-      });
-      return frag;
-    }
-    return this._node.$$ as any as Node;
+  get dom(): Node | null {
+    return this._node.$$ as any as Node | null;
   }
 
   get innerHTML(): string {
-    return getInnerHTML(this.dom);
+    return getInnerHTML(this._node);
   }
 
   get outerHTML(): string {
-    return getOuterHTML(this.dom);
+    return getOuterHTML(this._node);
   }
 
   dispatchTapEvent() {
     const target = this.dom as Element;
-    const touch = {
+    const touch = new Touch({
       identifier: 0,
       clientX: -1,
       clientY: -1,
@@ -37,8 +51,8 @@ export class ElementWrapper {
       radiusX: 1,
       radiusY: 1,
       rotationAngle: 0,
-      target,
-    };
+      target: target,
+    });
     const touchstart = new TouchEvent("touchstart", {
       touches: [touch],
       changedTouches: [touch],
@@ -57,6 +71,28 @@ export class ElementWrapper {
 
   dispatchEvent(type: string, options?: EventInit) {
     (this.dom as Element)?.dispatchEvent(new Event(type, options));
+  }
+
+  scrollTo(options: ScrollToOptions): void;
+  scrollTo(top: number, left: number): void;
+  scrollTo(top: number | ScrollToOptions, left?: number): void {
+    const options: ScrollToOptions =
+      typeof top === "object" ? top : { top, left };
+    const dom = this.dom;
+    if (!dom) throw new Error("Cannot scroll on a virtual node.");
+    if (!(dom instanceof Element)) throw new Error("Not an element.");
+
+    if (isNodeJs) {
+      setTimeout(() => {
+        if (options.top !== undefined) dom.scrollTop = options.top;
+        if (options.left !== undefined) dom.scrollLeft = options.left;
+        dom.dispatchEvent(
+          new Event("scroll", { bubbles: true, cancelable: false })
+        );
+      }, 0);
+    } else {
+      dom.scrollTo(options);
+    }
   }
 
   addEventListener(
@@ -97,11 +133,11 @@ export class ComponentWrapper extends ElementWrapper {
     return this._node.getMethodCaller().data;
   }
 
-  get instance() {
-    return this._node.getMethodCaller();
+  get instance(): component.ComponentCaller<any, any, any, never> {
+    return this._node.getMethodCaller() as any;
   }
 
-  querySelector(selector: string): ComponentWrapper | ElementWrapper | null {
+  querySelector(selector: string): ElementWrapper | null {
     const elem = this._node.getShadowRoot()!.querySelector(selector);
     if (elem instanceof glassEasel.Component) {
       return new ComponentWrapper(elem);
@@ -124,7 +160,9 @@ export class ComponentWrapper extends ElementWrapper {
   setData(data: Record<string, unknown>, callback?: () => void) {
     this.instance.setData(data);
     if (callback) {
-      this._node._$nodeTreeContext.render(callback);
+      setTimeout(() => {
+        callback();
+      }, 0);
     }
   }
 
@@ -141,7 +179,15 @@ export class RootComponentWrapper extends ComponentWrapper {
   private parent: HTMLElement | null = null;
 
   attach(parent: HTMLElement) {
-    parent.appendChild(this.dom);
+    const frag = document.createDocumentFragment();
+    if (this._node.isVirtual()) {
+      this._node.forEachNonVirtualComposedChild((node) => {
+        frag.appendChild(node.$$ as any as Node);
+      });
+    } else {
+      frag.appendChild(this.dom!);
+    }
+    parent.appendChild(frag);
     this.parent = parent;
     glassEasel.Element.pretendAttached(this._node);
     this._node.triggerLifetime("ready", []);
@@ -150,7 +196,13 @@ export class RootComponentWrapper extends ComponentWrapper {
   detach() {
     if (!this.parent) return;
 
-    this.parent.removeChild(this.dom);
+    if (this._node.isVirtual()) {
+      this._node.forEachNonVirtualComposedChild((node) => {
+        this.parent!.removeChild(node.$$ as any as Node);
+      });
+    } else {
+      this.parent.removeChild(this.dom!);
+    }
     this.parent = null;
 
     glassEasel.Element.pretendDetached(this._node);

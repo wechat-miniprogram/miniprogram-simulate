@@ -1,5 +1,19 @@
 # 更新日志
 
+## 2.0.0
+
+* 废弃 j-component，使用 glass-easel
+* `load(componentPath)` 接口改为 `loadComponent(componentPath)`
+* `load(definition)` 接口改为 `loadComponentByDef(staticConfig, template, definition)`
+* 不再提供多种 compiler 以及 compiler 选项
+* 移除 `match` 接口
+* 移除 `sleep` 接口
+* 移除 `scroll` 接口
+* 新增 `ElementWrapper#innerHTML`, `ElementWrapper#outerHTML` 接口
+* 新增 `ElementWrapper#dispatchTapEvent` 接口
+* 新增 `ElementWrapper#scrollTo` 接口
+* 新增模拟器服务
+
 ## 1.6.0
 
 * 更新 mock api 到基础库 v2.32.0 版本

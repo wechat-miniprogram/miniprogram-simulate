@@ -1,10 +1,10 @@
 import { getEnv } from "./env";
 import * as templateCompiler from "glass-easel-template-compiler";
-import fs from "fs";
 import postcss from "postcss";
 import path from "path";
 import type { CodeSpace, ComponentConstructor } from "glass-easel-miniprogram-adapter";
 import { extractDomain } from "./utils";
+import { readFileSync, requireScript } from "./fs";
 
 export type ComponentStaticConfig = Parameters<
   CodeSpace["addComponentStaticConfig"]
@@ -12,7 +12,7 @@ export type ComponentStaticConfig = Parameters<
 
 export type ComponentDefinitionParam = Parameters<ComponentConstructor>[0]
 
-export function loadComponentByDef(
+export function loadCompByDef(
   componentName: string,
   tagName: string,
   rootPath: string,
@@ -50,7 +50,7 @@ export function loadComponentByDef(
               rootPath,
               path.resolve(path.dirname(componentPath), componentName)
             );
-        loadComponent(resolvedCompName, tagName, domain || rootPath);
+        loadComp(resolvedCompName, tagName, domain || rootPath);
       }
     );
   }
@@ -58,7 +58,7 @@ export function loadComponentByDef(
   return componentName
 }
 
-export function loadComponent(
+export function loadComp(
   componentName: string,
   tagName: string,
   rootPath: string,
@@ -71,7 +71,7 @@ export function loadComponent(
 
   let staticConfig: ComponentStaticConfig;
   try {
-    staticConfig = require(`${componentPath}.json`) || {};
+    staticConfig = requireScript(`${componentPath}.json`) || {};
   } catch (e) {
     staticConfig = {};
   }
@@ -102,7 +102,7 @@ export function loadComponent(
   }
   codeSpace.addStyleSheet(componentName, componentPath, stylePrefix);
   codeSpace.globalComponentEnv(globalThis, componentName, () => {
-    require(componentPath);
+    requireScript(`${componentPath}.js`);
   });
 
   if (finalStaticConfig.usingComponents) {
@@ -115,86 +115,12 @@ export function loadComponent(
               rootPath,
               path.resolve(path.dirname(componentPath), componentName)
             );
-        loadComponent(resolvedCompName, tagName, domain || rootPath);
+        loadComp(resolvedCompName, tagName, domain || rootPath);
       }
     );
   }
 
   return componentName;
-}
-
-export function transformComponent(componentPath: string) {
-  const compPath =
-    componentPath[0] === "/" ? componentPath.slice(1) : componentPath;
-  return `
-    import { codeSpace } from '$env';
-    import staticConfig from ${JSON.stringify("/" + compPath + ".json")};
-    import tmplGroup from ${JSON.stringify("/" + compPath + ".wxml")};
-
-
-    codeSpace.addComponentStaticConfig(compPath, staticConfig);
-    const genObjectGroupList = new Function(
-      'return ' + tmplGroup.getTmplGenObjectGroups()
-    )();
-    codeSpace.addCompiledTemplate(compPath, {
-      groupList: genObjectGroupList,
-      content: genObjectGroupList[compPath],
-    });
-    // TODO stylesheet
-    codeSpace.globalComponentEnv(globalThis, compPath, () => {
-      import('/' + compPath)
-    })
-  `;
-}
-
-const transformWxmlCache: Record<string, string> = {};
-
-export function transformWxml(componentPath: string): string {
-  if (transformWxmlCache[componentPath])
-    return transformWxmlCache[componentPath];
-
-  const compName =
-    componentPath[0] === "/" ? componentPath.slice(1) : componentPath;
-  const content = fs.readFileSync(`${componentPath}.wxml`, "utf8");
-  const group = new templateCompiler.TmplGroup();
-
-  group.addTmpl(compName, content);
-  const directDependencies = group.getDirectDependencies(compName);
-  const scriptDependencies = group.getScriptDependencies(compName);
-  group.free();
-
-  const result = `
-    import { TmplGroup } from 'glass-easel-template-compiler';
-    ${directDependencies
-      .map(
-        (dep, index) =>
-          `import dep${index} from ${JSON.stringify(dep + ".wxml")};`
-      )
-      .join("\n")}
-    ${scriptDependencies
-      .map(
-        (dep, index) =>
-          `import script${index} from ${JSON.stringify(dep + ".wxs")};`
-      )
-      .join("\n")}
-
-    const group = new TmplGroup();
-    group.addTmpl(${JSON.stringify(compName)}, ${JSON.stringify(content)});
-
-    ${scriptDependencies
-      .map(
-        (dep, index) =>
-          `group.addScript(${JSON.stringify(dep)}, script${index});`
-      )
-      .join("\n")}
-    ${directDependencies
-      .map((dep, index) => `group.importGroup(dep${index});`)
-      .join("\n")}
-
-    export default group;
-  `;
-  transformWxmlCache[compName] = result;
-  return result;
 }
 
 function generateTmplGroupByWxml(
@@ -250,7 +176,7 @@ export function loadWxml(
 ): templateCompiler.TmplGroup {
   const componentPath = path.join(rootPath, componentName);
   if (loadWxmlCache[componentPath]) return loadWxmlCache[componentPath];
-  const content = fs.readFileSync(`${componentPath}.wxml`, "utf8");
+  const content = readFileSync(`${componentPath}.wxml`);
   const group = generateTmplGroupByWxml(content, componentName, rootPath)
 
   loadWxmlCache[componentName] = group;
@@ -263,25 +189,9 @@ export function loadWxs(componentName: string, rootPath: string): string {
   const componentPath = path.join(rootPath, componentName);
   if (loadWxsCache[componentPath]) return loadWxsCache[componentPath];
 
-  const result = fs.readFileSync(`${componentPath}.wxs`, "utf8");
+  const result = readFileSync(`${componentPath}.wxs`);
 
   loadWxsCache[componentPath] = result;
-
-  return result;
-}
-
-const transformWxsCache: Record<string, string> = {};
-
-export function transformWxs(componentPath: string): string {
-  if (transformWxsCache[componentPath]) return transformWxsCache[componentPath];
-  const compName =
-    componentPath[0] === "/" ? componentPath.slice(1) : componentPath;
-
-  const result =
-    "export default " +
-    JSON.stringify(fs.readFileSync(`${componentPath}.wxs`, "utf8"));
-
-  transformWxsCache[compName] = result;
 
   return result;
 }
@@ -340,7 +250,7 @@ export function loadWxss(componentName: string, rootPath: string): string {
   const componentPath = path.join(rootPath, componentName);
   if (loadWxssCache[componentPath]) return loadWxssCache[componentPath];
 
-  const content = fs.readFileSync(`${componentPath}.wxss`, "utf8");
+  const content = readFileSync(`${componentPath}.wxss`);
 
   const result = transformRpx(
     forEachImport(content, (url) => {
