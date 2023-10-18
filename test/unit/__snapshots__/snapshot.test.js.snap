@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot 1`] = `
+"<(virtual):shadow>
+  <abc class="index">
+    index.properties
+  <div class="index">
+    <div class="inner">
+      321"
+`;
+
+exports[`snapshot 2`] = `
+"<(virtual):shadow>
+  <abc class="index">
+    tap
+  <div class="index">
+    <div class="inner">
+      321"
+`;

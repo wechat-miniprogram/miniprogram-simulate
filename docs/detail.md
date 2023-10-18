@@ -10,7 +10,9 @@
 
 ## class 前缀化
 
-小程序中为了达到类似 web components 的效果，对于自定义组件中的 class 会进行前缀化处理，用于实现样式隔离。为了支持这个效果，在调用 [load](./api.md#loadcomponentpath-tagname-options--loaddefinition) 接口时传入 tagName 参数，这样在渲染自定义组件时会使用 tagName 作为 class 的前缀。默认 tagName 为 main，即前缀为 main。
+小程序的自定义组件会进行[样式隔离](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/wxml-wxss.html#%E7%BB%84%E4%BB%B6%E6%A0%B7%E5%BC%8F%E9%9A%94%E7%A6%BB)，防止组件间样式相互影响。
+
+样式隔离会通过对 class 进行前缀化处理，因此通过 `innerHTML` 获取到的 html 文本中的 class 属性，通常会带有前缀。
 
 假设自定义组件 comp 的模板为：
 
@@ -19,9 +21,19 @@
 ```
 
 ```js
-simulate.load('/comp') // 渲染出来的结果是 <comp><wx-view class="main--abc">123</wx-view></comp>
+const comp = simulate.render(simulate.load('/comp'))
 
-simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view class="custom-comp--abc">123</wx-view></comp>
+// 渲染的 class 结果会带有 main-- 前缀
+expect(comp.innerHTML).toBe('<view class="main--abc">123</view>')
+```
+
+在调用 [load](./api.md#loadcomponentpath-tagname-options--loaddefinition) 接口时传入 tagName 参数，这样在渲染自定义组件时会使用 tagName 作为 class 的前缀。默认 tagName 为 main，即前缀为 main。
+
+```js
+const comp = simulate.render(simulate.load('/comp', 'custom-comp'))
+
+// 渲染的 class 结果会带有 custom-comp-- 前缀
+expect(comp.innerHTML).toBe('<view class="custom-comp--abc">123</view>')
 ```
 
 需要注意的是，当自定义组件里在 usingComponents 里引用了其他自定义组件的时候，是会默认声明 tagName，所以这种情况下都会进行 class 前缀化：
@@ -35,13 +47,29 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 }
 ```
 
-这里的 other 组件在被渲染时就默认会以 other-comp 为 tagName，other 组件内的 class 就会被前缀化，加上前缀 other-comp。
+```js
+// 渲染的 class 结果会带有 other-comp-- 前缀
+expect(otherComp.innerHTML).toBe('<view class="other-comp--abc">123</view>')
+```
 
-## dom 接口模拟
+## 根路径
 
-因为搭建和渲染自定义组件树需要调用 dom 接口，所以需要在 node 端模拟出 dom 接口。假如你使用的是 [mocha](https://www.npmjs.com/package/mocha) 或者是其他一些没有提供 dom 模拟功能的测试框架的话，一个比较好的解决方式是使用 [jsdom](https://www.npmjs.com/package/jsdom) 库来进行模拟。假如你使用的是如 [jest](https://www.npmjs.com/package/jest) 等已内置 dom 模拟功能的测试框架的话，则直接使用即可。
+小程序中每个项目有唯一的跟路径，所以需要确保加载一个组件时，组件使用到的组件都是在根路径下：
 
-> PS：推荐使用 jest 来搭配此工具集使用，jest 内部已集成 jsdom，通过配置 testEnvironment 字段的值为 jsdom 即可以类浏览器环境的方式来执行测试用例。
+```js
+simulate.load('/comp/index', { rootPath: '/comp' })
+```
+
+```json
+// /comp/index.json
+{
+    "component": true,
+    "usingComponents": {
+        "other-comp": "/comp/other", // 在跟路径下，可以加载
+        "invalid-comp": "../invalid", // 超出跟路径，无法加载
+    }
+}
+```
 
 ## 自定义组件路径
 
@@ -89,10 +117,12 @@ test('test some', () => {
 
 ## 内置组件
 
+TODO
+
 像官方提供的 view、image 等都是内置组件，目前此测试环境中提供的内置组件都只做普通渲染，未实现任何功能，如果这些内置组件不满足你需求的话，可以自己重写内置组件来覆盖掉此测试环境中提供的内置组件，例如：
 
 ```js
-simulate.load({
+simulate.loadGlobal({
     id: 'view',
     tagName: 'wx-view',
     template: '<div class-"wx-view"><slot/></div>',

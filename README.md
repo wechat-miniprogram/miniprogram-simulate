@@ -7,9 +7,9 @@
 
 ## 介绍
 
-小程序自定义组件测试工具集。
+小程序简易模拟器
 
-目前因为小程序独特的运行环境，所以对于小程序自定义组件的单元测试一直没有比较优雅的解决方案，此工具集就是为了解决此痛点而诞生的。将原本小程序自定义组件双线程分离运行的机制调整成单线程模拟运行，利用 dom 环境进行渲染，借此来完成整个自定义组件树的搭建。
+本工具可以模拟运行独立的小程序页面或自定义组件，可用于进行组件或页面的单元测试，也可以直接在浏览器环境直接运行
 
 运行此工具集需要依赖 js 运行环境和 dom 环境，因此可以采用 jsdom + nodejs（如 jest），也可以采用真实浏览器环境（如 karma）。文档[使用简介](./docs/tutorial.md)中会提供简单的使用方式介绍。
 
@@ -21,18 +21,36 @@ npm install --save-dev miniprogram-simulate
 
 ## 使用
 
-```js
-const simulate = require('miniprogram-simulate')
+### 单元测试
 
-test('test sth', () => {
-    const id = simulate.load('/components/comp/index') // 加载自定义组件
+```js
+import path from 'node:path'
+import * as simulate from 'miniprogram-simulate'
+
+it('test', () => {
+    // 加载自定义组件
+    const id = simulate.load(
+        path.resolve(__dirname, 'components/comp/index')
+    )
     const comp = simulate.render(id) // 渲染自定义组件
-    
+
     // 使用自定义组件封装实例 comp 对象来进行各种单元测试
+    expect(comp.innerHTML).toBe(
+        '<view class="main--index">index.test.properties</view><comp1><view class="main--index">inner</view></comp1>'
+    )
 })
 ```
 
-以上只是一个简单的例子，实际上这个工具集必须搭配 jest 或 jsdom/mocha 等测试框架来使用，更为详细的使用细节请参阅下述文档：
+### 浏览器运行
+
+```bash
+# 在 8080 端口开启一个服务
+npx miniprogram-simulate -p 8080
+```
+
+该命令会在 8080 端口启动一个服务，你可以访问 `localhost:8080/path/to/comp` 来查看组件在浏览器上的渲染结果。注意你需要将 `/path/to/comp` 路径替换为你的组件所在路径.
+
+## 详细文档
 
 * [使用简介](./docs/tutorial.md)
 * [接口文档](./docs/api.md)

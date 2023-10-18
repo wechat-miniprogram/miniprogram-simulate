@@ -1,33 +1,36 @@
 const path = require('path')
-const simulate = require('../../index')
+const simulate = require('../../dist/miniprogram_simulate.cjs.js')
 
-function runTest(id) {
+test('comp2', () => {
+  const id = simulate.loadComponent(path.resolve(__dirname, './index'), 'custom-comp')
   const comp = simulate.render(id, {prop: 'index.test.properties'})
 
   const parent = document.createElement('parent-wrapper')
   comp.attach(parent)
 
-  expect(simulate.match(comp.dom, `
-        <wx-view class="custom-comp--index">index.test.properties</wx-view>
-        <wx-view data-index="0" data-type="3">haha</wx-view>
-        <wx-view data-index="1" data-type="4">hehe</wx-view>
-        <other-comp class="custom-comp--other"><wx-view class="other-comp--index">other.properties</wx-view></other-comp>
-    `)).toBe(true)
-  expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe('green')
-  expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe('100px')
-  expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).toBe('rgb(255, 255, 0)')
+  expect(comp.innerHTML).toBe(
+    simulate.trimHTML(`
+    <view class="custom-comp--index">index.test.properties</view>
+    <view index="0" type="3">haha</view>
+    <view index="1" type="4">hehe</view>
+    <other-comp class="custom-comp--other"><view class="other-comp--index">other.properties</view></other-comp>
+  `)
+  )
+  expect(window.getComputedStyle(comp.querySelector('.index').dom).color).toBe(
+    'green'
+  )
+  expect(window.getComputedStyle(comp.querySelector('.index').dom).width).toBe(
+    '10vw'
+  )
+  expect(
+    window.getComputedStyle(
+      comp.querySelector('.other').querySelector('.index').dom
+    ).color
+  ).toBe('yellow')
   expect(comp.querySelector('.other').instance.getStr).toBeInstanceOf(Function)
   expect(comp.querySelector('.other').instance.getStr()).toBe('other')
   expect(comp.dom.tagName).toBe('CUSTOM-COMP')
-  expect(comp.querySelector('.other').instance.selectOwnerComponent().$$.tagName).toBe('CUSTOM-COMP')
-}
-
-test('comp2', () => {
-  let id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp')
-  runTest(id)
-
-  jest.resetModules() // https://github.com/facebook/jest/issues/5120
-
-  id = simulate.load(path.resolve(__dirname, './index'), 'custom-comp', {compiler: 'simulate'})
-  runTest(id)
+  expect(comp.querySelector('.other').instance.selectOwnerComponent()).toBe(
+    comp.instance
+  )
 })

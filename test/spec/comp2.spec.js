@@ -1,23 +1,47 @@
-/* global simulate */
-const path = require('path')
-const expect = require('chai').expect
+let simulate;
 
-describe('comp2', () => {
-  it('should run successfully', () => {
-    const id = simulate.load(path.join(__dirname, '../comp2/index'), 'custom-comp')
-    const comp = simulate.render(id, {prop: 'index.test.properties'})
+describe("comp2", () => {
+  beforeAll(async () => {
+    simulate = await import(
+      "http://localhost:8080/@/dist/miniprogram_simulate.all.js"
+    );
+  });
 
-    comp.attach(document.body)
+  it("should run successfully", () => {
+    const id = simulate.loadComponent("/test/comp2/index", 'custom-comp')
 
-    expect(simulate.match(comp.dom, `
-            <wx-view class="custom-comp--index">index.test.properties</wx-view>
-            <wx-view data-index="0" data-type="3">haha</wx-view>
-            <wx-view data-index="1" data-type="4">hehe</wx-view>
-            <other-comp class="custom-comp--other"><wx-view class="other-comp--index">other.properties</wx-view></other-comp>
-        `)).to.equal(true)
-    expect(window.getComputedStyle(comp.querySelector('.index').dom).color).to.equal('rgb(0, 128, 0)')
-    expect(window.getComputedStyle(comp.querySelector('.index').dom).width).to.equal('100px')
-    expect(window.getComputedStyle(comp.querySelector('.other').querySelector('.index').dom).color).to.equal('rgb(255, 255, 0)')
-    expect(comp.dom.tagName).to.equal('CUSTOM-COMP')
-  })
-})
+    const comp = simulate.render(id, { prop: "index.test.properties" });
+
+    comp.attach(document.body);
+
+    expect(comp.innerHTML).toBe(
+      simulate.trimHTML(`
+    <view class="custom-comp--index">index.test.properties</view>
+    <view index="0" type="3">haha</view>
+    <view index="1" type="4">hehe</view>
+    <other-comp class="custom-comp--other"><view class="other-comp--index">other.properties</view></other-comp>
+  `)
+    );
+    expect(
+      window.getComputedStyle(comp.querySelector(".index").dom).color
+    ).toBe("rgb(0, 128, 0)");
+    // expect(
+    //   window.getComputedStyle(comp.querySelector(".index").dom).width
+    // ).toBe("10vw");
+    expect(
+      window.getComputedStyle(
+        comp.querySelector(".other").querySelector(".index").dom
+      ).color
+    ).toBe("rgb(255, 255, 0)");
+    expect(comp.querySelector(".other").instance.getStr).toBeInstanceOf(
+      Function
+    );
+    expect(comp.querySelector(".other").instance.getStr()).toBe("other");
+    expect(comp.dom.tagName).toBe("CUSTOM-COMP");
+    expect(comp.querySelector(".other").instance.selectOwnerComponent()).toBe(
+      comp.instance
+    );
+
+    comp.detach()
+  });
+});

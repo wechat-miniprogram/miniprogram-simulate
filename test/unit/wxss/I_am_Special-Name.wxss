@@ -1,7 +1,0 @@
-#id {
-    position: absolute;
-    left: 0;
-    right: 0;
-}
-
-@import './inner-folder/THIS-IS-ANOTHER-WXSS.wxss';

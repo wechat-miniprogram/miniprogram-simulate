@@ -18,7 +18,7 @@
 <view>
     <view wx:if="{{flag}}">if</view>
     <view wx:else>else {{elseData}}</view>
-    <view id="xx" attr="{{attrValue}}" bindtap="onTap">{{content}}</view>
+    <view id="xx" attr="{{attrValue}}" bind:tap="onTap">{{content}}</view>
     <comp a="123" b="{{aa}}">
         <view>I am slot</view>
     </comp>

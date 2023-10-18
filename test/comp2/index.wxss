@@ -1,4 +1,4 @@
 .index {
   color: green;
-  width: 100rpx;
+  width: 75rpx;
 }

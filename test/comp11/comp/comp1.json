@@ -1,6 +1,6 @@
 {
     "component": true,
     "usingComponents": {
-        "comp2": "12345"
+        "comp2": "./comp2"
     }
 }
