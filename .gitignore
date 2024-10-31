@@ -10,3 +10,5 @@ yarn-error.log*
 
 node_modules
 coverage
+dist
+.vscode

@@ -4,105 +4,163 @@
 
 ## jest
 
-1. 安装 jest 和配置参考 [jest 官网](https://jestjs.io/docs/zh-Hans/getting-started)
-1. 配置 jest
-    ```js
-    {
-        // jest 是直接在 nodejs 环境进行测试，使用 jsdom 进行 dom 环境的模拟。在使用时需要将 jest 的 `testEnvironment` 配置为 `jsdom`。
-        // jest 内置 jsdom，所以不需要额外引入。
-        "testEnvironment": "jsdom",
-        // 配置 jest-snapshot-plugin 从而在使用 jest 的 snapshot 功能时获得更加适合肉眼阅读的结构
-        "snapshotSerializers": ["miniprogram-simulate/jest-snapshot-plugin"]
-    }
-    ```
+jest 可以使用 nodejs 在本地运行单元测试
+
+### 1. 安装 jest
+
+安装和配置参考 [jest 官网](https://jestjs.io/docs/zh-Hans/getting-started)
+### 2. 配置 jest
+
+在 jest 配置文件中（通常为 `jest.config.js`）设置 [jsdom](https://www.npmjs.com/package/jest-environment-jsdom) 环境
+
+```js
+// jest.config.js
+{
+    "testEnvironment": "jsdom",
+}
+```
+### 3. 编写单元测试
+
+```js
+const path = require('node:path')
+const simulate = requier('miniprogram-simulate')
+
+it('test', () => {
+    // 加载自定义组件，自定义组件在当前的 components/comp/index 目录下
+    const id = simulate.load(
+        path.resolve(__dirname, 'components/comp/index')
+    )
+    const comp = simulate.render(id) // 渲染自定义组件
+
+    // 挂载到 body
+    comp.attach(document.body)
+
+    // 使用自定义组件封装实例 comp 对象来进行各种单元测试
+    expect(comp.innerHTML).toBe(
+        '<view class="main--index">index.test.properties</view><comp1><view class="main--index">inner</view></comp1>'
+    )
+    // 使用 jest 的 snapshot 功能可以快速测试
+    expect(comp).toMatchSnapshot()
+
+    // 从 body 移除
+    comp.detach()
+})
+```
+
+### 4. 运行 jest
+```bash
+npx jest
+```
 
 具体的 jest 配置例子可参考 [weui-miniprogram 中的配置](https://github.com/wechat-miniprogram/weui-miniprogram/blob/unit-test/jest.config.js)
 
 ## karma
 
-karma 可使用浏览器真实环境来运行测试用例，但是因为小程序自定义组件的文件是割裂的，而浏览器环境没有文件系统支持，因此需要做一些特殊处理。
+karma 可使用浏览器真实环境来运行测试用例。
 
-安装 preprocessor：
+### 1. 安装 karma
 
-```
-npm install --save-dev karma-dirname-preprocessor karma-filemap-preprocessor karma-webpack
-```
+安装和配置参考 [karma 官网](https://karma-runner.github.io/6.4/intro/installation.html)
 
-配置 karma.conf.js 中的 basePath、files、preprocessors、webpack 字段：
+### 2. 配置 karma
 
-```js
-module.exports = function(config) {
-    config.set({
-        // 其他配置 ......
-        basePath: path.resolve(__dirname, './test'), // 被测试组件所在根目录，因为编译器的限制，要求所有被测组件必须在此目录下
-        files: [
-            'node_modules/miniprogram-simulate/build.js', // 注入 miniprogram-simulate，会在 window 下挂载 simulate 对象
-            'test/spec/*.spec.js', // 测试用例
-            'src/component/*', // 组件文件，路径尽量不要包含 ../ 或者 ./，不然 wcc 编译器可能识别不了
-        ],
-        preprocessors: {
-            'src/component/*': ['filemap'], // 组件文件使用 filemap 将各个文件内容注入到浏览器，路径尽量不要包含 ../ 或者 ./，不然 wcc 编译器可能识别不了
-            'test/spec/*.spec.js': ['webpack', 'dirname'], // 使用 webpack 进行打包，使用 dirname 处理测试用例中的 __dirname 变量
-        },
-        webpack: {
-            optimization: {
-                minimize: false, // 不做压缩，方便调试
-            },
-            node: {
-                __dirname: false, // 不注入 __dirname，由 preprocessor 来处理
-            },
-        },
-        // 其他配置 ......
-    })
-}
-```
-
-然后测试用例如下方式来编写（以使用 mocha + chai 的方式为例）：
+karma 不需要特殊的配置，你可以使用任何你喜欢的 framework。下面是一个示例
 
 ```js
 const path = require('path')
-const expect = require('chai').expect
+
+module.exports = function(config) {
+  config.set({
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    basePath: path.resolve(__dirname, 'test'),
+
+    // karma plugins
+    plugins: ['karma-jasmine', 'karma-chrome-launcher'],
+
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['jasmine'],
+
+    // list of files / patterns to load in the browser
+    files: [{pattern: 'spec/*.spec.js', type: 'module'}],
+  })
+}
+```
+
+### 3. 启动 simulate 服务
+
+在你想要测试的项目下启动 simulate 服务
+
+```bash
+# 在 8080 端口开启一个服务
+npx miniprogram-simulate -p 8080
+```
+
+该命令会在 8080 端口启动一个服务，你可以访问 `localhost:8080/path/to/comp` 来查看组件在浏览器上的渲染结果。注意你需要将 `/path/to/comp` 路径替换为你的组件所在路径.
+
+### 4. 编写单元测试
+
+```js
+let simulate
 
 describe('component', () => {
-    it ('should run successfully', () => {
-        // 此处直接使用 simulate 或者 window.simulate 即可，不需要再做 require
+    beforeAll(async () => {
+        // 加载 simulate
+        simulate = await import(
+        "http://localhost:8080/@/dist/miniprogram_simulate.all.js"
+        );
+    });
 
-        const id = simulate.load(path.resolve(__dirname, '../src/component/index'))
-        const comp = simulate.render(id, {prop: 'index.test.properties'})
+    it('should run successfully', () => {
+        // 加载自定义组件，自定义组件在当前的 components/comp/index 目录下
+        const id = simulate.load('/components/comp/index')
+        const comp = simulate.render(id) // 渲染自定义组件
 
-        comp.attach(document.body) // 挂载在 body 下面
+        // 挂载到 body
+        comp.attach(document.body)
 
-        expect(simulate.match(comp.dom, '<wx-view class="main--index">index.test.properties</wx-view>')).to.equal(true)
+        // 使用自定义组件封装实例 comp 对象来进行各种单元测试
+        expect(comp.innerHTML).toBe(
+            '<view class="main--index">index.test.properties</view><comp1><view class="main--index">inner</view></comp1>'
+        )
+
+        // 从 body 移除
+        comp.detach()
     })
 })
 ```
 
-> PS：在使用 karma 测试时只支持官方编译器编译 wxml 文件，不支持使用 js 模拟的编译器，因此就算在 simulate.load 方法中配置了 `compiler: 'simulate'` 也不会生效。
+### 5. 运行 karma
+
+```bash
+npx karma start
+```
 
 # 使用指南
 
 以下均**以 miniprogram-simulate + jest 的方式**来介绍。
 
-## 引入测试工具
-
-```js
-const simulate = require('miniprogram-simulate')
-```
 
 ## 起步例子
 
 ```js
 test('comp', () => {
-    const id = simulate.load(path.join(__dirname, './comp')) // 加载自定义组件，返回组件 id
-    const comp = simulate.render(id) // 使用 id 渲染自定义组件，返回组件封装实例
+    // 加载自定义组件，自定义组件在当前的 components/comp/index 目录下
+    const id = simulate.load(
+        path.resolve(__dirname, 'components/comp/index')
+    )
+    const comp = simulate.render(id) // 渲染自定义组件
 
-    const parent = document.createElement('parent-wrapper') // 创建容器节点
-    comp.attach(parent) // 将组件插入到容器节点中，会触发 attached 生命周期
+    // 挂载到 body
+    comp.attach(document.body)
 
-    expect(comp.dom.innerHTML).toBe('<div>123</div>') // 判断组件渲染结果
-    // 执行其他的一些测试逻辑
+    // 使用自定义组件封装实例 comp 对象来进行各种单元测试
+    expect(comp.innerHTML).toBe(
+        '<view class="main--index">index.test.properties</view><comp1><view class="main--index">inner</view></comp1>'
+    )
 
-    comp.detach() // 将组件从容器节点中移除，会触发 detached 生命周期
+    // 从 body 移除
+    comp.detach()
 })
 ```
 
@@ -110,10 +168,12 @@ test('comp', () => {
 
 ```js
 test('comp', () => {
-    // 前略
-
+    // 加载自定义组件，自定义组件在当前的 components/comp/index 目录下
+    const id = simulate.load(
+        path.resolve(__dirname, 'components/comp/index')
+    )
     const comp = simulate.render(id, {
-        propName: 'propValue',
+        propName: 'propValue', // 组件会收到 propName 参数
     })
 })
 ```
