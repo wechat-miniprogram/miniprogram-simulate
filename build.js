@@ -43720,7 +43720,7 @@ module.exports = {
     hasSystemProxy: false,
   }),
   getLocalIPAddress: _.mockAsync('getLocalIPAddress', {
-    localip: '192.168.0.1',
+    localip: '123.123.0.1',
     netmask: '255.255.255.0',
   }),
 
