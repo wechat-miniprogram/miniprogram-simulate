@@ -63,7 +63,7 @@
     "j-component": "^1.4.9",
     "less": "^3.10.3",
     "miniprogram-compiler": "latest",
-    "postcss": "^7.0.23",
+    "postcss": "^8.4.31",
     "pretty-format": "^26.0.1"
   }
 }
