@@ -53,7 +53,7 @@
     "karma-dirname-preprocessor": "latest",
     "karma-filemap-preprocessor": "latest",
     "karma-mocha": "^2.0.1",
-    "karma-webpack": "^4.0.2",
+    "karma-webpack": "^5.0.1",
     "mocha": "^10.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
