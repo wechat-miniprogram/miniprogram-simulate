@@ -13100,7 +13100,7 @@ class ComponentManager {
           if (!exparserNode) return null
 
           return getSelectComponentResult(exparserNode)
-        } 
+        }
         caller.createSelectorQuery = () => new SelectorQuery(caller)
         caller.createIntersectionObserver = options => new IntersectionObserver(caller, options)
         caller.setData = (data, callback) => {
@@ -14539,12 +14539,16 @@ function diffVt(oldVt, newVt) {
       }
 
       // 检查事件
-      Object.keys(oldVt.event).forEach(key => {
-        const {name, isCapture, id} = oldVt.event[key]
+      if (isSameEvent(oldVt.event, newVt.event)) {
+        newVt.event = oldVt.event
+      } else {
+        Object.keys(oldVt.event).forEach(key => {
+          const {name, isCapture, id} = oldVt.event[key]
 
-        exparser.removeListenerFromElement(node, name, id, {capture: isCapture})
-      })
-      render.updateEvent(node, newVt.event)
+          exparser.removeListenerFromElement(node, name, id, {capture: isCapture})
+        })
+        render.updateEvent(node, newVt.event)
+      }
 
       // 检查子节点
       const oldChildren = oldVt.children
@@ -14616,6 +14620,28 @@ function diffAttrs(oldAttrs, newAttrs) {
   }
 
   return isChange ? retAttrs : false
+}
+
+/**
+ * diff 事件绑定
+ */
+function isSameEvent(oldEvent, newEvent) {
+  const oldKeys = Object.keys(oldEvent)
+  const newKeys = Object.keys(newEvent)
+
+  if (oldKeys.length !== newKeys.length) return false
+
+  return oldKeys.every(key => {
+    const oldItem = oldEvent[key]
+    const newItem = newEvent[key]
+
+    return newItem &&
+      oldItem.name === newItem.name &&
+      oldItem.isCapture === newItem.isCapture &&
+      oldItem.isMutated === newItem.isMutated &&
+      oldItem.isCatch === newItem.isCatch &&
+      oldItem.handler === newItem.handler
+  })
 }
 
 /**
@@ -15000,7 +15026,7 @@ function exparserTreeToJSON(node) {
         })
         array.push(child)
       }
-      ;(node.__wxSlotChildren || []).forEach(child => _inner(child, children))
+      (node.__wxSlotChildren || []).forEach(child => _inner(child, children))
     }
 
     return array
