@@ -1,0 +1,6 @@
+{
+    "component": true,
+    "usingComponents": {
+        "main-status": "/components/main-status/index"
+    }
+}

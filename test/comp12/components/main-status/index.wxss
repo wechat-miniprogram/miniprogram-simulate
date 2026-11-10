@@ -1,0 +1,4 @@
+.main--status {
+    color: #1e6bb8;
+    font-size: 16px;
+}

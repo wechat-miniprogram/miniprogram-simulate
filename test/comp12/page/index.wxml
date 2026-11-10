@@ -1,0 +1,3 @@
+<view class="page">
+    <main-status msg="{{msg}}"></main-status>
+</view>

@@ -62,6 +62,55 @@ function behavior(definition) {
   return jComponent.behavior(definition)
 }
 
+/**
+ * 获取两个路径的公共父路径
+ */
+function getCommonAncestorPath(pathA, pathB) {
+  const listA = path.resolve(pathA).split(path.sep)
+  const listB = path.resolve(pathB).split(path.sep)
+  const commonList = []
+
+  for (let i = 0, len = Math.min(listA.length, listB.length); i < len; i++) {
+    if (listA[i] !== listB[i]) break
+    commonList.push(listA[i])
+  }
+
+  return commonList.join(path.sep) || path.sep
+}
+
+/**
+ * 计算 usingComponents 中某个依赖组件对应的路径
+ */
+function resolveUsingComponentsPath(value, componentPath, cache) {
+  if (!_.isAbsolute(value)) {
+    // 相对路径，以当前组件所在目录为基准
+    return path.join(path.dirname(componentPath), value)
+  }
+
+  // 绝对路径，以 rootPath 为基准
+  const rootPath = cache.options.rootPath
+  const usingPath = path.join(rootPath, value)
+  if (_.readFile(`${usingPath}.json`)) return usingPath
+  if (!cache.rootPathIsDefault) return usingPath
+
+  // rootPath 未指定时其默认值为当前组件所在目录，此时无法得知项目根路径，
+  // 对于以项目根路径为基准书写的绝对路径会解析失败，导致该组件被当作空节点渲染，
+  // 因此再从组件所在目录逐级向上查找，取最近的一个存在的组件路径
+  let dir = path.dirname(componentPath)
+  while (dir !== path.dirname(dir)) {
+    const dirPath = path.join(dir, value)
+    if (_.readFile(`${dirPath}.json`)) {
+      // 找到的组件可能不在原 rootPath 下，需要同步扩大编译根路径，否则无法编译其模板
+      cache.options.rootPath = getCommonAncestorPath(cache.options.rootPath, dirPath)
+      return dirPath
+    }
+
+    dir = path.dirname(dir)
+  }
+
+  return usingPath
+}
+
 /* eslint-disable complexity */
 /**
  * 注册自定义组件
@@ -102,7 +151,6 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
   }
 
   // 先加载 using components
-  const rootPath = cache.options.rootPath
   const usingComponents = component.json.usingComponents || {}
   const overrideUsingComponents = cache.options.usingComponents || {}
   Object.assign(usingComponents, overrideUsingComponents)
@@ -111,7 +159,7 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     const key = usingComponentKeys[i]
 
     const value = usingComponents[key]
-    const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
+    const usingPath = resolveUsingComponentsPath(value, componentPath, cache)
 
     if (_.readFile(`${usingPath}.json`)) {
       // 文件路径
@@ -145,6 +193,8 @@ function load(componentPath, tagName, options = {}) {
     tagName = ''
   }
 
+  const rootPathIsDefault = !(options && options.rootPath)
+
   if (typeof componentPath === 'string') {
     options = Object.assign({
       compiler: 'official', // official - 官方编译器、simulate - 纯 js 实现的模拟编译器
@@ -161,6 +211,7 @@ function load(componentPath, tagName, options = {}) {
     wxss: [],
     options,
     needRunJsList: [],
+    rootPathIsDefault: typeof componentPath === 'string' && rootPathIsDefault,
   }
   const hasRegisterCache = {}
   const id = register(componentPath, tagName, cache, hasRegisterCache)

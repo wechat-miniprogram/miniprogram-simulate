@@ -1,0 +1,4 @@
+<view class="main--status">
+    <u-icon name="star"></u-icon>
+    <view class="main--msg">{{msg}}</view>
+</view>
