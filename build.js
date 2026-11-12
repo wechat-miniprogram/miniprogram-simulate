@@ -12652,6 +12652,31 @@ function behavior(definition) {
   return jComponent.behavior(definition)
 }
 
+/**
+ * 判断 usingComponents 的值是否是一个路径，而不是已经注册好的自定义组件 id
+ */
+function isPathLike(value) {
+  if (typeof value !== 'string' || !value) return false
+
+  return _.isAbsolute(value) || value[0] === '.' || value.includes('/') || value.includes('\\')
+}
+
+/**
+ * 构建 usingComponents 无法解析时的报错信息
+ */
+function buildUsingComponentsError(info) {
+  const {
+    key, value, usingPath, componentPath
+  } = info
+
+  // 路径找不到时直接报错，否则原始路径会被当作组件 id 传给 exparser，静默渲染成空节点
+  return [
+    `invalid usingComponents["${key}"] in ${componentPath}.json: ${JSON.stringify(value)}`,
+    `  resolved to ${usingPath}, but the file does not exist.`,
+    '  Please check the path, or pass the correct rootPath to simulate.load() if the component lives elsewhere.',
+  ].join('\n')
+}
+
 /* eslint-disable complexity */
 /**
  * 注册自定义组件
@@ -12701,12 +12726,20 @@ function register(componentPath, tagName, cache, hasRegisterCache) {
     const key = usingComponentKeys[i]
 
     const value = usingComponents[key]
-    const usingPath = _.isAbsolute(value) ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
+    const checkIsAbsolute = _.isAbsolute(value)
+    const usingPath = checkIsAbsolute ? path.join(rootPath, value) : path.join(path.dirname(componentPath), value)
+    // options.usingComponents 会作用于所有组件，其中的相对路径不保证指向当前组件所在目录，缺失时不报错
+    const isOverrideRelative =
+      !checkIsAbsolute && Object.prototype.hasOwnProperty.call(overrideUsingComponents, key)
 
     if (_.readFile(`${usingPath}.json`)) {
       // 文件路径
       const id = register(usingPath, key, cache, hasRegisterCache)
       usingComponents[key] = id
+    } else if (isPathLike(value) && !isOverrideRelative) {
+      throw new Error(buildUsingComponentsError({
+        key, value, usingPath, componentPath,
+      }))
     }
   }
 

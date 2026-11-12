@@ -68,6 +68,8 @@ simulate.load('/comp', 'custom-comp') // 渲染出来的结果是 <comp><wx-view
 ```
 
 > PS：关于 rootPath 的设置，可查看[此文档](./api.md#options)
+>
+> PS：usingComponents 中的路径解析后如果找不到对应文件，load 会直接报错并给出解析后的路径，此时请检查路径写法或者调整 rootPath。
 
 ## wx 对象
 
